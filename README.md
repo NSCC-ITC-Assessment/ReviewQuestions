@@ -19,25 +19,25 @@ A GitHub Action that analyses code changes and uses AI to generate targeted comp
 
 ### Inputs
 
-| Input                 | Required | Default                   | Description                                                             |
-| --------------------- | -------- | ------------------------- | ----------------------------------------------------------------------- |
-| `github-token`        | Yes      | `${{ github.token }}`     | GitHub token for API access and GitHub Models credential                |
-| `ai-provider`         | No       | `github-models`           | AI provider: `github-models`, `openai`, `openrouter`, or `azure-openai` |
-| `ai-model`            | No       | `gpt-4o`                  | Model identifier for the chosen provider                                |
-| `api-key`             | No       |                           | API key (not needed for `github-models`)                                |
-| `azure-endpoint`      | No       |                           | Azure OpenAI endpoint URL (required for `azure-openai`)                 |
-| `num-questions`       | No       | `5`                       | Number of questions to generate                                         |
-| `include-patterns`    | No       |                           | Comma-separated globs for files to include                              |
-| `exclude-patterns`    | No       | _(common non-code files)_ | Comma-separated globs for files to exclude                              |
-| `output-file`         | No       | `assessment-questions.md` | Path for the output Markdown file                                       |
-| `post-pr-comment`     | No       | `true`                    | Post assessment as a PR comment                                         |
-| `post-issue`          | No       | `false`                   | Create a GitHub Issue with the assessment                               |
-| `post-discussion`     | No       | `false`                   | Create a GitHub Discussion with the assessment                          |
-| `discussion-category` | No       | `Assessments`             | Discussion category name                                                |
-| `additional-context`  | No       |                           | Assignment/topic context for more relevant questions                    |
-| `skip-initial-commit` | No       | `true`                    | Exclude GitHub Classroom starter files from the diff                    |
-| `base-sha`            | No       |                           | Override the base commit SHA                                            |
-| `head-sha`            | No       |                           | Override the head commit SHA                                            |
+| Input                 | Required | Default                   | Description                                                                                                                                                                          |
+| --------------------- | -------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `github-token`        | Yes      | `${{ github.token }}`     | GitHub token for API access and GitHub Models credential                                                                                                                             |
+| `ai-provider`         | No       | `github-models`           | AI provider: `github-models`, `openai`, `openrouter`, or `azure-openai`                                                                                                              |
+| `ai-model`            | No       | `gpt-4o`                  | Model identifier for the chosen provider                                                                                                                                             |
+| `api-key`             | No       |                           | API key for the provider. For `github-models`, leave empty to use `github-token`, or supply an alternative PAT (e.g. an instructor token with an alternative licence) to override it |
+| `azure-endpoint`      | No       |                           | Azure OpenAI endpoint URL (required for `azure-openai`)                                                                                                                              |
+| `num-questions`       | No       | `5`                       | Number of questions to generate                                                                                                                                                      |
+| `include-patterns`    | No       |                           | Comma-separated globs for files to include                                                                                                                                           |
+| `exclude-patterns`    | No       | _(common non-code files)_ | Comma-separated globs for files to exclude                                                                                                                                           |
+| `output-file`         | No       | `assessment-questions.md` | Path for the output Markdown file                                                                                                                                                    |
+| `post-pr-comment`     | No       | `true`                    | Post assessment as a PR comment                                                                                                                                                      |
+| `post-issue`          | No       | `false`                   | Create a GitHub Issue with the assessment                                                                                                                                            |
+| `post-discussion`     | No       | `false`                   | Create a GitHub Discussion with the assessment                                                                                                                                       |
+| `discussion-category` | No       | `Assessments`             | Discussion category name                                                                                                                                                             |
+| `additional-context`  | No       |                           | Assignment/topic context for more relevant questions                                                                                                                                 |
+| `skip-initial-commit` | No       | `true`                    | Exclude GitHub Classroom starter files from the diff                                                                                                                                 |
+| `base-sha`            | No       |                           | Override the base commit SHA                                                                                                                                                         |
+| `head-sha`            | No       |                           | Override the head commit SHA                                                                                                                                                         |
 
 ### Outputs
 

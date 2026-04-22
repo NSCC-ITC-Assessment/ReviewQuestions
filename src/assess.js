@@ -116,7 +116,7 @@ async function run() {
     );
 
     const effectiveApiKey =
-      inputs.aiProvider === 'github-models' ? inputs.githubToken : inputs.apiKey;
+      inputs.aiProvider === 'github-models' ? inputs.apiKey || inputs.githubToken : inputs.apiKey;
 
     const questions = await callAI({
       provider: inputs.aiProvider,

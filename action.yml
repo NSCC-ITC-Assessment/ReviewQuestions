@@ -36,7 +36,9 @@ inputs:
   api-key:
     description: >
       API key for the chosen AI provider.
-      Not required when ai-provider is github-models (uses github-token instead).
+      For github-models, leave empty to use github-token automatically, or supply a
+      Personal Access Token (e.g. an instructor token with an alternative licence)
+      to use that instead.
     required: false
     default: ""
 

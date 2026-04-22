@@ -528,7 +528,7 @@ function formatReport({
   const branchNote = isDefaultBranch ? '' : `> **Branch:** \`${branchName}\`\n`;
 
   return [
-    '## Code Comprehension Assessment',
+    '## Review Questions Generator',
     '',
     `> **Generated:** ${date}`,
     `> **Commits reviewed:** \`${shortBase}\` → \`${shortHead}\``,
@@ -554,13 +554,13 @@ function formatReport({
 async function postIssue({ octokit, ctx, report, branchName, headSha }) {
   const shortHead = headSha.substring(0, 7);
   const branchPart = branchName ? ` (${branchName})` : '';
-  const title = `Code Comprehension Assessment${branchPart} — ${shortHead}`;
+  const title = `Review Questions Generator${branchPart} — ${shortHead}`;
   const { owner, repo } = ctx.repo;
 
   // ── Close any open predecessor issues for this branch ────────────────────
   const searchStr = branchName
-    ? `Code Comprehension Assessment (${branchName})`
-    : 'Code Comprehension Assessment';
+    ? `Review Questions Generator (${branchName})`
+    : 'Review Questions Generator';
 
   const existing = await octokit.rest.issues.listForRepo({
     owner,
@@ -608,10 +608,10 @@ async function postIssue({ octokit, ctx, report, branchName, headSha }) {
 async function postDiscussion({ octokit, ctx, report, branchName, headSha, categoryName }) {
   const shortHead = headSha.substring(0, 7);
   const branchPart = branchName ? ` (${branchName})` : '';
-  const title = `Code Comprehension Assessment${branchPart} — ${shortHead}`;
+  const title = `Review Questions Generator${branchPart} — ${shortHead}`;
   const searchStr = branchName
-    ? `Code Comprehension Assessment (${branchName})`
-    : 'Code Comprehension Assessment';
+    ? `Review Questions Generator (${branchName})`
+    : 'Review Questions Generator';
 
   // ── Step 1: resolve repo node ID, category ID, and existing discussions ──
   const repoQuery = await octokit.graphql(

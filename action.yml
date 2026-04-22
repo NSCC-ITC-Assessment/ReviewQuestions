@@ -1,4 +1,4 @@
-name: "Code Comprehension Assessment"
+name: "Review Questions Generator"
 description: >
   Analyses code changes submitted via GitHub and uses AI to generate targeted
   comprehension questions for viva voce or written assessments.

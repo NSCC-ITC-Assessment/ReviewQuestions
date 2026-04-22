@@ -1,13 +1,23 @@
 # Versioning & Release Guide
 
-This action follows [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`) and uses floating image tags so consumers can opt into the level of stability they need.
+## Versioning philosophy
+
+This action uses a simplified versioning model:
+
+- **Any new functionality** — whether or not it is backwards-compatible — triggers a **new major version**
+- **Bug fixes only** are released as patch versions on the current major line
+- There are no minor versions
+
+This means consumers pin to a major tag (e.g. `@v1`) and receive bug fixes automatically. New features never appear unexpectedly — getting them requires a deliberate update to reference the new major version (e.g. `@v2`). This is intentional: assessment tools used by instructors across a semester should not silently change behaviour mid-course.
+
+Previous major versions enter **maintenance mode** when a new major is released — they continue to receive bug fixes but no new functionality.
 
 ## How a Release Works
 
-Pushing a tag is the single action that triggers everything. When you run `git push origin vX.Y.Z`:
+Pushing a tag is the single action that triggers everything. When you run `git push origin vX.0.Y`:
 
 1. The `release.yml` workflow fires
-2. It builds the Docker image and pushes it to `ghcr.io` with all four version tags
+2. It builds the Docker image and pushes it to `ghcr.io` with three version tags
 3. It automatically creates a **GitHub Release** on the repository — this is the entry in the **Releases** section of the repo page, complete with auto-generated release notes summarising the commits since the last tag
 
 You do not need to manually create the GitHub Release through the UI. The workflow handles it.
@@ -18,25 +28,28 @@ You do not need to manually create the GitHub Release through the UI. The workfl
 
 ## Tag Strategy
 
-When you push a tag like `v1.2.3`, the release workflow produces four image tags on `ghcr.io`:
+When you push a tag like `v2.0.1`, the release workflow produces three image tags on `ghcr.io`:
 
-| Image Tag | Updates When                   | Use Case                                             |
-| --------- | ------------------------------ | ---------------------------------------------------- |
-| `v1.2.3`  | Never (immutable)              | Pinning to an exact known-good build                 |
-| `v1.2`    | Any `v1.2.x` patch is released | Getting bug fixes automatically                      |
-| `v1`      | Any `v1.x.x` release           | Getting bug fixes + minor improvements (recommended) |
-| `latest`  | Any release                    | Always the newest — not recommended for consumers    |
+| Image Tag | Updates When             | Use Case                                          |
+| --------- | ------------------------ | ------------------------------------------------- |
+| `v2.0.1`  | Never (immutable)        | Pinning to an exact known-good build              |
+| `v2`      | Any `v2.x.x` is released | Receiving bug fixes automatically (recommended)   |
+| `latest`  | Any release              | Always the newest — not recommended for consumers |
 
-Most consumer repos should reference the **major** tag (`v1`) in `action.yml` so they receive both patches and minor improvements without changing their workflow files.
+All consumer repos should reference the **major** tag (e.g. `v1`) in their workflow files. They receive bug fixes automatically and only move to a new major version when they choose to adopt new functionality.
 
 ---
 
 ## Releasing a Patch (bug fix)
 
-Use when: fixing a bug, correcting a typo in output, or addressing a regression. No new features, no breaking changes.
+---
+
+## Releasing a Patch (bug fix)
+
+Use when: fixing a bug, correcting a typo in output, or addressing a regression. No new functionality.
 
 ```bash
-# Example: current latest release is v1.2.0
+# Example: current version on main is v1.0.2
 
 # 1. Create a branch, make the fix, merge to main
 git checkout -b fix/null-output
@@ -47,142 +60,109 @@ git push origin fix/null-output
 
 # 2. Tag the patch release from main
 git checkout main && git pull
-git tag v1.2.1
-git push origin v1.2.1
+git tag v1.0.3
+git push origin v1.0.3
 ```
 
 **What happens:**
 
 - The release workflow builds and pushes the image
-- `v1.2.1` is created (new, immutable)
-- `v1.2` is updated to point to this build
+- `v1.0.3` is created (new, immutable)
 - `v1` is updated to point to this build
 - `latest` is updated to point to this build
-- Any consumer referencing `v1` or `v1.2` gets the fix on their next run — no action required on their end
+- Any consumer referencing `v1` gets the fix on their next run — no action required on their end
 
 ---
 
-## Releasing a Minor Improvement
+## Releasing New Functionality (new major)
 
-Use when: adding a new input/output, supporting an additional language, or adding non-breaking functionality.
+Use when: adding any new capability — new input, new AI provider, new output, new delivery mechanism, etc. — regardless of whether it is backwards-compatible.
 
 ```bash
-# Example: current latest release is v1.2.1
+# Example: current version on main is v1.0.3
 
 # 1. Create a branch, implement the feature, merge to main
-git checkout -b feat/add-feedback-comment
+git checkout -b feat/add-anthropic-provider
 # ... make changes ...
-git add -A && git commit -m "feat: post feedback as PR comment"
-git push origin feat/add-feedback-comment
+git add -A && git commit -m "feat: add anthropic as a supported ai-provider"
+git push origin feat/add-anthropic-provider
 # merge to main via PR or direct push
 
-# 2. Tag the minor release from main
-git checkout main && git pull
-git tag v1.3.0
-git push origin v1.3.0
-```
-
-**What happens:**
-
-- `v1.3.0` is created (new, immutable)
-- `v1.3` is created (new floating tag for this minor line)
-- `v1` is updated to point to this build
-- `latest` is updated to point to this build
-- Consumers on `v1` get the improvement automatically
-- Consumers pinned to `v1.2` do **not** get the change (they stay on the 1.2.x line)
-
----
-
-## Releasing a Major (breaking change)
-
-Use when: removing an input, changing output format, or any change that would break existing consumer workflows.
-
-```bash
+# 2. Tag the new major release from main
 git checkout main && git pull
 git tag v2.0.0
 git push origin v2.0.0
 ```
 
-Consumers on `v1` are **not affected**. You must update `action.yml` in consumer repos to reference `v2` when they are ready to migrate.
+**What happens:**
+
+- `v2.0.0` is created (new, immutable)
+- `v2` is created (new floating tag for this major line)
+- `latest` is updated to point to this build
+- `v1` is **not affected** — consumers on `v1` stay on the previous functionality until they deliberately update to `@v2`
+
+Consumers must update their workflow files to reference `@v2` when they are ready to adopt the new functionality.
 
 ---
 
-## Patching an Older Minor Line
+## Patching an Older Major (maintenance mode)
 
-If you need to fix a bug in `v1.2.x` but `main` has already moved to `v1.3.0`:
+When a new major is released, previous majors enter maintenance mode — they continue to receive bug fixes. If a bug exists in an older major line, apply the fix there independently.
 
 ```bash
-# 1. Create a release branch from the last v1.2.x tag
-git checkout -b release/v1.2 v1.2.1
+# Example: main is now on v2.x.x but a bug needs fixing in v1
 
-# 2. Cherry-pick or apply the fix
+# 1. Create a release branch from the latest v1 patch tag
+git checkout -b release/v1 v1.0.3
+
+# 2. Apply the fix
 git cherry-pick <commit-hash>
-git push origin release/v1.2
+git push origin release/v1
 
 # 3. Tag from the release branch
-git tag v1.2.2
-git push origin v1.2.2
+git tag v1.0.4
+git push origin v1.0.4
 ```
 
-This updates `v1.2` without affecting `v1.3` or `v1`. The `v1` tag continues to point at `v1.3.0` (the latest minor).
-
-> **Note:** Only maintain separate release branches when you have consumers explicitly pinned to an older minor version. Otherwise, patches on `main` with a new minor or patch tag are simpler.
+This updates `v1` without affecting `v2` or `latest`.
 
 ---
 
-## Patching the Same Bug Across Multiple Minor Lines
+## Patching the Same Bug Across Multiple Major Lines
 
-If a bug exists in more than one minor version (e.g., both `v1.0.x` and `v1.1.x`) and consumers are pinned to each, you need to apply the fix to every affected release branch.
-
-**Workflow:**
+If a bug affects more than one active major, apply the fix to each independently.
 
 ```bash
-# 1. Fix the bug on main first (or on a feature branch merged to main)
+# 1. Fix the bug on main first
 git checkout main
 # ... apply fix, commit ...
 git add -A && git commit -m "fix: handle edge case in output parsing"
 git push origin main
 
-# 2. Note the commit hash of the fix
 FIX_COMMIT=$(git rev-parse HEAD)
 
-# 3. Patch v1.0.x
-git checkout -b release/v1.0 v1.0.2    # branch from the latest v1.0.x tag
+# 2. Patch v1
+git checkout -b release/v1 v1.0.3
 git cherry-pick "$FIX_COMMIT"
-git push origin release/v1.0
-git tag v1.0.3
-git push origin v1.0.3
+git push origin release/v1
+git tag v1.0.4
+git push origin v1.0.4
 
-# 4. Patch v1.1.x
-git checkout -b release/v1.1 v1.1.1    # branch from the latest v1.1.x tag
-git cherry-pick "$FIX_COMMIT"
-git push origin release/v1.1
-git tag v1.1.2
-git push origin v1.1.2
-
-# 5. If main is on v1.2.x or later, tag a patch there too
+# 3. Tag the fix on main (v2)
 git checkout main
-git tag v1.2.1
-git push origin v1.2.1
+git tag v2.0.1
+git push origin v2.0.1
 ```
-
-**What happens:**
-
-- `v1.0` floating tag updates to the `v1.0.3` build
-- `v1.1` floating tag updates to the `v1.1.2` build
-- `v1.2` / `v1` floating tags update to the `v1.2.1` build
-- Consumers pinned to any of these minor versions receive the fix on their next run
 
 **Key points:**
 
-- Always fix on `main` first, then cherry-pick backward — this avoids the fix being lost when new releases are cut from `main`
-- Each release branch is independent — a cherry-pick conflict on one branch does not block the others
-- If the fix does not cherry-pick cleanly (e.g., surrounding code has changed), resolve the conflict on that branch manually before tagging
-- If you have many minor lines to maintain, consider whether consumers really need to be pinned to a minor version — encouraging `v1` (major pin) reduces this maintenance burden significantly
+- Always fix on `main` first, then cherry-pick backward — this ensures the fix is not lost when future releases are cut from `main`
+- Each major's release branch is independent — a cherry-pick conflict on one does not block the others
+- If the fix does not cherry-pick cleanly, resolve the conflict on that branch manually before tagging
 
 ---
 
-## What Counts as a Patch, Minor, or Major Change?
+## What Counts as a Patch vs New Major?
 
 ### Patch — bug fix, no behaviour change for consumers
 
@@ -196,7 +176,9 @@ git push origin v1.2.1
 - The `build-and-push.yml` dev workflow fails due to a stale action version
 - Whitespace or encoding issue in the generated Markdown output
 
-### Minor — new capability, fully backwards compatible
+### New Major — any new functionality or breaking change
+
+**New functionality (consumers must opt in to get it):**
 
 - **New AI provider** — e.g. adding `anthropic` or `google-gemini` as a supported `ai-provider` value
 - **New input** — e.g. `question-style` to switch between viva/written format, or `language` to request questions in a specific language
@@ -207,7 +189,7 @@ git push origin v1.2.1
 - **Structured output** — e.g. optionally returning questions as JSON rather than a numbered Markdown list
 - **`discussion-category` auto-creation** — instead of throwing when the category doesn't exist, optionally create it
 
-### Major — breaking, existing consumer workflows would need updating
+**Breaking changes (existing workflows would break without updating):**
 
 - **Removing or renaming an input** — e.g. removing `skip-initial-commit` or renaming `additional-context` to `context`
 - **Changing an input's default behaviour** — e.g. flipping `post-pr-comment` default from `'true'` to `'false'`, or changing `skip-initial-commit` default from `'true'` to `'false'`
@@ -217,26 +199,25 @@ git push origin v1.2.1
 - **Removing an output** — e.g. dropping the `questions` output that downstream steps might consume
 - **Requiring a new mandatory input** — e.g. making `api-key` required unconditionally
 
-> ⚠️ **Assessment integrity rule:** Anything that silently changes _which student code gets assessed_ is a breaking change, even if it is technically just a default value flip. The `skip-initial-commit` default is load-bearing for GitHub Classroom deployments and must never change without a major version bump.
+> ⚠️ **Assessment integrity rule:** Anything that silently changes _which student code gets assessed_ requires a new major version, even if it is technically just a default value flip. The `skip-initial-commit` default is load-bearing for GitHub Classroom deployments and must never change on an existing major.
 
 ---
 
 ## Quick Reference
 
-| I need to...                     | Bump                 | Example                                          |
-| -------------------------------- | -------------------- | ------------------------------------------------ |
-| Fix a bug                        | Patch                | `v1.2.0` → `v1.2.1`                              |
-| Fix a bug across multiple minors | Patch on each branch | `v1.0.2` → `v1.0.3` AND `v1.1.1` → `v1.1.2`      |
-| Add a feature (non-breaking)     | Minor                | `v1.2.1` → `v1.3.0`                              |
-| Make a breaking change           | Major                | `v1.3.0` → `v2.0.0`                              |
-| Hotfix an old release line       | Patch on branch      | `v1.2.1` → `v1.2.2` (from `release/v1.2` branch) |
+| I need to...                            | Tag                  | Example                                        |
+| --------------------------------------- | -------------------- | ---------------------------------------------- |
+| Fix a bug                               | Patch                | `v1.0.2` → `v1.0.3`                            |
+| Add any new functionality               | New major            | `v1.0.3` → `v2.0.0`                            |
+| Fix a bug on an older major             | Patch on branch      | `v1.0.3` → `v1.0.4` (from `release/v1` branch) |
+| Fix a bug across multiple active majors | Patch on each branch | `v1.0.3` → `v1.0.4` AND `v2.0.0` → `v2.0.1`    |
 
 ## How `action.yml` Stays in Sync
 
 Consumer repos reference a pre-built image in `action.yml` rather than building from `Dockerfile` on every run. The release workflow handles keeping this reference up to date automatically:
 
-1. The image is built and pushed to GHCR with all four version tags
-2. The workflow updates the `image:` line in `action.yml` to the immutable patch tag (e.g. `docker://ghcr.io/nscc-itc-assessment/reviewquestions:v1.2.3`)
+1. The image is built and pushed to GHCR with three version tags
+2. The workflow updates the `image:` line in `action.yml` to the immutable patch tag (e.g. `docker://ghcr.io/nscc-itc-assessment/reviewquestions:v1.0.3`)
 3. That change is committed and pushed to `main`
 4. The git tag is force-moved to include this commit, so the tagged source and the image it references are always in sync
 

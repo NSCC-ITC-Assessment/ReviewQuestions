@@ -132,4 +132,4 @@ docker run --rm \
 
 ## Releasing
 
-Releases are triggered by pushing a version tag. See [versioning.md](versioning.md) for the complete guide including patch, minor, major, and backport release procedures.
+Releases are triggered by pushing a version tag. See [versioning.md](versioning.md) for the complete guide including patch and new major release procedures.

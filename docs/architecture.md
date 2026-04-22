@@ -143,14 +143,20 @@ This prevents an accumulating backlog of open issues or discussions per branch.
 ## Docker image lifecycle
 
 ```
-push to main  ──► build-and-push.yml  ──► ghcr.io/…:latest  (dev build)
+push to main  ──► build-and-push.yml  ──► ghcr.io/…:latest  (dev build only)
 
-push v* tag   ──► release.yml ──► ghcr.io/…:v1.2.3   (immutable)
-                                  ghcr.io/…:v1.2      (floating)
-                                  ghcr.io/…:v1        (floating)
+push v* tag   ──► release.yml ──► ghcr.io/…:v1.0.3   (immutable)
+                                  ghcr.io/…:v1        (floating — recommended for consumers)
                                   ghcr.io/…:latest    (floating)
                             └──► updates action.yml image reference
                             └──► creates GitHub Release
 ```
+
+Two separate workflows manage the image:
+
+- **`build-and-push.yml`** fires on every push to `main` that is _not_ a version tag. It pushes a single `:latest` tag as a dev/CI image. This image is continuously overwritten and should never be pinned by consumers.
+- **`release.yml`** fires only when a `v*` tag is pushed. It produces the three versioned tags above and updates `action.yml` so consumers always get the correct pre-built image.
+
+> ⚠️ `:latest` on GHCR is overwritten by routine `main` merges between releases. Consumers must pin to a major floating tag (e.g. `v1`) — never to `:latest`.
 
 See [versioning.md](versioning.md) for the full release and tagging guide.

@@ -1,0 +1,101 @@
+{
+  "name": "Grill My Code",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
+
+  // ─── Lifecycle ─────────────────────────────────────────────────────────────
+  "onCreateCommand": "corepack prepare pnpm@11.0.8 --activate",
+  "postCreateCommand": "pnpm install",
+  "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+
+  // ─── VS Code ───────────────────────────────────────────────────────────────
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // JavaScript / Node
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "orta.vscode-jest",
+        "vitest.explorer",
+
+        //Git
+        "eamodio.gitlens",
+
+        // GitHub & Actions
+        "github.vscode-github-actions",
+        "github.copilot",
+        "github.copilot-chat",
+
+        // Docker
+        "ms-azuretools.vscode-docker",
+
+        // YAML / JSON helpers
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+
+        // Dev quality-of-life
+        "streetsidesoftware.code-spell-checker",
+        "christian-kohler.path-intellisense",
+        "EditorConfig.EditorConfig"
+      ],
+      "settings": {
+        // ── Formatting ──────────────────────────────────────────────────────
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": false,
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+
+        // ── ESLint ──────────────────────────────────────────────────────────
+        "eslint.enable": true,
+        "eslint.validate": ["javascript"],
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+
+        // ── Language-specific overrides ─────────────────────────────────────
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[yaml]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+          "editor.wordWrap": "on"
+        },
+
+        // ── Node / pnpm ─────────────────────────────────────────────────────
+        "npm.packageManager": "pnpm",
+
+        // ── Spell checker ───────────────────────────────────────────────────
+        "cSpell.language": "en,en-CA",
+
+        // ── Terminal ────────────────────────────────────────────────────────
+        "terminal.integrated.defaultProfile.linux": "bash",
+
+        // ── Git ─────────────────────────────────────────────────────────────
+        "git.enableCommitSigning": false,
+        "git.autofetch": true
+      }
+    }
+  },
+
+  // ─── Container features ────────────────────────────────────────────────────
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false
+    }
+  },
+
+  // ─── Environment variables ─────────────────────────────────────────────────
+  "remoteEnv": {
+    "NODE_ENV": "development"
+  },
+
+  // ─── Container user ────────────────────────────────────────────────────────
+  "remoteUser": "node"
+}

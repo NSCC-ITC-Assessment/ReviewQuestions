@@ -1,0 +1,11 @@
+# Prevent pushing directly to main — allow tag pushes
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" = "main" ]; then
+  while read local_ref local_sha remote_ref remote_sha; do
+    if [[ "$remote_ref" != refs/tags/* ]]; then
+      echo "Direct push to main is not allowed."
+      echo "Create a branch and open a pull request instead."
+      exit 1
+    fi
+  done
+fi

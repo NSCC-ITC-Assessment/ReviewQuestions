@@ -1,0 +1,83 @@
+/**
+ * Input Handling
+ *
+ * Reads and normalises all INPUT_* environment variables set by the GitHub
+ * Action. Responsible for parsing, applying defaults, and clamping values
+ * to valid ranges.
+ */
+
+import * as core from '@actions/core';
+import { DEFAULT_EXCLUDE_PATTERNS, MAX_QUESTIONS, MIN_QUESTIONS } from './constants.js';
+
+export function readInputs() {
+  const includeStr = core.getInput('include_patterns');
+  const excludeStr = core.getInput('exclude_patterns');
+
+  const rawNumQuestions = Math.max(
+    MIN_QUESTIONS,
+    parseInt(core.getInput('num_questions') || '5', 10),
+  );
+  const numQuestions = Math.min(MAX_QUESTIONS, rawNumQuestions);
+  if (rawNumQuestions > MAX_QUESTIONS) {
+    core.warning(
+      `num_questions was set to ${rawNumQuestions}, which exceeds the maximum of ${MAX_QUESTIONS}. Capping to ${MAX_QUESTIONS}.`,
+    );
+  }
+
+  const excludeWorkflowFiles = core.getInput('exclude_workflow_files') !== 'false';
+
+  const baseExcludePatterns = excludeStr
+    ? excludeStr
+        .split(',')
+        .map((p) => p.trim())
+        .filter(Boolean)
+    : DEFAULT_EXCLUDE_PATTERNS;
+
+  const excludePatterns = excludeWorkflowFiles
+    ? [...new Set([...baseExcludePatterns, '.github/workflows/**'])]
+    : baseExcludePatterns;
+
+  return {
+    githubToken: core.getInput('github_token', { required: true }),
+    aiProvider: core.getInput('ai_provider') || 'github-models',
+    aiModel: core.getInput('ai_model') || 'gpt-4o',
+    apiKey: core.getInput('api_key') || '',
+    azureEndpoint: core.getInput('azure_endpoint') || '',
+    numQuestions,
+    includePatterns: includeStr
+      ? includeStr
+          .split(',')
+          .map((p) => p.trim())
+          .filter(Boolean)
+      : [],
+    excludePatterns,
+    outputFile: core.getInput('output_file') || 'grill-my-code.md',
+    postPrComment: core.getInput('post_pr_comment') !== 'false',
+    postIssue: core.getInput('post_issue') === 'true',
+    postDiscussion: core.getInput('post_discussion') === 'true',
+    discussionCategory: core.getInput('discussion_category') || 'Assessments',
+    additionalContext: core.getInput('additional_context') || '',
+    keepComments: core.getInput('keep_comments') === 'true',
+    skipInitialCommit: core.getInput('skip_initial_commit') !== 'false',
+    // Three-way logic for skip_committers:
+    //   • Input not provided (empty string from Actions default) → use the
+    //     built-in default list of known Classroom/Actions bot accounts.
+    //   • Input explicitly set to '' (empty) → disabled; return [] so no
+    //     commits are skipped.
+    //   • Input set to a non-empty string → parse it as a comma-separated
+    //     list and use exactly those values.
+    // Matching is case-insensitive substring on commit author name OR email,
+    // and only consecutive commits from the start of the range are skipped.
+    skipCommitters: (() => {
+      const raw = core.getInput('skip_committers');
+      if (raw === '') return [];
+      const val = raw || 'github-classroom[bot],github-actions[bot]';
+      return val
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+    })(),
+    baseSha: core.getInput('base_sha') || '',
+    headSha: core.getInput('head_sha') || '',
+  };
+}

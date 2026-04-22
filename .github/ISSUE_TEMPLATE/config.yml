@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/NSCC-ITC-Assessment/GrillMyCode/tree/main/docs
+    about: Read the docs before opening an issue — your question may already be answered.
+  - name: Versioning policy
+    url: https://github.com/NSCC-ITC-Assessment/GrillMyCode/blob/main/docs/versioning.md
+    about: Understand how major/minor/patch versions work before requesting a feature.
+  - name: Contributing guide
+    url: https://github.com/NSCC-ITC-Assessment/GrillMyCode/blob/main/docs/contributing.md
+    about: Want to contribute a fix or feature yourself? Start here.

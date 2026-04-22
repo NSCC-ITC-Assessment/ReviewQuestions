@@ -1,0 +1,122 @@
+/**
+ * Git Utilities
+ *
+ * Low-level wrappers around git CLI commands using spawnSync (no shell
+ * interpolation). These functions have no GitHub Actions or Octokit
+ * dependencies and can be used or tested independently.
+ */
+
+import { spawnSync } from 'child_process';
+import { GIT_EMPTY_TREE_SHA, GIT_MAX_BUFFER } from './constants.js';
+
+/**
+ * Runs a git command using spawnSync and returns stdout.
+ * Throws on non-zero exit.
+ */
+export function git(...args) {
+  const result = spawnSync('git', args, {
+    encoding: 'utf-8',
+    maxBuffer: GIT_MAX_BUFFER,
+  });
+  if (result.error) throw result.error;
+  if (result.status !== 0) throw new Error(`git ${args[0]} failed:\n${result.stderr}`);
+  return result.stdout;
+}
+
+export function getFirstCommit() {
+  return git('rev-list', '--max-parents=0', 'HEAD').trim();
+}
+
+export function getChangedFiles(baseSha, headSha) {
+  return git('diff', '--name-only', baseSha, headSha)
+    .split('\n')
+    .map((f) => f.trim())
+    .filter(Boolean);
+}
+
+export function getDiff(baseSha, headSha, files) {
+  return git('diff', baseSha, headSha, '--', ...files);
+}
+
+/**
+ * Advances baseSha past any consecutive commits (oldest-first from baseSha
+ * towards headSha) whose author name or email contains one of the
+ * skipCommitters substrings (case-insensitive).
+ *
+ * The walk stops as soon as a non-matching commit is encountered, so only a
+ * leading run of bot commits is skipped — any bot commits that appear after
+ * student work are left in the range.
+ *
+ * Returns the new baseSha (unchanged if no matching commits were found at
+ * the start of the range).
+ */
+/**
+ * Returns the SHA of the most recent commit in baseSha..headSha whose author
+ * is NOT matched by any entry in skipCommitters. This avoids misidentifying a
+ * trailing bot commit (e.g. the action's own assessment file commit) as the
+ * student's work when resolving the student's GitHub login.
+ *
+ * Falls back to headSha if skipCommitters is empty or no non-bot commit exists
+ * in the range (e.g. the range only contains bot commits).
+ */
+export function findStudentCommitSha(baseSha, headSha, skipCommitters) {
+  if (!skipCommitters || skipCommitters.length === 0) return headSha;
+
+  // git log range notation (A..B) requires A to be a commit object.
+  // When baseSha is the empty tree, use a plain log up to headSha instead.
+  const logRange = baseSha === GIT_EMPTY_TREE_SHA ? [headSha] : [`${baseSha}..${headSha}`];
+  const raw = git('log', '--format=%H\t%ae\t%an', ...logRange);
+  const commits = raw
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map((l) => {
+      const parts = l.split('\t');
+      return { sha: parts[0], email: parts[1] || '', name: parts[2] || '' };
+    });
+
+  // git log is newest-first; find() returns the most recent non-bot commit.
+  const studentCommit = commits.find(
+    (commit) =>
+      !skipCommitters.some((sc) => {
+        const scLower = sc.toLowerCase();
+        return (
+          commit.email.toLowerCase().includes(scLower) ||
+          commit.name.toLowerCase().includes(scLower)
+        );
+      }),
+  );
+
+  return studentCommit?.sha ?? headSha;
+}
+
+export function advanceBasePastBotCommits(baseSha, headSha, skipCommitters) {
+  // git log range notation (A..B) requires A to be a commit object.
+  // When baseSha is the empty tree, use a plain log up to headSha instead.
+  const logRange = baseSha === GIT_EMPTY_TREE_SHA ? [headSha] : [`${baseSha}..${headSha}`];
+  const raw = git('log', '--format=%H\t%ae\t%an', '--reverse', ...logRange);
+  const commits = raw
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map((l) => {
+      const parts = l.split('\t');
+      return { sha: parts[0], email: parts[1] || '', name: parts[2] || '' };
+    });
+
+  let newBase = baseSha;
+  for (const commit of commits) {
+    const isBotCommit = skipCommitters.some((sc) => {
+      const scLower = sc.toLowerCase();
+      return (
+        commit.email.toLowerCase().includes(scLower) || commit.name.toLowerCase().includes(scLower)
+      );
+    });
+    if (isBotCommit) {
+      newBase = commit.sha;
+    } else {
+      break;
+    }
+  }
+  return newBase;
+}

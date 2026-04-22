@@ -1,0 +1,79 @@
+name: Feature request
+description: Suggest new functionality for GrillMyCode
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement. Per the [versioning philosophy](../../docs/versioning.md), **any new functionality triggers a new major version** — consumers must explicitly update their workflow reference to adopt it. Please keep that in mind when describing your request.
+
+  - type: dropdown
+    id: feature-area
+    attributes:
+      label: Feature area
+      description: Which part of the action does this relate to?
+      options:
+        - New AI provider support
+        - New delivery method (e.g. posting output somewhere new)
+        - New input / configuration option
+        - Prompt or question-quality improvement
+        - File filtering (include/exclude patterns)
+        - Documentation
+        - Developer experience / CI
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: One sentence describing the feature.
+      placeholder: "Add support for X so that instructors can Y."
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What problem does this solve, or what use case does it enable? Include any relevant classroom or assessment context.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-behaviour
+    attributes:
+      label: Proposed behaviour
+      description: How should it work? Describe any new inputs, outputs, defaults, or configuration changes.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: breaking
+    attributes:
+      label: Is this backwards-compatible?
+      description: Would existing consumer workflows continue to work unchanged after this is added?
+      options:
+        - "Yes — new optional input or output; existing workflows unaffected"
+        - "No — requires a new required input, removes/renames something, or changes a default"
+        - Unsure
+    validations:
+      required: true
+
+  - type: textarea
+    id: example-workflow
+    attributes:
+      label: Example workflow snippet
+      description: Optional — show how a consumer would use this feature in a workflow file.
+      render: yaml
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any other approaches you considered, and why you prefer this one.
+    validations:
+      required: false

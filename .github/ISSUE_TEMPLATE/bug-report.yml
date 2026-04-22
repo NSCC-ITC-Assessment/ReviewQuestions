@@ -1,0 +1,117 @@
+name: Bug report
+description: Something is broken or behaving unexpectedly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill in as much detail as you can — the more context you provide, the faster we can reproduce and fix it.
+
+  - type: dropdown
+    id: problem-area
+    attributes:
+      label: Problem area
+      description: Which part of the action is behaving incorrectly?
+      options:
+        - Action fails to run / exits with an error
+        - Wrong or no files analysed (include/exclude patterns)
+        - AI provider error or bad response
+        - Generated questions are missing or malformed
+        - PR comment not posted
+        - Issue not created
+        - Discussion not created
+        - Output file not written
+        - skip_committers not working as expected
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: action-version
+    attributes:
+      label: Action version
+      description: The version ref used in your workflow (e.g. `@v1`, `@v1.2.0`, `@main`)
+      placeholder: "@v1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ai-provider
+    attributes:
+      label: AI provider
+      description: Which `ai_provider` value is set in your workflow?
+      options:
+        - github-models (default)
+        - openai
+        - azure-openai
+        - openrouter
+        - Not applicable / unsure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: trigger-event
+    attributes:
+      label: Trigger event
+      description: Which GitHub event triggers the workflow?
+      options:
+        - pull_request
+        - push
+        - workflow_dispatch
+        - issue_comment
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What did you expect the action to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What actually happened? Include any error messages.
+    validations:
+      required: true
+
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Relevant workflow snippet
+      description: Paste the relevant job steps from your workflow file (omit secrets).
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Actions run log
+      description: Paste the relevant portion of the failed Actions run log.
+      render: text
+    validations:
+      required: false
+
+  - type: dropdown
+    id: regression
+    attributes:
+      label: Has this ever worked?
+      options:
+        - "Yes — it worked before and recently broke"
+        - "No — this is the first time I have tried it"
+        - Unsure
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Anything else that might help — repository type, classroom setup, model used, etc.
+    validations:
+      required: false

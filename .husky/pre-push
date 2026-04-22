@@ -1,0 +1,7 @@
+# Prevent pushing directly to main
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" = "main" ]; then
+  echo "Direct push to main is not allowed."
+  echo "Create a branch and open a pull request instead."
+  exit 1
+fi

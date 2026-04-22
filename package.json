@@ -26,10 +26,10 @@
   "private": true,
   "lint-staged": {
     "*.js": [
-      "eslint --fix",
+      "eslint --fix --no-warn-ignored",
       "prettier --write"
     ],
-    "*.{json,yml,yaml,md,sh}": "prettier --write"
+    "*.{json,yml,yaml,md}": "prettier --write"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",

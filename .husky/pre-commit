@@ -4,7 +4,7 @@ node -e "JSON.parse(require('fs').readFileSync('package.json', 'utf8'))" || { ec
 # Ensure no accidental hardcoded secrets in staged files.
 # Matches patterns like: api_key = "abc123" or password = "hunter2"
 # Ignores GitHub Actions expressions (${{ ... }}) and comment lines.
-if git diff --cached --name-only | xargs grep -E '(api_key|secret|password)\s*[=:]\s*"[^"$][^"]+"' 2>/dev/null | grep -v '^\s*#' | grep -v '\${{'; then
+if git diff --cached --name-only | xargs grep -hE '(api_key|secret|password)\s*[=:]\s*"[^"$][^"]+"' 2>/dev/null | grep -v '^\s*#' | grep -qv '\${{'; then
   echo 'Possible hardcoded secret detected in staged files — review before committing.'
   exit 1
 fi

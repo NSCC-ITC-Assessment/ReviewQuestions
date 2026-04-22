@@ -1,0 +1,31 @@
+# Example 2 — Push to Branch
+#
+# Generates assessment questions on every push to a non-default branch.
+# Useful when students work directly on a feature or personal branch without
+# opening a pull request. The output file is written back to the repository.
+#
+# Copy this file to .github/workflows/assess.yml in the student/client repo.
+
+name: Code Assessment
+
+on:
+  push:
+    branches-ignore: [main, master]
+
+jobs:
+  assess:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # required to commit the output file back to the repo
+      pull-requests: write # required if post_pr_comment is left at its default (true)
+      models: read # required to call GitHub Models API
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history required for diff resolution
+
+      - uses: NSCC-ITC-Assessment/GrillMyCode@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          post_pr_comment: "false"
+          output_file: "grill-my-code.md"

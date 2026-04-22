@@ -1,0 +1,46 @@
+{
+  "name": "code-comprehension-assessment",
+  "version": "1.0.0",
+  "description": "Analyses code changes and uses AI to generate targeted comprehension questions for viva voce or written assessments.",
+  "main": "src/main.js",
+  "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "start": "node src/main.js",
+    "prepare": "husky",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@actions/core": "^3.0.1",
+    "@actions/github": "^9.1.1",
+    "@actions/http-client": "^4.0.1",
+    "minimatch": "^10.2.5"
+  },
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix --no-warn-ignored",
+      "prettier --write"
+    ],
+    "*.{json,yml,yaml,md}": "prettier --write"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.2",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.2.1",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.3",
+    "vitest": "^4.1.5"
+  }
+}

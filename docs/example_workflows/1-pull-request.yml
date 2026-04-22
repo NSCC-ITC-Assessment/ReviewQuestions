@@ -1,0 +1,31 @@
+# Example 1 — Pull Request (Recommended)
+#
+# Generates assessment questions whenever a student opens or updates a pull
+# request. Questions are posted as a PR comment so the instructor can see them
+# inline alongside the submitted code.
+#
+# Copy this file to .github/workflows/assess.yml in the student/client repo.
+
+name: Code Assessment
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  assess:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # required to post the PR comment
+      models: read # required to call GitHub Models API
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history required for diff resolution
+
+      - uses: NSCC-ITC-Assessment/GrillMyCode@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          num_questions: "5"
+          additional_context: "Assignment 3 — Python list comprehensions"

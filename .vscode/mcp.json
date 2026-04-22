@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp"
+      // "headers": {
+      //   "CONTEXT7_API_KEY": "YOUR_API_KEY"  //Add a key when you want to increase the rate limit to 1000 requests per day. You can get a free API key from https://context7.com/dashboard
+    }
+  }
+}

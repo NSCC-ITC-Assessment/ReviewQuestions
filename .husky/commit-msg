@@ -1,0 +1,36 @@
+pnpm exec commitlint --edit "$1" || COMMITLINT_EXIT=$?
+COMMITLINT_EXIT=${COMMITLINT_EXIT:-0}
+
+if [ $COMMITLINT_EXIT -ne 0 ]; then
+  echo "" >&2
+  echo "──────────────────────────────────────────────────────────" >&2
+  echo "  COMMIT MESSAGE REJECTED" >&2
+  echo "──────────────────────────────────────────────────────────" >&2
+  echo "" >&2
+  echo "  Your commit message does not follow the Conventional" >&2
+  echo "  Commits format. Every commit message must look like:" >&2
+  echo "" >&2
+  echo "    <type>: <short description>" >&2
+  echo "" >&2
+  echo "  Allowed types:" >&2
+  echo "    feat      A new feature" >&2
+  echo "    fix       A bug fix" >&2
+  echo "    docs      Documentation changes only" >&2
+  echo "    style     Formatting (no code logic changes)" >&2
+  echo "    refactor  Code restructuring (no new feature or fix)" >&2
+  echo "    test      Adding or updating tests" >&2
+  echo "    chore     Maintenance (deps, config, etc.)" >&2
+  echo "    perf      Performance improvements" >&2
+  echo "    ci        CI/CD pipeline changes" >&2
+  echo "    build     Build system changes" >&2
+  echo "    revert    Reverting a previous commit" >&2
+  echo "" >&2
+  echo "  Examples:" >&2
+  echo "    feat: add user registration form" >&2
+  echo "    fix: resolve login redirect loop" >&2
+  echo "    docs: update README with setup instructions" >&2
+  echo "    chore: upgrade to v16" >&2
+  echo "" >&2
+  echo "──────────────────────────────────────────────────────────" >&2
+  exit 1
+fi

@@ -1,0 +1,24 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment / secrets
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/*
+!.vscode/mcp.json
+.idea/
+
+# Action output files
+grill-my-code*.md
+
+# Husky (internal bootstrap only — hooks themselves are committed)
+.husky/_

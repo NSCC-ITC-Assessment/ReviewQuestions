@@ -10,7 +10,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "start": "node src/assess.js",
-    "prepare": "node -e \"if (process.env.CI) process.exit(0)\" && husky",
+    "prepare": "husky",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write .",

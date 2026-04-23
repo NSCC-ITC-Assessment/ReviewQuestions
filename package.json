@@ -22,6 +22,7 @@
     "@actions/http-client": "^4.0.1",
     "minimatch": "^10.2.5"
   },
+  "type": "module",
   "license": "MIT",
   "private": true,
   "lint-staged": {

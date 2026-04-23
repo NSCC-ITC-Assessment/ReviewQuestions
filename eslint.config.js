@@ -7,15 +7,10 @@ export default [
   {
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'commonjs',
+      sourceType: 'module',
       globals: {
         // Node.js globals
         process: 'readonly',
-        __dirname: 'readonly',
-        __filename: 'readonly',
-        require: 'readonly',
-        module: 'writable',
-        exports: 'writable',
         fetch: 'readonly',
         console: 'readonly',
       },

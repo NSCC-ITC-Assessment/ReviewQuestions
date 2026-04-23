@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Code Comprehension Question Generator — Main Script
  *
@@ -10,12 +8,12 @@
  * (optionally) a PR comment.
  */
 
-const core = require('@actions/core');
-const github = require('@actions/github');
-const { spawnSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const { minimatch } = require('minimatch');
+import * as core from '@actions/core';
+import * as github from '@actions/github';
+import { spawnSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { minimatch } from 'minimatch';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 

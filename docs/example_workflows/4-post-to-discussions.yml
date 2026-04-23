@@ -22,6 +22,7 @@ jobs:
     permissions:
       contents: read
       discussions: write # required to create the GitHub Discussion
+      models: read # required to call GitHub Models API
     steps:
       - uses: actions/checkout@v4
         with:

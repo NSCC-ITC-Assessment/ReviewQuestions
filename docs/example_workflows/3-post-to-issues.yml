@@ -19,6 +19,7 @@ jobs:
     permissions:
       contents: read
       issues: write # required to create the GitHub Issue
+      models: read # required to call GitHub Models API
     steps:
       - uses: actions/checkout@v4
         with:

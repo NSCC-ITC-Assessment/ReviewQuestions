@@ -118,6 +118,8 @@ A thin provider abstraction over the OpenAI-compatible chat completions API. Eac
 
 All providers use the same request body shape (`model`, `messages`, `temperature`, `max_tokens`, `top_p`).
 
+For the full configuration reference — required inputs, secrets, and workflow examples for each provider — see [docs/ai-providers.md](ai-providers.md).
+
 ### `postIssue()` / `postDiscussion()`
 
 Both delivery functions follow the same supersession pattern:

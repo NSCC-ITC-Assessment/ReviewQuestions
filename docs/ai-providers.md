@@ -1,0 +1,202 @@
+# AI Providers
+
+This action supports four AI providers via the `ai-provider` input. All providers use the same OpenAI-compatible chat completions API shape internally, so swapping providers requires only a change to a small number of inputs — the rest of the workflow stays the same.
+
+---
+
+## Quick comparison
+
+| Provider      | `ai-provider` value | Requires `api-key`       | Requires `azure-endpoint` | Default |
+| ------------- | ------------------- | ------------------------ | ------------------------- | ------- |
+| GitHub Models | `github-models`     | No (uses `github-token`) | No                        | ✓       |
+| OpenAI        | `openai`            | Yes                      | No                        |         |
+| OpenRouter    | `openrouter`        | Yes                      | No                        |         |
+| Azure OpenAI  | `azure-openai`      | Yes                      | Yes                       |         |
+
+---
+
+## GitHub Models (default)
+
+Uses the [GitHub Models](https://github.com/marketplace/models) inference endpoint. Authentication is handled automatically with the built-in `GITHUB_TOKEN` — no secrets need to be created.
+
+**When to use:** The default for all workflows. No setup cost. Suitable for most classroom deployments.
+
+### Required inputs
+
+| Input          | Value                                                         |
+| -------------- | ------------------------------------------------------------- |
+| `ai-provider`  | `github-models` _(or omit)_                                   |
+| `github-token` | `${{ secrets.GITHUB_TOKEN }}` _(or omit — it is the default)_ |
+
+### Optional inputs
+
+| Input      | Notes                                                                                                                                                                                                                                              |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ai-model` | Defaults to `gpt-4o`. Any model identifier listed on the [GitHub Models marketplace](https://github.com/marketplace/models) is valid. Examples: `gpt-4o-mini`, `Phi-3-mini-128k-instruct`.                                                         |
+| `api-key`  | Leave empty to use `github-token` automatically. Supply an instructor Personal Access Token here to authenticate calls under the instructor's account instead of the student's. See [Using an instructor token](#using-an-instructor-token) below. |
+
+### Using an instructor token
+
+By default the action authenticates GitHub Models API calls with the built-in `GITHUB_TOKEN`. Because `GITHUB_TOKEN` represents the **repository owner** — in a GitHub Classroom context, that is the **student's personal account** — the rate limit tier applied to every API call is the one attached to the student's GitHub plan (typically the free tier).
+
+Supplying an instructor's Personal Access Token via `api-key` changes whose account is billed for the request:
+
+| Authentication           | Rate limit tier used | Quota shared across…          |
+| ------------------------ | -------------------- | ----------------------------- |
+| `GITHUB_TOKEN` (default) | Student's plan       | That student only             |
+| Instructor PAT           | Instructor's plan    | Every repo using the same PAT |
+
+**Practical effect for a classroom:**
+
+- Under the default, each student's workflow runs against that student's own quota. The limits are low on free accounts, but they are isolated — one student hitting their limit does not affect others.
+- Under an instructor PAT, all students share the instructor's single quota. If the instructor has a higher-tier plan (Team, Enterprise, or an active Copilot subscription), the per-request limit and context window available to each run may be larger. The trade-off is that a surge of simultaneous submissions (e.g. around a deadline) pools all requests against one account rather than distributing them.
+
+**How to set it up:**
+
+1. Generate a [fine-grained Personal Access Token](https://github.com/settings/tokens?type=beta) from the instructor's GitHub account. No repository permissions are needed — GitHub Models only requires the token to be valid for authentication.
+2. Add the token as an **organisation-level secret** (or a secret on each student repository) named e.g. `INSTRUCTOR_GITHUB_TOKEN`.
+3. Pass it via `api-key`:
+
+```yaml
+- uses: NSCC-ITC-Assessment/ReviewQuestions@v1
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    api-key: ${{ secrets.INSTRUCTOR_GITHUB_TOKEN }}
+```
+
+> **Note:** `github-token` is still required for GitHub API operations (posting PR comments, creating issues, etc.). Only the GitHub Models inference call is authenticated with `api-key` when it is supplied.
+
+### Minimal example
+
+```yaml
+- uses: NSCC-ITC-Assessment/ReviewQuestions@v1
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### Explicit example with a different model
+
+```yaml
+- uses: NSCC-ITC-Assessment/ReviewQuestions@v1
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    ai-provider: 'github-models'
+    ai-model: 'gpt-4o-mini'
+```
+
+---
+
+## OpenAI
+
+Uses the [OpenAI](https://platform.openai.com/) API directly.
+
+**When to use:** When you need access to the full OpenAI model catalogue, higher rate limits, or a specific model not available on GitHub Models.
+
+### Required secrets
+
+Create the following secret in the repository's **Settings → Secrets and variables → Actions**:
+
+| Secret name      | Description         |
+| ---------------- | ------------------- |
+| `OPENAI_API_KEY` | Your OpenAI API key |
+
+### Inputs
+
+| Input         | Value                                                                                |
+| ------------- | ------------------------------------------------------------------------------------ |
+| `ai-provider` | `openai`                                                                             |
+| `api-key`     | `${{ secrets.OPENAI_API_KEY }}`                                                      |
+| `ai-model`    | Any valid OpenAI model identifier. Examples: `gpt-4o`, `gpt-4-turbo`, `gpt-4o-mini`. |
+
+### Example
+
+```yaml
+- uses: NSCC-ITC-Assessment/ReviewQuestions@v1
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    ai-provider: 'openai'
+    ai-model: 'gpt-4o'
+    api-key: ${{ secrets.OPENAI_API_KEY }}
+```
+
+---
+
+## OpenRouter
+
+Uses the [OpenRouter](https://openrouter.ai/) unified inference API, which provides access to models from many different providers through a single key.
+
+**When to use:** When you want to use a model from a provider other than OpenAI or Azure (e.g. Anthropic Claude, Google Gemini, Meta Llama) without setting up a separate account for each.
+
+### Required secrets
+
+| Secret name          | Description             |
+| -------------------- | ----------------------- |
+| `OPENROUTER_API_KEY` | Your OpenRouter API key |
+
+### Inputs
+
+| Input         | Value                                                                                                                                                                                                                                                                  |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ai-provider` | `openrouter`                                                                                                                                                                                                                                                           |
+| `api-key`     | `${{ secrets.OPENROUTER_API_KEY }}`                                                                                                                                                                                                                                    |
+| `ai-model`    | Any model identifier supported by OpenRouter, in the format `provider/model-name`. Refer to the [OpenRouter model list](https://openrouter.ai/models) for valid values. Examples: `openai/gpt-4o`, `anthropic/claude-3-5-sonnet`, `meta-llama/llama-3.1-70b-instruct`. |
+
+### Example
+
+```yaml
+- uses: NSCC-ITC-Assessment/ReviewQuestions@v1
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    ai-provider: 'openrouter'
+    ai-model: 'anthropic/claude-3-5-sonnet'
+    api-key: ${{ secrets.OPENROUTER_API_KEY }}
+```
+
+---
+
+## Azure OpenAI
+
+Uses a model deployed in your own [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service) resource.
+
+**When to use:** When institutional policy requires data to stay within an Azure tenant, or when a specific Azure deployment is already provisioned.
+
+### Required secrets
+
+| Secret name             | Description                                                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `AZURE_OPENAI_API_KEY`  | API key for your Azure OpenAI resource                                                                              |
+| `AZURE_OPENAI_ENDPOINT` | Full endpoint URL for your deployment, e.g. `https://my-resource.openai.azure.com/openai/deployments/my-deployment` |
+
+### Inputs
+
+| Input            | Value                                                                                               |
+| ---------------- | --------------------------------------------------------------------------------------------------- |
+| `ai-provider`    | `azure-openai`                                                                                      |
+| `api-key`        | `${{ secrets.AZURE_OPENAI_API_KEY }}`                                                               |
+| `azure-endpoint` | `${{ secrets.AZURE_OPENAI_ENDPOINT }}`                                                              |
+| `ai-model`       | Your Azure deployment name (not the underlying model name — use whatever you named the deployment). |
+
+### Example
+
+```yaml
+- uses: NSCC-ITC-Assessment/ReviewQuestions@v1
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+    ai-provider: 'azure-openai'
+    ai-model: 'my-gpt4o-deployment'
+    api-key: ${{ secrets.AZURE_OPENAI_API_KEY }}
+    azure-endpoint: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+```
+
+---
+
+## Full example workflows
+
+Ready-to-use workflow files for each provider configuration are available in [docs/examples/](examples/):
+
+| File                                                                | Provider                |
+| ------------------------------------------------------------------- | ----------------------- |
+| [1-pull-request.yml](examples/1-pull-request.yml)                   | GitHub Models (default) |
+| [2-push-to-branch.yml](examples/2-push-to-branch.yml)               | GitHub Models (default) |
+| [5-openai-provider.yml](examples/5-openai-provider.yml)             | OpenAI / OpenRouter     |
+| [6-azure-openai-provider.yml](examples/6-azure-openai-provider.yml) | Azure OpenAI            |

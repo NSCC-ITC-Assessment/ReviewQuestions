@@ -219,9 +219,10 @@ exclude-patterns: 'node_modules/**,**/*.lock,dist/**,tests/**'
 
 ## Further reading
 
-| Document                                     | Description                                                          |
-| -------------------------------------------- | -------------------------------------------------------------------- |
-| [docs/architecture.md](docs/architecture.md) | How the Docker-based action is structured and executed               |
-| [docs/examples/](docs/examples/)             | Numbered, copy-paste workflow files for each configuration           |
-| [docs/contributing.md](docs/contributing.md) | Local development setup, commit conventions, and the release process |
-| [docs/versioning.md](docs/versioning.md)     | Release guide — cutting patch, minor, and major versions             |
+| Document                                     | Description                                                                     |
+| -------------------------------------------- | ------------------------------------------------------------------------------- |
+| [docs/ai-providers.md](docs/ai-providers.md) | Supported AI providers, required inputs, secrets, and example snippets for each |
+| [docs/architecture.md](docs/architecture.md) | How the Docker-based action is structured and executed                          |
+| [docs/examples/](docs/examples/)             | Numbered, copy-paste workflow files for each configuration                      |
+| [docs/contributing.md](docs/contributing.md) | Local development setup, commit conventions, and the release process            |
+| [docs/versioning.md](docs/versioning.md)     | Release guide — cutting patch, minor, and major versions                        |

@@ -20,7 +20,7 @@
     "@actions/core": "^3.0.1",
     "@actions/github": "^9.1.1",
     "@actions/http-client": "^4.0.1",
-    "minimatch": "^9.0.4"
+    "minimatch": "^10.2.5"
   },
   "license": "MIT",
   "private": true,

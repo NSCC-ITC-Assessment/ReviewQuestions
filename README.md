@@ -9,6 +9,8 @@ A GitHub Action that analyses code changes and uses AI to generate targeted comp
 3. Sends the diff to an AI provider to generate comprehension questions
 4. Writes the assessment to a Markdown file, and optionally posts it as a PR comment, GitHub Issue, or GitHub Discussion
 
+See [docs/architecture.md](docs/architecture.md) for a detailed breakdown of how the action is structured and executed.
+
 ## Usage
 
 ```yaml
@@ -47,6 +49,8 @@ A GitHub Action that analyses code changes and uses AI to generate targeted comp
 | `questions`   | The raw generated questions as a string        |
 
 ## Example workflows
+
+Ready-to-use workflow files for each configuration are available in [docs/examples/](docs/examples/). Copy the relevant file into `.github/workflows/` in your repository.
 
 ### Pull request (recommended)
 
@@ -213,10 +217,11 @@ exclude-patterns: 'node_modules/**,**/*.lock,dist/**,tests/**'
 
 ---
 
-## Contributing
+## Further reading
 
-See [docs/contributing.md](docs/contributing.md) for local development setup, commit conventions, and the release process.
-
-## Versioning
-
-See [docs/versioning.md](docs/versioning.md) for the full release guide including how to cut patch, minor, and major releases, and how to backport fixes to older release lines.
+| Document                                     | Description                                                          |
+| -------------------------------------------- | -------------------------------------------------------------------- |
+| [docs/architecture.md](docs/architecture.md) | How the Docker-based action is structured and executed               |
+| [docs/examples/](docs/examples/)             | Numbered, copy-paste workflow files for each configuration           |
+| [docs/contributing.md](docs/contributing.md) | Local development setup, commit conventions, and the release process |
+| [docs/versioning.md](docs/versioning.md)     | Release guide — cutting patch, minor, and major versions             |

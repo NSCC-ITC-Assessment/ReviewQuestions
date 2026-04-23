@@ -1,0 +1,39 @@
+# Example 6 — Azure OpenAI Provider
+#
+# Uses an Azure OpenAI deployment for question generation. You must supply
+# both the deployment name (ai-model) and the full endpoint URL (azure-endpoint).
+#
+# Required secrets in the client repository
+# (Settings → Secrets and variables → Actions):
+#   AZURE_OPENAI_API_KEY  — API key for your Azure OpenAI resource
+#   AZURE_OPENAI_ENDPOINT — Full endpoint URL, e.g.:
+#                           https://my-resource.openai.azure.com/openai/deployments/my-deployment
+#
+# Copy this file to .github/workflows/assess.yml in the student/client repo.
+
+name: Code Assessment
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  assess:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # required to post the PR comment
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history required for diff resolution
+
+      - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          ai-provider: "azure-openai"
+          ai-model: "my-gpt4o-deployment" # replace with your deployment name
+          api-key: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          azure-endpoint: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          num-questions: "5"
+          additional-context: "Cloud Computing — Azure services and deployment"

@@ -1,0 +1,37 @@
+# Example 4 — Post to GitHub Discussions
+#
+# Creates a GitHub Discussion for each assessment run. Useful for class-wide
+# visibility or when instructors prefer a forum-style record of assessments.
+#
+# Prerequisites:
+#   - Discussions must be enabled on the repository.
+#   - The named discussion category (e.g. "Assessments") must already exist
+#     in the repository's Discussions settings before the first run.
+#
+# Copy this file to .github/workflows/assess.yml in the student/client repo.
+
+name: Code Assessment
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  assess:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      discussions: write # required to create the GitHub Discussion
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history required for diff resolution
+
+      - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          post-discussion: "true"
+          discussion-category: "Assessments"
+          post-pr-comment: "false"
+          num-questions: "5"
+          additional-context: "Assignment 4 — Database design and SQL queries"

@@ -1,0 +1,33 @@
+# Example 3 — Post to GitHub Issues
+#
+# Creates a GitHub Issue for each assessment run instead of (or as well as)
+# a PR comment. Each issue title includes the branch name and head commit SHA
+# so runs are distinct and searchable. Previous open issues for the same branch
+# are automatically closed.
+#
+# Copy this file to .github/workflows/assess.yml in the student/client repo.
+
+name: Code Assessment
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  assess:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write # required to create the GitHub Issue
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history required for diff resolution
+
+      - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          post-issue: "true"
+          post-pr-comment: "false"
+          num-questions: "5"
+          additional-context: "Assignment 2 — Data structures and algorithms"

@@ -4,7 +4,7 @@
 
 | Tool   | Version | Notes                                             |
 | ------ | ------- | ------------------------------------------------- |
-| Node   | ≥ 20    | Matches the Docker base image (`node:20-alpine`)  |
+| Node   | ≥ 24    | Matches the Docker base image (`node:24-alpine`)  |
 | pnpm   | ≥ 10    | Enforced via `engines` — `npm install` is blocked |
 | Docker | any     | Required to test the action end-to-end locally    |
 | git    | any     | Commit hooks are installed automatically          |

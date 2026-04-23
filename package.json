@@ -5,7 +5,7 @@
   "main": "src/assess.js",
   "packageManager": "pnpm@10.32.1",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",

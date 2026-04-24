@@ -63,7 +63,9 @@ const MAX_DIFF_CHARS = 12000;
 async function run() {
   try {
     const inputs = readInputs();
-    const octokit = github.getOctokit(inputs.githubToken);
+    const octokit = github.getOctokit(inputs.githubToken, {
+      headers: { 'X-GitHub-Api-Version': '2022-11-28' },
+    });
     const ctx = github.context;
 
     // Prevent the external API key from appearing in workflow logs.

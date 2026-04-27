@@ -1,7 +1,9 @@
 name: "Review Questions Generator"
 description: >
   Analyses code changes submitted via GitHub and uses AI to generate targeted
-  comprehension questions for viva voce or written assessments.
+  comprehension questions for viva voce or written assessments. Created to promote 
+  code comprehension and critical thinking in NSCC's ITC courses, but adaptable to 
+  various educational contexts.
 author: "NSCC-ITC"
 branding:
   icon: "book-open"

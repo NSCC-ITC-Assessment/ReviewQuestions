@@ -95,6 +95,7 @@ async function run() {
 
     // ── Fetch diff content ──────────────────────────────────────────────────
     let diff = getDiff(baseSha, headSha, files);
+    core.info(`Total diff size: ${diff.length} characters`);
     let truncated = false;
     if (diff.length > MAX_DIFF_CHARS) {
       diff = diff.substring(0, MAX_DIFF_CHARS) + '\n\n[diff truncated due to size]';

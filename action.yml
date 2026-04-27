@@ -12,7 +12,7 @@ branding:
 # ─── Inputs ──────────────────────────────────────────────────────────────────
 
 inputs:
-  github-token:
+  github_token:
     description: >
       GitHub token used for API access and as the credential for GitHub Models.
       Defaults to the built-in GITHUB_TOKEN.

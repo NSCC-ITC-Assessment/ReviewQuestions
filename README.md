@@ -25,27 +25,27 @@ See [docs/architecture.md](docs/architecture.md) for a detailed breakdown of how
 | --------------------- | -------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `github_token`        | Yes      | `${{ github.token }}`     | GitHub token for API access and GitHub Models credential                                                                                                                             |
 | `ai_provider`         | No       | `github-models`           | AI provider: `github-models`, `openai`, `openrouter`, or `azure-openai`                                                                                                              |
-| `ai-model`            | No       | `gpt-4o`                  | Model identifier for the chosen provider                                                                                                                                             |
-| `api-key`             | No       |                           | API key for the provider. For `github-models`, leave empty to use `github_token`, or supply an alternative PAT (e.g. an instructor token with an alternative licence) to override it |
-| `azure-endpoint`      | No       |                           | Azure OpenAI endpoint URL (required for `azure-openai`)                                                                                                                              |
-| `num-questions`       | No       | `5`                       | Number of questions to generate                                                                                                                                                      |
-| `include-patterns`    | No       |                           | Comma-separated globs for files to include                                                                                                                                           |
-| `exclude-patterns`    | No       | _(common non-code files)_ | Comma-separated globs for files to exclude                                                                                                                                           |
-| `output-file`         | No       | `assessment-questions.md` | Path for the output Markdown file                                                                                                                                                    |
-| `post-pr-comment`     | No       | `true`                    | Post assessment as a PR comment                                                                                                                                                      |
-| `post-issue`          | No       | `false`                   | Create a GitHub Issue with the assessment                                                                                                                                            |
-| `post-discussion`     | No       | `false`                   | Create a GitHub Discussion with the assessment                                                                                                                                       |
-| `discussion-category` | No       | `Assessments`             | Discussion category name                                                                                                                                                             |
-| `additional-context`  | No       |                           | Assignment/topic context for more relevant questions                                                                                                                                 |
-| `skip-initial-commit` | No       | `true`                    | Exclude GitHub Classroom starter files from the diff                                                                                                                                 |
-| `base-sha`            | No       |                           | Override the base commit SHA                                                                                                                                                         |
-| `head-sha`            | No       |                           | Override the head commit SHA                                                                                                                                                         |
+| `ai_model`            | No       | `gpt-4o`                  | Model identifier for the chosen provider                                                                                                                                             |
+| `api_key`             | No       |                           | API key for the provider. For `github-models`, leave empty to use `github_token`, or supply an alternative PAT (e.g. an instructor token with an alternative licence) to override it |
+| `azure_endpoint`      | No       |                           | Azure OpenAI endpoint URL (required for `azure-openai`)                                                                                                                              |
+| `num_questions`       | No       | `5`                       | Number of questions to generate                                                                                                                                                      |
+| `include_patterns`    | No       |                           | Comma-separated globs for files to include                                                                                                                                           |
+| `exclude_patterns`    | No       | _(common non-code files)_ | Comma-separated globs for files to exclude                                                                                                                                           |
+| `output_file`         | No       | `assessment-questions.md` | Path for the output Markdown file                                                                                                                                                    |
+| `post_pr_comment`     | No       | `true`                    | Post assessment as a PR comment                                                                                                                                                      |
+| `post_issue`          | No       | `false`                   | Create a GitHub Issue with the assessment                                                                                                                                            |
+| `post_discussion`     | No       | `false`                   | Create a GitHub Discussion with the assessment                                                                                                                                       |
+| `discussion_category` | No       | `Assessments`             | Discussion category name                                                                                                                                                             |
+| `additional_context`  | No       |                           | Assignment/topic context for more relevant questions                                                                                                                                 |
+| `skip_initial_commit` | No       | `true`                    | Exclude GitHub Classroom starter files from the diff                                                                                                                                 |
+| `base_sha`            | No       |                           | Override the base commit SHA                                                                                                                                                         |
+| `head_sha`            | No       |                           | Override the head commit SHA                                                                                                                                                         |
 
 ### Outputs
 
 | Output        | Description                                    |
 | ------------- | ---------------------------------------------- |
-| `output-file` | Path to the generated assessment Markdown file |
+| `output_file` | Path to the generated assessment Markdown file |
 | `questions`   | The raw generated questions as a string        |
 
 ## Example workflows
@@ -76,8 +76,8 @@ jobs:
       - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          num-questions: '5'
-          additional-context: 'Assignment 3 — Python list comprehensions'
+          num_questions: '5'
+          additional_context: 'Assignment 3 — Python list comprehensions'
 ```
 
 ### Push to branch
@@ -104,8 +104,8 @@ jobs:
       - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          post-pr-comment: 'false'
-          output-file: 'assessment-questions.md'
+          post_pr_comment: 'false'
+          output_file: 'assessment-questions.md'
 ```
 
 ### Post to GitHub Issues
@@ -116,8 +116,8 @@ Creates a searchable GitHub Issue for each assessment run. Previous issues for t
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-    post-issue: 'true'
-    post-pr-comment: 'false'
+    post_issue: 'true'
+    post_pr_comment: 'false'
   permissions:
     contents: read
     issues: write
@@ -131,8 +131,8 @@ Creates a Discussion instead of (or as well as) a PR comment. Requires Discussio
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-    post-discussion: 'true'
-    discussion-category: 'Assessments'
+    post_discussion: 'true'
+    discussion_category: 'Assessments'
   permissions:
     contents: read
     discussions: write
@@ -145,10 +145,10 @@ Creates a Discussion instead of (or as well as) a PR comment. Requires Discussio
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     ai_provider: 'openai'
-    ai-model: 'gpt-4o'
-    api-key: ${{ secrets.OPENAI_API_KEY }}
-    num-questions: '8'
-    additional-context: 'Web Development — REST API design with Express.js'
+    ai_model: 'gpt-4o'
+    api_key: ${{ secrets.OPENAI_API_KEY }}
+    num_questions: '8'
+    additional_context: 'Web Development — REST API design with Express.js'
 ```
 
 ---
@@ -159,25 +159,25 @@ Creates a Discussion instead of (or as well as) a PR comment. Requires Discussio
 | ---------------------- | -------------------------------------------------------------- |
 | `contents: read`       | Always — needed to check out the repo and read the git history |
 | `contents: write`      | When writing the output file back to the repository            |
-| `pull-requests: write` | When `post-pr-comment: 'true'` (the default)                   |
-| `issues: write`        | When `post-issue: 'true'`                                      |
-| `discussions: write`   | When `post-discussion: 'true'`                                 |
+| `pull-requests: write` | When `post_pr_comment: 'true'` (the default)                   |
+| `issues: write`        | When `post_issue: 'true'`                                      |
+| `discussions: write`   | When `post_discussion: 'true'`                                 |
 
 ---
 
 ## GitHub Classroom
 
-This action is designed to work with GitHub Classroom. By default (`skip-initial-commit: 'true'`), the diff base is pinned to the repository's very first commit — the template/starter code committed by Classroom. This means only code written by the student after accepting the assignment is assessed, and template boilerplate is never included in the diff.
+This action is designed to work with GitHub Classroom. By default (`skip_initial_commit: 'true'`), the diff base is pinned to the repository's very first commit — the template/starter code committed by Classroom. This means only code written by the student after accepting the assignment is assessed, and template boilerplate is never included in the diff.
 
-Set `skip-initial-commit: 'false'` only if you want to assess the delta between the PR base branch and head (standard PR diffing behaviour).
+Set `skip_initial_commit: 'false'` only if you want to assess the delta between the PR base branch and head (standard PR diffing behaviour).
 
 ---
 
 ## Output file naming
 
-On the default branch (`main`/`master`) the output file is written to the path specified by `output-file`. On any other branch the sanitised branch name is appended before the extension:
+On the default branch (`main`/`master`) the output file is written to the path specified by `output_file`. On any other branch the sanitised branch name is appended before the extension:
 
-| Branch            | `output-file` setting     | Actual file written                       |
+| Branch            | `output_file` setting     | Actual file written                       |
 | ----------------- | ------------------------- | ----------------------------------------- |
 | `main`            | `assessment-questions.md` | `assessment-questions.md`                 |
 | `feat/login-form` | `assessment-questions.md` | `assessment-questions-feat-login-form.md` |
@@ -199,7 +199,7 @@ The action exposes two outputs for use in later steps:
   uses: actions/upload-artifact@v4
   with:
     name: assessment
-    path: ${{ steps.assess.outputs.output-file }}
+    path: ${{ steps.assess.outputs.output_file }}
 
 - name: Print questions
   run: echo "${{ steps.assess.outputs.questions }}"
@@ -209,10 +209,10 @@ The action exposes two outputs for use in later steps:
 
 ## Exclude patterns behaviour
 
-The default `exclude-patterns` list covers common non-code files (lock files, images, build artefacts, minified assets). **Providing a custom value completely replaces this list** — it does not extend it. If you want to add patterns while keeping the defaults, you must repeat them:
+The default `exclude_patterns` list covers common non-code files (lock files, images, build artefacts, minified assets). **Providing a custom value completely replaces this list** — it does not extend it. If you want to add patterns while keeping the defaults, you must repeat them:
 
 ```yaml
-exclude-patterns: 'node_modules/**,**/*.lock,dist/**,tests/**'
+exclude_patterns: 'node_modules/**,**/*.lock,dist/**,tests/**'
 ```
 
 ---

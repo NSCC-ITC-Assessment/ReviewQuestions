@@ -36,14 +36,14 @@ readInputs()
 resolveSHAs()
     │  Determines baseSha and headSha from the event context
     │  Handles: pull_request, push, issue_comment, workflow_dispatch
-    │  Applies skip-initial-commit override when enabled
+    │  Applies skip_initial_commit override when enabled
     │
 resolveBranch()
     │  Extracts the branch name from the event payload or GITHUB_REF
     │
 getChangedFiles() → filterFiles()
     │  Runs `git diff --name-only baseSha headSha`
-    │  Applies include-patterns and exclude-patterns via minimatch
+    │  Applies include_patterns and exclude_patterns via minimatch
     │
 getDiff()
     │  Runs `git diff baseSha headSha -- <files>`
@@ -62,7 +62,7 @@ formatReport()          resolveOutputFile()
                │
         writes Markdown file to GITHUB_WORKSPACE
                │
-        sets action outputs (output-file, questions)
+        sets action outputs (output_file, questions)
                │
      ┌─────────┼─────────┐
      ▼         ▼         ▼
@@ -79,8 +79,8 @@ postPrComment  postIssue  postDiscussion
 Reads and normalises every `INPUT_*` environment variable. Responsible for:
 
 - Parsing comma-separated glob lists into arrays
-- Applying defaults (`DEFAULT_EXCLUDE_PATTERNS` when no `exclude-patterns` is supplied)
-- Clamping `num-questions` to a minimum of 1
+- Applying defaults (`DEFAULT_EXCLUDE_PATTERNS` when no `exclude_patterns` is supplied)
+- Clamping `num_questions` to a minimum of 1
 
 ### `resolveSHAs(ctx, octokit, inputs)`
 
@@ -93,13 +93,13 @@ The most event-aware function in the codebase. Handles four distinct event types
 | `issue_comment`                        | PR base branch SHA (fetched via REST)        | PR head SHA | from payload |
 | everything else                        | first commit                                 | `ctx.sha`   | —            |
 
-After event-specific resolution, `skip-initial-commit` can override the base SHA to pin it to the repository's very first commit — the behaviour needed for GitHub Classroom to exclude starter template files.
+After event-specific resolution, `skip_initial_commit` can override the base SHA to pin it to the repository's very first commit — the behaviour needed for GitHub Classroom to exclude starter template files.
 
-Manual `base-sha` / `head-sha` inputs always take precedence over all of the above.
+Manual `base_sha` / `head_sha` inputs always take precedence over all of the above.
 
 ### `sanitiseSha(sha)`
 
-Validates that a SHA is 4–64 hex characters before passing it to a `git` command. This prevents shell injection through crafted `base-sha`/`head-sha` inputs.
+Validates that a SHA is 4–64 hex characters before passing it to a `git` command. This prevents shell injection through crafted `base_sha`/`head_sha` inputs.
 
 ### `resolveOutputFile(outputFile, branchName)`
 
@@ -112,9 +112,9 @@ A thin provider abstraction over the OpenAI-compatible chat completions API. Eac
 | Provider        | URL                             | Auth header                            |
 | --------------- | ------------------------------- | -------------------------------------- |
 | `github-models` | `models.inference.ai.azure.com` | `Authorization: Bearer <github_token>` |
-| `openai`        | `api.openai.com`                | `Authorization: Bearer <api-key>`      |
-| `openrouter`    | `openrouter.ai`                 | `Authorization: Bearer <api-key>`      |
-| `azure-openai`  | caller-supplied endpoint        | `api-key: <api-key>`                   |
+| `openai`        | `api.openai.com`                | `Authorization: Bearer <api_key>`      |
+| `openrouter`    | `openrouter.ai`                 | `Authorization: Bearer <api_key>`      |
+| `azure-openai`  | caller-supplied endpoint        | `api_key: <api_key>`                   |
 
 All providers use the same request body shape (`model`, `messages`, `temperature`, `max_tokens`, `top_p`).
 

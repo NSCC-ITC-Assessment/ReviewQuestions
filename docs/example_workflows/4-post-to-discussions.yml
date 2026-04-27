@@ -31,8 +31,8 @@ jobs:
       - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          post-discussion: "true"
-          discussion-category: "Assessments"
-          post-pr-comment: "false"
-          num-questions: "5"
-          additional-context: "Assignment 4 — Database design and SQL queries"
+          post_discussion: "true"
+          discussion_category: "Assessments"
+          post_pr_comment: "false"
+          num_questions: "5"
+          additional_context: "Assignment 4 — Database design and SQL queries"

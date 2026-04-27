@@ -1,7 +1,7 @@
 # Example 6 — Azure OpenAI Provider
 #
 # Uses an Azure OpenAI deployment for question generation. You must supply
-# both the deployment name (ai-model) and the full endpoint URL (azure-endpoint).
+# both the deployment name (ai_model) and the full endpoint URL (azure_endpoint).
 #
 # Required secrets in the client repository
 # (Settings → Secrets and variables → Actions):
@@ -32,8 +32,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           ai_provider: "azure-openai"
-          ai-model: "my-gpt4o-deployment" # replace with your deployment name
-          api-key: ${{ secrets.AZURE_OPENAI_API_KEY }}
-          azure-endpoint: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-          num-questions: "5"
-          additional-context: "Cloud Computing — Azure services and deployment"
+          ai_model: "my-gpt4o-deployment" # replace with your deployment name
+          api_key: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          azure_endpoint: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          num_questions: "5"
+          additional_context: "Cloud Computing — Azure services and deployment"

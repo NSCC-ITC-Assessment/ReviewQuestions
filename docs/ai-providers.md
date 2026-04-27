@@ -6,7 +6,7 @@ This action supports four AI providers via the `ai_provider` input. All provider
 
 ## Quick comparison
 
-| Provider      | `ai_provider` value | Requires `api-key`       | Requires `azure-endpoint` | Default |
+| Provider      | `ai_provider` value | Requires `api_key`       | Requires `azure_endpoint` | Default |
 | ------------- | ------------------- | ------------------------ | ------------------------- | ------- |
 | GitHub Models | `github-models`     | No (uses `github_token`) | No                        | ✓       |
 | OpenAI        | `openai`            | Yes                      | No                        |         |
@@ -32,14 +32,14 @@ Uses the [GitHub Models](https://github.com/marketplace/models) inference endpoi
 
 | Input      | Notes                                                                                                                                                                                                                                              |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ai-model` | Defaults to `gpt-4o`. Any model identifier listed on the [GitHub Models marketplace](https://github.com/marketplace/models) is valid. Examples: `gpt-4o-mini`, `Phi-3-mini-128k-instruct`.                                                         |
-| `api-key`  | Leave empty to use `github_token` automatically. Supply an instructor Personal Access Token here to authenticate calls under the instructor's account instead of the student's. See [Using an instructor token](#using-an-instructor-token) below. |
+| `ai_model` | Defaults to `gpt-4o`. Any model identifier listed on the [GitHub Models marketplace](https://github.com/marketplace/models) is valid. Examples: `gpt-4o-mini`, `Phi-3-mini-128k-instruct`.                                                         |
+| `api_key`  | Leave empty to use `github_token` automatically. Supply an instructor Personal Access Token here to authenticate calls under the instructor's account instead of the student's. See [Using an instructor token](#using-an-instructor-token) below. |
 
 ### Using an instructor token
 
 By default the action authenticates GitHub Models API calls with the built-in `GITHUB_TOKEN`. Because `GITHUB_TOKEN` represents the **repository owner** — in a GitHub Classroom context, that is the **student's personal account** — the rate limit tier applied to every API call is the one attached to the student's GitHub plan (typically the free tier).
 
-Supplying an instructor's Personal Access Token via `api-key` changes whose account is billed for the request:
+Supplying an instructor's Personal Access Token via `api_key` changes whose account is billed for the request:
 
 | Authentication           | Rate limit tier used | Quota shared across…          |
 | ------------------------ | -------------------- | ----------------------------- |
@@ -55,16 +55,16 @@ Supplying an instructor's Personal Access Token via `api-key` changes whose acco
 
 1. Generate a [fine-grained Personal Access Token](https://github.com/settings/tokens?type=beta) from the instructor's GitHub account. No repository permissions are needed — GitHub Models only requires the token to be valid for authentication.
 2. Add the token as an **organisation-level secret** (or a secret on each student repository) named e.g. `INSTRUCTOR_GITHUB_TOKEN`.
-3. Pass it via `api-key`:
+3. Pass it via `api_key`:
 
 ```yaml
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-    api-key: ${{ secrets.INSTRUCTOR_GITHUB_TOKEN }}
+    api_key: ${{ secrets.INSTRUCTOR_GITHUB_TOKEN }}
 ```
 
-> **Note:** `github_token` is still required for GitHub API operations (posting PR comments, creating issues, etc.). Only the GitHub Models inference call is authenticated with `api-key` when it is supplied.
+> **Note:** `github_token` is still required for GitHub API operations (posting PR comments, creating issues, etc.). Only the GitHub Models inference call is authenticated with `api_key` when it is supplied.
 
 ### Minimal example
 
@@ -81,7 +81,7 @@ Supplying an instructor's Personal Access Token via `api-key` changes whose acco
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     ai_provider: 'github-models'
-    ai-model: 'gpt-4o-mini'
+    ai_model: 'gpt-4o-mini'
 ```
 
 ---
@@ -105,8 +105,8 @@ Create the following secret in the repository's **Settings → Secrets and varia
 | Input         | Value                                                                                |
 | ------------- | ------------------------------------------------------------------------------------ |
 | `ai_provider` | `openai`                                                                             |
-| `api-key`     | `${{ secrets.OPENAI_API_KEY }}`                                                      |
-| `ai-model`    | Any valid OpenAI model identifier. Examples: `gpt-4o`, `gpt-4-turbo`, `gpt-4o-mini`. |
+| `api_key`     | `${{ secrets.OPENAI_API_KEY }}`                                                      |
+| `ai_model`    | Any valid OpenAI model identifier. Examples: `gpt-4o`, `gpt-4-turbo`, `gpt-4o-mini`. |
 
 ### Example
 
@@ -115,8 +115,8 @@ Create the following secret in the repository's **Settings → Secrets and varia
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     ai_provider: 'openai'
-    ai-model: 'gpt-4o'
-    api-key: ${{ secrets.OPENAI_API_KEY }}
+    ai_model: 'gpt-4o'
+    api_key: ${{ secrets.OPENAI_API_KEY }}
 ```
 
 ---
@@ -138,8 +138,8 @@ Uses the [OpenRouter](https://openrouter.ai/) unified inference API, which provi
 | Input         | Value                                                                                                                                                                                                                                                                  |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ai_provider` | `openrouter`                                                                                                                                                                                                                                                           |
-| `api-key`     | `${{ secrets.OPENROUTER_API_KEY }}`                                                                                                                                                                                                                                    |
-| `ai-model`    | Any model identifier supported by OpenRouter, in the format `provider/model-name`. Refer to the [OpenRouter model list](https://openrouter.ai/models) for valid values. Examples: `openai/gpt-4o`, `anthropic/claude-3-5-sonnet`, `meta-llama/llama-3.1-70b-instruct`. |
+| `api_key`     | `${{ secrets.OPENROUTER_API_KEY }}`                                                                                                                                                                                                                                    |
+| `ai_model`    | Any model identifier supported by OpenRouter, in the format `provider/model-name`. Refer to the [OpenRouter model list](https://openrouter.ai/models) for valid values. Examples: `openai/gpt-4o`, `anthropic/claude-3-5-sonnet`, `meta-llama/llama-3.1-70b-instruct`. |
 
 ### Example
 
@@ -148,8 +148,8 @@ Uses the [OpenRouter](https://openrouter.ai/) unified inference API, which provi
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     ai_provider: 'openrouter'
-    ai-model: 'anthropic/claude-3-5-sonnet'
-    api-key: ${{ secrets.OPENROUTER_API_KEY }}
+    ai_model: 'anthropic/claude-3-5-sonnet'
+    api_key: ${{ secrets.OPENROUTER_API_KEY }}
 ```
 
 ---
@@ -172,9 +172,9 @@ Uses a model deployed in your own [Azure OpenAI](https://azure.microsoft.com/en-
 | Input            | Value                                                                                               |
 | ---------------- | --------------------------------------------------------------------------------------------------- |
 | `ai_provider`    | `azure-openai`                                                                                      |
-| `api-key`        | `${{ secrets.AZURE_OPENAI_API_KEY }}`                                                               |
-| `azure-endpoint` | `${{ secrets.AZURE_OPENAI_ENDPOINT }}`                                                              |
-| `ai-model`       | Your Azure deployment name (not the underlying model name — use whatever you named the deployment). |
+| `api_key`        | `${{ secrets.AZURE_OPENAI_API_KEY }}`                                                               |
+| `azure_endpoint` | `${{ secrets.AZURE_OPENAI_ENDPOINT }}`                                                              |
+| `ai_model`       | Your Azure deployment name (not the underlying model name — use whatever you named the deployment). |
 
 ### Example
 
@@ -183,9 +183,9 @@ Uses a model deployed in your own [Azure OpenAI](https://azure.microsoft.com/en-
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     ai_provider: 'azure-openai'
-    ai-model: 'my-gpt4o-deployment'
-    api-key: ${{ secrets.AZURE_OPENAI_API_KEY }}
-    azure-endpoint: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+    ai_model: 'my-gpt4o-deployment'
+    api_key: ${{ secrets.AZURE_OPENAI_API_KEY }}
+    azure_endpoint: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
 ```
 
 ---

@@ -170,7 +170,7 @@ git push origin v2.0.1
 - The diff truncation cuts mid-line and produces malformed Markdown in the output file
 - `sanitiseSha` rejects a valid short SHA format that GitHub legitimately produces
 - `resolveOutputFile` generates an invalid filename for an edge-case branch name (e.g. a branch with consecutive slashes)
-- `skip-initial-commit` logic incorrectly identifies the initial commit on a shallow clone
+- `skip_initial_commit` logic incorrectly identifies the initial commit on a shallow clone
 - The `issue_comment` event doesn't correctly resolve the PR number in certain repo configurations
 - A Discussion predecessor incorrectly matches a title it shouldn't (prefix collision)
 - The `build-and-push.yml` dev workflow fails due to a stale action version
@@ -187,19 +187,19 @@ git push origin v2.0.1
 - **New event support** — e.g. handling `workflow_run` or `schedule` events with sensible SHA detection
 - **Smarter diff filtering** — e.g. per-file token budgeting, or splitting large diffs across multiple AI calls and merging results
 - **Structured output** — e.g. optionally returning questions as JSON rather than a numbered Markdown list
-- **`discussion-category` auto-creation** — instead of throwing when the category doesn't exist, optionally create it
+- **`discussion_category` auto-creation** — instead of throwing when the category doesn't exist, optionally create it
 
 **Breaking changes (existing workflows would break without updating):**
 
-- **Removing or renaming an input** — e.g. removing `skip-initial-commit` or renaming `additional-context` to `context`
-- **Changing an input's default behaviour** — e.g. flipping `post-pr-comment` default from `'true'` to `'false'`, or changing `skip-initial-commit` default from `'true'` to `'false'`
+- **Removing or renaming an input** — e.g. removing `skip_initial_commit` or renaming `additional_context` to `context`
+- **Changing an input's default behaviour** — e.g. flipping `post_pr_comment` default from `'true'` to `'false'`, or changing `skip_initial_commit` default from `'true'` to `'false'`
 - **Changing the output file format** — e.g. switching from Markdown to JSON, or changing the heading structure that downstream steps might be parsing
 - **Removing a supported `ai_provider` value** — any consumer hardcoded to that provider breaks
-- **Changing the `output-file` naming convention** for branch-specific files — consumers referencing the output path in subsequent steps would get a file-not-found
+- **Changing the `output_file` naming convention** for branch-specific files — consumers referencing the output path in subsequent steps would get a file-not-found
 - **Removing an output** — e.g. dropping the `questions` output that downstream steps might consume
-- **Requiring a new mandatory input** — e.g. making `api-key` required unconditionally
+- **Requiring a new mandatory input** — e.g. making `api_key` required unconditionally
 
-> ⚠️ **Assessment integrity rule:** Anything that silently changes _which student code gets assessed_ requires a new major version, even if it is technically just a default value flip. The `skip-initial-commit` default is load-bearing for GitHub Classroom deployments and must never change on an existing major.
+> ⚠️ **Assessment integrity rule:** Anything that silently changes _which student code gets assessed_ requires a new major version, even if it is technically just a default value flip. The `skip_initial_commit` default is load-bearing for GitHub Classroom deployments and must never change on an existing major.
 
 ---
 

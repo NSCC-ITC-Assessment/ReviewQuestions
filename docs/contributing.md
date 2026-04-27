@@ -109,7 +109,7 @@ docker run --rm \
   -e GITHUB_WORKSPACE=/workspace \
   -e INPUT_GITHUB_TOKEN=<your-token> \
   -e INPUT_AI_PROVIDER=github-models \
-  -e INPUT_NUM-QUESTIONS=5 \
+  -e INPUT_NUM_QUESTIONS=5 \
   -v $(pwd):/workspace \
   reviewquestions-local
 ```

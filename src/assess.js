@@ -19,7 +19,7 @@ import { minimatch } from 'minimatch';
 
 /**
  * Default glob patterns for files that should never be assessed.
- * Applied when the user has not supplied a custom exclude-patterns input.
+ * Applied when the user has not supplied a custom exclude_patterns input.
  */
 const DEFAULT_EXCLUDE_PATTERNS = [
   'node_modules/**',
@@ -146,7 +146,7 @@ async function run() {
     fs.writeFileSync(outPath, report, 'utf-8');
     core.info(`Assessment written to: ${effectiveOutputFile}`);
 
-    core.setOutput('output-file', effectiveOutputFile);
+    core.setOutput('output_file', effectiveOutputFile);
     core.setOutput('questions', questions);
 
     // ── Post PR comment ─────────────────────────────────────────────────────
@@ -184,16 +184,16 @@ async function run() {
 // ─── Input Handling ───────────────────────────────────────────────────────────
 
 function readInputs() {
-  const includeStr = core.getInput('include-patterns');
-  const excludeStr = core.getInput('exclude-patterns');
+  const includeStr = core.getInput('include_patterns');
+  const excludeStr = core.getInput('exclude_patterns');
 
   return {
     githubToken: core.getInput('github_token', { required: true }),
     aiProvider: core.getInput('ai_provider') || 'github-models',
-    aiModel: core.getInput('ai-model') || 'gpt-4o',
-    apiKey: core.getInput('api-key') || '',
-    azureEndpoint: core.getInput('azure-endpoint') || '',
-    numQuestions: Math.max(1, parseInt(core.getInput('num-questions') || '5', 10)),
+    aiModel: core.getInput('ai_model') || 'gpt-4o',
+    apiKey: core.getInput('api_key') || '',
+    azureEndpoint: core.getInput('azure_endpoint') || '',
+    numQuestions: Math.max(1, parseInt(core.getInput('num_questions') || '5', 10)),
     includePatterns: includeStr
       ? includeStr
           .split(',')
@@ -206,15 +206,15 @@ function readInputs() {
           .map((p) => p.trim())
           .filter(Boolean)
       : DEFAULT_EXCLUDE_PATTERNS,
-    outputFile: core.getInput('output-file') || 'assessment-questions.md',
-    postPrComment: core.getInput('post-pr-comment') !== 'false',
-    postIssue: core.getInput('post-issue') === 'true',
-    postDiscussion: core.getInput('post-discussion') === 'true',
-    discussionCategory: core.getInput('discussion-category') || 'Assessments',
-    additionalContext: core.getInput('additional-context') || '',
-    skipInitialCommit: core.getInput('skip-initial-commit') !== 'false',
-    baseSha: core.getInput('base-sha') || '',
-    headSha: core.getInput('head-sha') || '',
+    outputFile: core.getInput('output_file') || 'assessment-questions.md',
+    postPrComment: core.getInput('post_pr_comment') !== 'false',
+    postIssue: core.getInput('post_issue') === 'true',
+    postDiscussion: core.getInput('post_discussion') === 'true',
+    discussionCategory: core.getInput('discussion_category') || 'Assessments',
+    additionalContext: core.getInput('additional_context') || '',
+    skipInitialCommit: core.getInput('skip_initial_commit') !== 'false',
+    baseSha: core.getInput('base_sha') || '',
+    headSha: core.getInput('head_sha') || '',
   };
 }
 
@@ -230,7 +230,7 @@ function readInputs() {
  * commit") are never included in the assessed diff — only code added or
  * modified by the student after that first commit will appear.
  *
- * Manual base-sha / head-sha overrides always take precedence over this flag.
+ * Manual base_sha / head_sha overrides always take precedence over this flag.
  */
 async function resolveSHAs(ctx, octokit, inputs) {
   // Manual override: both SHAs explicitly provided — honour them as-is.
@@ -273,12 +273,12 @@ async function resolveSHAs(ctx, octokit, inputs) {
     headSha = sanitiseSha(ctx.sha);
   }
 
-  // ── Apply skip-initial-commit override ──────────────────────────────────
+  // ── Apply skip_initial_commit override ──────────────────────────────────
   if (inputs.skipInitialCommit) {
     const initialCommit = getFirstCommit();
     if (baseSha !== initialCommit) {
       core.info(
-        `skip-initial-commit is enabled: overriding base SHA from ` +
+        `skip_initial_commit is enabled: overriding base SHA from ` +
           `${baseSha.substring(0, 7)} to initial commit ${initialCommit.substring(0, 7)} ` +
           `to exclude GitHub Classroom starter files from the diff.`,
       );
@@ -286,7 +286,7 @@ async function resolveSHAs(ctx, octokit, inputs) {
     }
   }
 
-  // Apply a manual base-sha-only override (head still auto-detected).
+  // Apply a manual base_sha-only override (head still auto-detected).
   if (inputs.baseSha) {
     baseSha = sanitiseSha(inputs.baseSha);
   }
@@ -328,7 +328,7 @@ function resolveBranch(ctx) {
 /**
  * Derives the effective output file path.
  *
- * On main/master (or when the branch is unknown) the configured output-file
+ * On main/master (or when the branch is unknown) the configured output_file
  * is used as-is. On any other branch the sanitised branch name is inserted
  * before the file extension so each branch produces a distinct file.
  */
@@ -478,7 +478,7 @@ async function callAI({ provider, model, apiKey, endpoint, messages }) {
     case 'azure-openai':
       if (!endpoint) {
         throw new Error(
-          'The azure-endpoint input is required when using the azure-openai provider.\n' +
+          'The azure_endpoint input is required when using the azure-openai provider.\n' +
             'Expected format: https://<resource>.openai.azure.com/openai/deployments/<deployment>',
         );
       }
@@ -653,7 +653,7 @@ async function postDiscussion({ octokit, ctx, report, branchName, headSha, categ
       `Discussion category "${categoryName}" not found in this repository.\n` +
         `Available categories: ${available || '(none — Discussions may not be enabled)'}\n` +
         `Create the category in the repository's Discussions settings, or set ` +
-        `discussion-category to one of the names listed above.`,
+        `discussion_category to one of the names listed above.`,
     );
   }
 

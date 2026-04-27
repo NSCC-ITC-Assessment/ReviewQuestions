@@ -31,7 +31,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           ai_provider: "openai"
-          ai-model: "gpt-4o"
-          api-key: ${{ secrets.OPENAI_API_KEY }}
-          num-questions: "8"
-          additional-context: "Web Development — REST API design with Express.js"
+          ai_model: "gpt-4o"
+          api_key: ${{ secrets.OPENAI_API_KEY }}
+          num_questions: "8"
+          additional_context: "Web Development — REST API design with Express.js"

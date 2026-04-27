@@ -1,7 +1,11 @@
-FROM node:24-alpine
+FROM node:24-slim
 
-# Install git (needed for diff operations) and pnpm
-RUN apk add --no-cache git && corepack enable && corepack prepare pnpm@latest --activate
+# Install git and pnpm
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends git ca-certificates \
+ && rm -rf /var/lib/apt/lists/* \
+ && corepack enable \
+ && corepack prepare pnpm@latest --activate
 
 # Copy package files and install production dependencies
 WORKDIR /action

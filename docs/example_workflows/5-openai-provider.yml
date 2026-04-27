@@ -1,6 +1,6 @@
 # Example 5 — Third-party AI Provider (OpenAI / OpenRouter)
 #
-# Uses an external AI provider instead of GitHub Models. Set ai-provider to
+# Uses an external AI provider instead of GitHub Models. Set ai_provider to
 # "openai" or "openrouter" and store the corresponding API key as a repository
 # secret. Useful when a higher question count or a specific model is required.
 #
@@ -30,7 +30,7 @@ jobs:
       - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          ai-provider: "openai"
+          ai_provider: "openai"
           ai-model: "gpt-4o"
           api-key: ${{ secrets.OPENAI_API_KEY }}
           num-questions: "8"

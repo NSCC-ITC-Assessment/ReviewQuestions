@@ -19,7 +19,7 @@ inputs:
     required: true
     default: ${{ github.token }}
 
-  ai-provider:
+  ai_provider:
     description: >
       AI provider to use for question generation.
       Supported values: github-models | openai | openrouter | azure-openai
@@ -39,14 +39,14 @@ inputs:
     description: >
       API key for the chosen AI provider.
       For github-models, leave empty to use github_token automatically, or supply a
-      Personal Access Token (e.g. an instructor token with an alternative licence)
+      Personal Access Token (e.g. an instructor token with an alternative license)
       to use that instead.
     required: false
     default: ""
 
   azure-endpoint:
     description: >
-      Full Azure OpenAI endpoint URL, required only when ai-provider is azure-openai.
+      Full Azure OpenAI endpoint URL, required only when ai_provider is azure-openai.
       Example: https://my-resource.openai.azure.com/openai/deployments/my-deployment
     required: false
     default: ""
@@ -67,7 +67,7 @@ inputs:
   exclude-patterns:
     description: >
       Comma-separated glob patterns for files to exclude from the assessment.
-      Defaults to common non-code files (lock files, images, build artefacts, etc.).
+      Defaults to common non-code files (lock files, images, build artifacts, etc.).
       Providing a value here completely replaces the default list.
     required: false
     default: ""
@@ -157,7 +157,7 @@ runs:
   image: "docker://ghcr.io/nscc-itc-assessment/reviewquestions:latest"
   env:
     INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
-    INPUT_AI-PROVIDER: ${{ inputs.ai-provider }}
+    INPUT_AI_PROVIDER: ${{ inputs.ai_provider }}
     INPUT_AI-MODEL: ${{ inputs.ai-model }}
     INPUT_API-KEY: ${{ inputs.api-key }}
     INPUT_AZURE-ENDPOINT: ${{ inputs.azure-endpoint }}

@@ -1,12 +1,12 @@
 # AI Providers
 
-This action supports four AI providers via the `ai-provider` input. All providers use the same OpenAI-compatible chat completions API shape internally, so swapping providers requires only a change to a small number of inputs — the rest of the workflow stays the same.
+This action supports four AI providers via the `ai_provider` input. All providers use the same OpenAI-compatible chat completions API shape internally, so swapping providers requires only a change to a small number of inputs — the rest of the workflow stays the same.
 
 ---
 
 ## Quick comparison
 
-| Provider      | `ai-provider` value | Requires `api-key`       | Requires `azure-endpoint` | Default |
+| Provider      | `ai_provider` value | Requires `api-key`       | Requires `azure-endpoint` | Default |
 | ------------- | ------------------- | ------------------------ | ------------------------- | ------- |
 | GitHub Models | `github-models`     | No (uses `github_token`) | No                        | ✓       |
 | OpenAI        | `openai`            | Yes                      | No                        |         |
@@ -25,7 +25,7 @@ Uses the [GitHub Models](https://github.com/marketplace/models) inference endpoi
 
 | Input          | Value                                                         |
 | -------------- | ------------------------------------------------------------- |
-| `ai-provider`  | `github-models` _(or omit)_                                   |
+| `ai_provider`  | `github-models` _(or omit)_                                   |
 | `github_token` | `${{ secrets.GITHUB_TOKEN }}` _(or omit — it is the default)_ |
 
 ### Optional inputs
@@ -80,7 +80,7 @@ Supplying an instructor's Personal Access Token via `api-key` changes whose acco
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-    ai-provider: 'github-models'
+    ai_provider: 'github-models'
     ai-model: 'gpt-4o-mini'
 ```
 
@@ -104,7 +104,7 @@ Create the following secret in the repository's **Settings → Secrets and varia
 
 | Input         | Value                                                                                |
 | ------------- | ------------------------------------------------------------------------------------ |
-| `ai-provider` | `openai`                                                                             |
+| `ai_provider` | `openai`                                                                             |
 | `api-key`     | `${{ secrets.OPENAI_API_KEY }}`                                                      |
 | `ai-model`    | Any valid OpenAI model identifier. Examples: `gpt-4o`, `gpt-4-turbo`, `gpt-4o-mini`. |
 
@@ -114,7 +114,7 @@ Create the following secret in the repository's **Settings → Secrets and varia
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-    ai-provider: 'openai'
+    ai_provider: 'openai'
     ai-model: 'gpt-4o'
     api-key: ${{ secrets.OPENAI_API_KEY }}
 ```
@@ -137,7 +137,7 @@ Uses the [OpenRouter](https://openrouter.ai/) unified inference API, which provi
 
 | Input         | Value                                                                                                                                                                                                                                                                  |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ai-provider` | `openrouter`                                                                                                                                                                                                                                                           |
+| `ai_provider` | `openrouter`                                                                                                                                                                                                                                                           |
 | `api-key`     | `${{ secrets.OPENROUTER_API_KEY }}`                                                                                                                                                                                                                                    |
 | `ai-model`    | Any model identifier supported by OpenRouter, in the format `provider/model-name`. Refer to the [OpenRouter model list](https://openrouter.ai/models) for valid values. Examples: `openai/gpt-4o`, `anthropic/claude-3-5-sonnet`, `meta-llama/llama-3.1-70b-instruct`. |
 
@@ -147,7 +147,7 @@ Uses the [OpenRouter](https://openrouter.ai/) unified inference API, which provi
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-    ai-provider: 'openrouter'
+    ai_provider: 'openrouter'
     ai-model: 'anthropic/claude-3-5-sonnet'
     api-key: ${{ secrets.OPENROUTER_API_KEY }}
 ```
@@ -171,7 +171,7 @@ Uses a model deployed in your own [Azure OpenAI](https://azure.microsoft.com/en-
 
 | Input            | Value                                                                                               |
 | ---------------- | --------------------------------------------------------------------------------------------------- |
-| `ai-provider`    | `azure-openai`                                                                                      |
+| `ai_provider`    | `azure-openai`                                                                                      |
 | `api-key`        | `${{ secrets.AZURE_OPENAI_API_KEY }}`                                                               |
 | `azure-endpoint` | `${{ secrets.AZURE_OPENAI_ENDPOINT }}`                                                              |
 | `ai-model`       | Your Azure deployment name (not the underlying model name — use whatever you named the deployment). |
@@ -182,7 +182,7 @@ Uses a model deployed in your own [Azure OpenAI](https://azure.microsoft.com/en-
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-    ai-provider: 'azure-openai'
+    ai_provider: 'azure-openai'
     ai-model: 'my-gpt4o-deployment'
     api-key: ${{ secrets.AZURE_OPENAI_API_KEY }}
     azure-endpoint: ${{ secrets.AZURE_OPENAI_ENDPOINT }}

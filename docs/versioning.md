@@ -84,7 +84,7 @@ Use when: adding any new capability — new input, new AI provider, new output, 
 # 1. Create a branch, implement the feature, merge to main
 git checkout -b feat/add-anthropic-provider
 # ... make changes ...
-git add -A && git commit -m "feat: add anthropic as a supported ai-provider"
+git add -A && git commit -m "feat: add anthropic as a supported ai_provider"
 git push origin feat/add-anthropic-provider
 # merge to main via PR or direct push
 
@@ -180,7 +180,7 @@ git push origin v2.0.1
 
 **New functionality (consumers must opt in to get it):**
 
-- **New AI provider** — e.g. adding `anthropic` or `google-gemini` as a supported `ai-provider` value
+- **New AI provider** — e.g. adding `anthropic` or `google-gemini` as a supported `ai_provider` value
 - **New input** — e.g. `question-style` to switch between viva/written format, or `language` to request questions in a specific language
 - **New output** — e.g. adding a `question-count` or `truncated` boolean output
 - **New delivery mechanism** — e.g. posting to a Teams/Slack webhook, or attaching the report as a workflow artefact
@@ -194,7 +194,7 @@ git push origin v2.0.1
 - **Removing or renaming an input** — e.g. removing `skip-initial-commit` or renaming `additional-context` to `context`
 - **Changing an input's default behaviour** — e.g. flipping `post-pr-comment` default from `'true'` to `'false'`, or changing `skip-initial-commit` default from `'true'` to `'false'`
 - **Changing the output file format** — e.g. switching from Markdown to JSON, or changing the heading structure that downstream steps might be parsing
-- **Removing a supported `ai-provider` value** — any consumer hardcoded to that provider breaks
+- **Removing a supported `ai_provider` value** — any consumer hardcoded to that provider breaks
 - **Changing the `output-file` naming convention** for branch-specific files — consumers referencing the output path in subsequent steps would get a file-not-found
 - **Removing an output** — e.g. dropping the `questions` output that downstream steps might consume
 - **Requiring a new mandatory input** — e.g. making `api-key` required unconditionally

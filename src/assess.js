@@ -189,7 +189,7 @@ function readInputs() {
 
   return {
     githubToken: core.getInput('github_token', { required: true }),
-    aiProvider: core.getInput('ai-provider') || 'github-models',
+    aiProvider: core.getInput('ai_provider') || 'github-models',
     aiModel: core.getInput('ai-model') || 'gpt-4o',
     apiKey: core.getInput('api-key') || '',
     azureEndpoint: core.getInput('azure-endpoint') || '',
@@ -490,7 +490,7 @@ async function callAI({ provider, model, apiKey, endpoint, messages }) {
 
     default:
       throw new Error(
-        `Unknown ai-provider: "${provider}". Valid values: github-models | openai | openrouter | azure-openai`,
+        `Unknown ai_provider: "${provider}". Valid values: github-models | openai | openrouter | azure-openai`,
       );
   }
 

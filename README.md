@@ -24,7 +24,7 @@ See [docs/architecture.md](docs/architecture.md) for a detailed breakdown of how
 | Input                 | Required | Default                   | Description                                                                                                                                                                          |
 | --------------------- | -------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `github_token`        | Yes      | `${{ github.token }}`     | GitHub token for API access and GitHub Models credential                                                                                                                             |
-| `ai-provider`         | No       | `github-models`           | AI provider: `github-models`, `openai`, `openrouter`, or `azure-openai`                                                                                                              |
+| `ai_provider`         | No       | `github-models`           | AI provider: `github-models`, `openai`, `openrouter`, or `azure-openai`                                                                                                              |
 | `ai-model`            | No       | `gpt-4o`                  | Model identifier for the chosen provider                                                                                                                                             |
 | `api-key`             | No       |                           | API key for the provider. For `github-models`, leave empty to use `github_token`, or supply an alternative PAT (e.g. an instructor token with an alternative licence) to override it |
 | `azure-endpoint`      | No       |                           | Azure OpenAI endpoint URL (required for `azure-openai`)                                                                                                                              |
@@ -144,7 +144,7 @@ Creates a Discussion instead of (or as well as) a PR comment. Requires Discussio
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-    ai-provider: 'openai'
+    ai_provider: 'openai'
     ai-model: 'gpt-4o'
     api-key: ${{ secrets.OPENAI_API_KEY }}
     num-questions: '8'

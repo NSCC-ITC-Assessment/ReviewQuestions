@@ -76,7 +76,7 @@ This project enforces [Conventional Commits](https://www.conventionalcommits.org
 **Examples:**
 
 ```
-feat: add anthropic as a supported ai-provider
+feat: add anthropic as a supported ai_provider
 fix: handle null output when AI returns empty choices array
 docs: add GitHub Classroom usage example to README
 chore: update @actions/core to v3
@@ -108,7 +108,7 @@ docker build -t reviewquestions-local .
 docker run --rm \
   -e GITHUB_WORKSPACE=/workspace \
   -e INPUT_GITHUB_TOKEN=<your-token> \
-  -e INPUT_AI-PROVIDER=github-models \
+  -e INPUT_AI_PROVIDER=github-models \
   -e INPUT_NUM-QUESTIONS=5 \
   -v $(pwd):/workspace \
   reviewquestions-local

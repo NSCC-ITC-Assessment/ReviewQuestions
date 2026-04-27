@@ -103,7 +103,11 @@ async function run() {
     core.info(`Total diff size: ${diff.length} characters`);
 
     // ── Strip comments from changed files ──────────────────────────────────
-    const { strippedFiles, strippedCharCount } = stripCommentsFromFiles(files, headSha);
+    const rawFiles = collectRawFiles(files, headSha);
+    const rawContent = buildCodeContent(rawFiles);
+    core.info(`Code size before comment stripping: ${rawContent.length} characters`);
+
+    const { strippedFiles, strippedCharCount } = stripCommentsFromFiles(rawFiles);
     core.info(`Code size after comment stripping: ${strippedCharCount} characters`);
 
     let codeContent = buildCodeContent(strippedFiles);
@@ -179,6 +183,8 @@ async function run() {
 
     core.setOutput('output_file', effectiveOutputFile);
     core.setOutput('questions', questions);
+    core.setOutput('code_before_strip', rawContent);
+    core.setOutput('code_after_strip', buildCodeContent(strippedFiles));
 
     // ── Post PR comment ─────────────────────────────────────────────────────
     if (inputs.postPrComment && prNumber) {
@@ -430,16 +436,11 @@ function filterFiles(files, includePatterns, excludePatterns) {
 // ─── Comment Stripping ────────────────────────────────────────────────────────
 
 /**
- * For each file, fetches the content at headSha, writes it to a temp file,
- * and runs rmcm (comment-remover) on it. Falls back silently to the original
- * content when the file type is unsupported or the binary is unavailable.
- *
- * Returns the stripped file entries and cumulative character counts.
+ * Fetches the content of each file at headSha and returns raw file entries.
+ * Files that cannot be read (e.g. deleted) are silently skipped.
  */
-function stripCommentsFromFiles(files, headSha) {
-  const strippedFiles = [];
-  let strippedCharCount = 0;
-
+function collectRawFiles(files, headSha) {
+  const rawFiles = [];
   for (const filepath of files) {
     let content;
     try {
@@ -448,7 +449,23 @@ function stripCommentsFromFiles(files, headSha) {
       // Deleted files or other git errors — skip
       continue;
     }
+    rawFiles.push({ filepath, content });
+  }
+  return rawFiles;
+}
 
+/**
+ * Accepts pre-fetched raw file entries, runs rmcm on each, and returns
+ * stripped entries. Falls back silently to the original content when the
+ * file type is unsupported or the binary is unavailable.
+ *
+ * Returns the stripped file entries and cumulative character count.
+ */
+function stripCommentsFromFiles(rawFiles) {
+  const strippedFiles = [];
+  let strippedCharCount = 0;
+
+  for (const { filepath, content } of rawFiles) {
     const tmpFile = path.join('/tmp', `rmcm_${process.pid}_${path.basename(filepath)}`);
     let stripped = content;
 

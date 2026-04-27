@@ -149,6 +149,10 @@ outputs:
     description: "Workspace-relative path to the generated assessment Markdown file."
   questions:
     description: "The raw generated questions as a string."
+  code_before_strip:
+    description: "The full code content of all assessed files before comment stripping."
+  code_after_strip:
+    description: "The full code content of all assessed files after comment stripping."
 
 # ─── Execution ────────────────────────────────────────────────────────────────
 

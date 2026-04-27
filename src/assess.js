@@ -60,6 +60,11 @@ const DEFAULT_EXCLUDE_PATTERNS = [
  */
 const MAX_DIFF_CHARS = 12000;
 
+/**
+ * Path to the comment-remover binary (rmcm) installed in the Docker image.
+ */
+const COMMENT_REMOVER_BIN = '/usr/local/bin/rmcm';
+
 // ─── Entry Point ─────────────────────────────────────────────────────────────
 
 async function run() {
@@ -94,20 +99,33 @@ async function run() {
     core.info(`Assessing ${files.length} file(s): ${files.join(', ')}`);
 
     // ── Fetch diff content ──────────────────────────────────────────────────
-    let diff = getDiff(baseSha, headSha, files);
+    const diff = getDiff(baseSha, headSha, files);
     core.info(`Total diff size: ${diff.length} characters`);
+
+    // ── Strip comments from changed files ──────────────────────────────────
+    const { strippedFiles, strippedCharCount } = stripCommentsFromFiles(files, headSha);
+    core.info(`Code size after comment stripping: ${strippedCharCount} characters`);
+
+    let codeContent = buildCodeContent(strippedFiles);
+    // Fall back to the raw diff if stripping produced no output
+    if (codeContent.trim() === '') {
+      codeContent = diff;
+      core.warning('Comment stripping produced no content — falling back to raw diff.');
+    }
+
     let truncated = false;
-    if (diff.length > MAX_DIFF_CHARS) {
-      diff = diff.substring(0, MAX_DIFF_CHARS) + '\n\n[diff truncated due to size]';
+    if (codeContent.length > MAX_DIFF_CHARS) {
+      codeContent =
+        codeContent.substring(0, MAX_DIFF_CHARS) + '\n\n[content truncated due to size]';
       truncated = true;
       core.warning(
-        `Diff truncated to ${MAX_DIFF_CHARS} characters to stay within AI context limits.`,
+        `Content truncated to ${MAX_DIFF_CHARS} characters to stay within AI context limits.`,
       );
     }
 
     // ── Generate questions using AI ─────────────────────────────────────────
     const messages = buildPrompt({
-      diff,
+      codeContent,
       files,
       numQuestions: inputs.numQuestions,
       context: inputs.additionalContext,
@@ -409,9 +427,74 @@ function filterFiles(files, includePatterns, excludePatterns) {
   return result;
 }
 
+// ─── Comment Stripping ────────────────────────────────────────────────────────
+
+/**
+ * For each file, fetches the content at headSha, writes it to a temp file,
+ * and runs rmcm (comment-remover) on it. Falls back silently to the original
+ * content when the file type is unsupported or the binary is unavailable.
+ *
+ * Returns the stripped file entries and cumulative character counts.
+ */
+function stripCommentsFromFiles(files, headSha) {
+  const strippedFiles = [];
+  let strippedCharCount = 0;
+
+  for (const filepath of files) {
+    let content;
+    try {
+      content = git('show', `${headSha}:${filepath}`);
+    } catch {
+      // Deleted files or other git errors — skip
+      continue;
+    }
+
+    const tmpFile = path.join('/tmp', `rmcm_${process.pid}_${path.basename(filepath)}`);
+    let stripped = content;
+
+    try {
+      fs.writeFileSync(tmpFile, content, 'utf-8');
+      const result = spawnSync(COMMENT_REMOVER_BIN, [tmpFile], {
+        encoding: 'utf-8',
+        timeout: 10000,
+      });
+      if (result.status === 0) {
+        stripped = result.stdout;
+      }
+      // Non-zero exit means unsupported/unrecognised type — silently use original
+    } catch {
+      // Binary unavailable or other error — silently use original
+    } finally {
+      try {
+        fs.unlinkSync(tmpFile);
+      } catch {
+        /* ignore */
+      }
+    }
+
+    strippedCharCount += stripped.length;
+    strippedFiles.push({ filepath, content: stripped });
+  }
+
+  return { strippedFiles, strippedCharCount };
+}
+
+/**
+ * Formats stripped file entries as a series of fenced code blocks,
+ * one per file, for inclusion in the AI prompt.
+ */
+function buildCodeContent(strippedFiles) {
+  return strippedFiles
+    .map(({ filepath, content }) => {
+      const ext = path.extname(filepath).slice(1);
+      return `### \`${filepath}\`\n\`\`\`${ext}\n${content.trimEnd()}\n\`\`\``;
+    })
+    .join('\n\n');
+}
+
 // ─── Prompt Building ──────────────────────────────────────────────────────────
 
-function buildPrompt({ diff, files, numQuestions, context: extraContext, truncated }) {
+function buildPrompt({ codeContent, files, numQuestions, context: extraContext, truncated }) {
   const contextLine = extraContext
     ? `- Are relevant to the following assignment/topic: ${extraContext}`
     : '';
@@ -438,21 +521,18 @@ ${contextLine}
 Format: present each question as a numbered item prefixed with its cognitive level tag — for example:
 1. [Comprehension] Why did you use a guard clause at the start of this function rather than nesting the logic inside a conditional?
 
-If the submitted diff is minimal or trivially simple, generate questions from the diff first (as many as warranted), then add a ## Broader Questions section — additional questions that relate to the underlying concepts, patterns, or technologies evident in the code, continuing the numbering. Do not add this section if the diff provides sufficient material.
+If the submitted code is minimal or trivially simple, generate questions from it first (as many as warranted), then add a ## Broader Questions section — additional questions that relate to the underlying concepts, patterns, or technologies evident in the code, continuing the numbering. Do not add this section if the submission provides sufficient material.
 
 Respond with the numbered list only — no preamble, no explanations, no answers.`;
 
   const truncatedNote = truncated
-    ? '\n> ⚠️ The diff below has been truncated — form questions based on the visible portion.\n'
+    ? '\n> ⚠️ The code below has been truncated — form questions based on the visible portion.\n'
     : '';
 
-  const user = `Analyse the following code changes and generate ${numQuestions} comprehension questions.
+  const user = `Analyse the following code submission and generate ${numQuestions} comprehension questions.
 
-**Changed files:** ${files.join(', ')}
-${truncatedNote}
-\`\`\`diff
-${diff}
-\`\`\``;
+**Changed files:** ${files.join(', ')}${truncatedNote}
+${codeContent}`;
 
   return [
     { role: 'system', content: system },
@@ -548,7 +628,7 @@ function formatReport({
   const shortHead = headSha.substring(0, 7);
   const fileList = files.map((f) => `\`${f}\``).join(', ');
   const truncNote = truncated
-    ? '> **⚠️ Note:** The diff was truncated — questions may not cover all changes.\n'
+    ? '> **⚠️ Note:** The content was truncated — questions may not cover all changes.\n'
     : '';
 
   const isDefaultBranch = !branchName || branchName === 'main' || branchName === 'master';

@@ -30,7 +30,7 @@ jobs:
 
       - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           ai-provider: "azure-openai"
           ai-model: "my-gpt4o-deployment" # replace with your deployment name
           api-key: ${{ secrets.AZURE_OPENAI_API_KEY }}

@@ -38,7 +38,7 @@ inputs:
   api-key:
     description: >
       API key for the chosen AI provider.
-      For github-models, leave empty to use github-token automatically, or supply a
+      For github-models, leave empty to use github_token automatically, or supply a
       Personal Access Token (e.g. an instructor token with an alternative licence)
       to use that instead.
     required: false
@@ -156,7 +156,7 @@ runs:
   using: "docker"
   image: "docker://ghcr.io/nscc-itc-assessment/reviewquestions:latest"
   env:
-    INPUT_GITHUB-TOKEN: ${{ inputs.github-token }}
+    INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
     INPUT_AI-PROVIDER: ${{ inputs.ai-provider }}
     INPUT_AI-MODEL: ${{ inputs.ai-model }}
     INPUT_API-KEY: ${{ inputs.api-key }}

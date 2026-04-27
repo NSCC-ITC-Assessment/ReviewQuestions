@@ -8,7 +8,7 @@ This action supports four AI providers via the `ai-provider` input. All provider
 
 | Provider      | `ai-provider` value | Requires `api-key`       | Requires `azure-endpoint` | Default |
 | ------------- | ------------------- | ------------------------ | ------------------------- | ------- |
-| GitHub Models | `github-models`     | No (uses `github-token`) | No                        | ✓       |
+| GitHub Models | `github-models`     | No (uses `github_token`) | No                        | ✓       |
 | OpenAI        | `openai`            | Yes                      | No                        |         |
 | OpenRouter    | `openrouter`        | Yes                      | No                        |         |
 | Azure OpenAI  | `azure-openai`      | Yes                      | Yes                       |         |
@@ -26,14 +26,14 @@ Uses the [GitHub Models](https://github.com/marketplace/models) inference endpoi
 | Input          | Value                                                         |
 | -------------- | ------------------------------------------------------------- |
 | `ai-provider`  | `github-models` _(or omit)_                                   |
-| `github-token` | `${{ secrets.GITHUB_TOKEN }}` _(or omit — it is the default)_ |
+| `github_token` | `${{ secrets.GITHUB_TOKEN }}` _(or omit — it is the default)_ |
 
 ### Optional inputs
 
 | Input      | Notes                                                                                                                                                                                                                                              |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ai-model` | Defaults to `gpt-4o`. Any model identifier listed on the [GitHub Models marketplace](https://github.com/marketplace/models) is valid. Examples: `gpt-4o-mini`, `Phi-3-mini-128k-instruct`.                                                         |
-| `api-key`  | Leave empty to use `github-token` automatically. Supply an instructor Personal Access Token here to authenticate calls under the instructor's account instead of the student's. See [Using an instructor token](#using-an-instructor-token) below. |
+| `api-key`  | Leave empty to use `github_token` automatically. Supply an instructor Personal Access Token here to authenticate calls under the instructor's account instead of the student's. See [Using an instructor token](#using-an-instructor-token) below. |
 
 ### Using an instructor token
 
@@ -60,18 +60,18 @@ Supplying an instructor's Personal Access Token via `api-key` changes whose acco
 ```yaml
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
     api-key: ${{ secrets.INSTRUCTOR_GITHUB_TOKEN }}
 ```
 
-> **Note:** `github-token` is still required for GitHub API operations (posting PR comments, creating issues, etc.). Only the GitHub Models inference call is authenticated with `api-key` when it is supplied.
+> **Note:** `github_token` is still required for GitHub API operations (posting PR comments, creating issues, etc.). Only the GitHub Models inference call is authenticated with `api-key` when it is supplied.
 
 ### Minimal example
 
 ```yaml
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### Explicit example with a different model
@@ -79,7 +79,7 @@ Supplying an instructor's Personal Access Token via `api-key` changes whose acco
 ```yaml
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
     ai-provider: 'github-models'
     ai-model: 'gpt-4o-mini'
 ```
@@ -113,7 +113,7 @@ Create the following secret in the repository's **Settings → Secrets and varia
 ```yaml
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
     ai-provider: 'openai'
     ai-model: 'gpt-4o'
     api-key: ${{ secrets.OPENAI_API_KEY }}
@@ -146,7 +146,7 @@ Uses the [OpenRouter](https://openrouter.ai/) unified inference API, which provi
 ```yaml
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
     ai-provider: 'openrouter'
     ai-model: 'anthropic/claude-3-5-sonnet'
     api-key: ${{ secrets.OPENROUTER_API_KEY }}
@@ -181,7 +181,7 @@ Uses a model deployed in your own [Azure OpenAI](https://azure.microsoft.com/en-
 ```yaml
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
     ai-provider: 'azure-openai'
     ai-model: 'my-gpt4o-deployment'
     api-key: ${{ secrets.AZURE_OPENAI_API_KEY }}

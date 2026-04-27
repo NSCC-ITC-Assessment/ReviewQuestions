@@ -29,7 +29,7 @@ jobs:
 
       - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           ai-provider: "openai"
           ai-model: "gpt-4o"
           api-key: ${{ secrets.OPENAI_API_KEY }}

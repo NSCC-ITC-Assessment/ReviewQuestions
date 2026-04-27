@@ -26,6 +26,6 @@ jobs:
 
       - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           num-questions: "5"
           additional-context: "Assignment 3 — Python list comprehensions"

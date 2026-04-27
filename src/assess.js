@@ -188,7 +188,7 @@ function readInputs() {
   const excludeStr = core.getInput('exclude-patterns');
 
   return {
-    githubToken: core.getInput('github-token', { required: true }),
+    githubToken: core.getInput('github_token', { required: true }),
     aiProvider: core.getInput('ai-provider') || 'github-models',
     aiModel: core.getInput('ai-model') || 'gpt-4o',
     apiKey: core.getInput('api-key') || '',

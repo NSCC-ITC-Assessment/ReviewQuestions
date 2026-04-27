@@ -16,17 +16,17 @@ See [docs/architecture.md](docs/architecture.md) for a detailed breakdown of how
 ```yaml
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### Inputs
 
 | Input                 | Required | Default                   | Description                                                                                                                                                                          |
 | --------------------- | -------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `github-token`        | Yes      | `${{ github.token }}`     | GitHub token for API access and GitHub Models credential                                                                                                                             |
+| `github_token`        | Yes      | `${{ github.token }}`     | GitHub token for API access and GitHub Models credential                                                                                                                             |
 | `ai-provider`         | No       | `github-models`           | AI provider: `github-models`, `openai`, `openrouter`, or `azure-openai`                                                                                                              |
 | `ai-model`            | No       | `gpt-4o`                  | Model identifier for the chosen provider                                                                                                                                             |
-| `api-key`             | No       |                           | API key for the provider. For `github-models`, leave empty to use `github-token`, or supply an alternative PAT (e.g. an instructor token with an alternative licence) to override it |
+| `api-key`             | No       |                           | API key for the provider. For `github-models`, leave empty to use `github_token`, or supply an alternative PAT (e.g. an instructor token with an alternative licence) to override it |
 | `azure-endpoint`      | No       |                           | Azure OpenAI endpoint URL (required for `azure-openai`)                                                                                                                              |
 | `num-questions`       | No       | `5`                       | Number of questions to generate                                                                                                                                                      |
 | `include-patterns`    | No       |                           | Comma-separated globs for files to include                                                                                                                                           |
@@ -75,7 +75,7 @@ jobs:
 
       - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           num-questions: '5'
           additional-context: 'Assignment 3 — Python list comprehensions'
 ```
@@ -103,7 +103,7 @@ jobs:
 
       - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           post-pr-comment: 'false'
           output-file: 'assessment-questions.md'
 ```
@@ -115,7 +115,7 @@ Creates a searchable GitHub Issue for each assessment run. Previous issues for t
 ```yaml
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
     post-issue: 'true'
     post-pr-comment: 'false'
   permissions:
@@ -130,7 +130,7 @@ Creates a Discussion instead of (or as well as) a PR comment. Requires Discussio
 ```yaml
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
     post-discussion: 'true'
     discussion-category: 'Assessments'
   permissions:
@@ -143,7 +143,7 @@ Creates a Discussion instead of (or as well as) a PR comment. Requires Discussio
 ```yaml
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
     ai-provider: 'openai'
     ai-model: 'gpt-4o'
     api-key: ${{ secrets.OPENAI_API_KEY }}
@@ -193,7 +193,7 @@ The action exposes two outputs for use in later steps:
 - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
   id: assess
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
 
 - name: Upload assessment
   uses: actions/upload-artifact@v4

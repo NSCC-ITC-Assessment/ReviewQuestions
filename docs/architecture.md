@@ -111,7 +111,7 @@ A thin provider abstraction over the OpenAI-compatible chat completions API. Eac
 
 | Provider        | URL                             | Auth header                            |
 | --------------- | ------------------------------- | -------------------------------------- |
-| `github-models` | `models.inference.ai.azure.com` | `Authorization: Bearer <github-token>` |
+| `github-models` | `models.inference.ai.azure.com` | `Authorization: Bearer <github_token>` |
 | `openai`        | `api.openai.com`                | `Authorization: Bearer <api-key>`      |
 | `openrouter`    | `openrouter.ai`                 | `Authorization: Bearer <api-key>`      |
 | `azure-openai`  | caller-supplied endpoint        | `api-key: <api-key>`                   |

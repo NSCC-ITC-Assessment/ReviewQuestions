@@ -30,7 +30,7 @@ jobs:
 
       - uses: NSCC-ITC-Assessment/ReviewQuestions@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           post-discussion: "true"
           discussion-category: "Assessments"
           post-pr-comment: "false"

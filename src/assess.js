@@ -106,9 +106,15 @@ async function run() {
     const rawFiles = collectRawFiles(files, headSha);
     const rawContent = buildCodeContent(rawFiles);
     core.info(`Code size before comment stripping: ${rawContent.length} characters`);
+    core.info(
+      `--- CODE BEFORE COMMENT STRIPPING ---\n${rawContent}\n--- END CODE BEFORE COMMENT STRIPPING ---`,
+    );
 
     const { strippedFiles, strippedCharCount } = stripCommentsFromFiles(rawFiles);
     core.info(`Code size after comment stripping: ${strippedCharCount} characters`);
+    core.info(
+      `--- CODE AFTER COMMENT STRIPPING ---\n${buildCodeContent(strippedFiles)}\n--- END CODE AFTER COMMENT STRIPPING ---`,
+    );
 
     let codeContent = buildCodeContent(strippedFiles);
     // Fall back to the raw diff if stripping produced no output

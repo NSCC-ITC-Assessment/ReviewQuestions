@@ -19,7 +19,7 @@ RUN cargo build --release --all-features
 # ---------------------------------------------------------------------------
 # Stage 2 — final action image
 # ---------------------------------------------------------------------------
-FROM node:24-slim
+FROM node:25-slim
 
 # Install git (needed for diff operations) and pnpm.
 RUN apt-get update \

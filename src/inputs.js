@@ -47,6 +47,24 @@ export function readInputs() {
     discussionCategory: core.getInput('discussion_category') || 'Assessments',
     additionalContext: core.getInput('additional_context') || '',
     skipInitialCommit: core.getInput('skip_initial_commit') !== 'false',
+    // Three-way logic for skip_committers:
+    //   • Input not provided (empty string from Actions default) → use the
+    //     built-in default list of known Classroom/Actions bot accounts.
+    //   • Input explicitly set to '' (empty) → disabled; return [] so no
+    //     commits are skipped.
+    //   • Input set to a non-empty string → parse it as a comma-separated
+    //     list and use exactly those values.
+    // Matching is case-insensitive substring on commit author name OR email,
+    // and only consecutive commits from the start of the range are skipped.
+    skipCommitters: (() => {
+      const raw = core.getInput('skip_committers');
+      if (raw === '') return [];
+      const val = raw || 'github-classroom[bot],github-actions[bot]';
+      return val
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+    })(),
     baseSha: core.getInput('base_sha') || '',
     headSha: core.getInput('head_sha') || '',
   };

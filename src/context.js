@@ -9,7 +9,7 @@
 import * as core from '@actions/core';
 import path from 'path';
 import { GIT_SHA_SHORT_LENGTH } from './constants.js';
-import { getFirstCommit } from './git.js';
+import { advanceBasePastBotCommits, getFirstCommit } from './git.js';
 
 /**
  * Determines the base and head commit SHAs for the diff based on the
@@ -74,6 +74,20 @@ export async function resolveSHAs(ctx, octokit, inputs) {
           `to exclude GitHub Classroom starter files from the diff.`,
       );
       baseSha = initialCommit;
+    }
+  }
+
+  // ── Apply skip_committers ────────────────────────────────────────────────
+  // Advance baseSha past any consecutive leading commits by bot accounts so
+  // that automated Classroom/Actions commits are excluded from the diff.
+  if (inputs.skipCommitters && inputs.skipCommitters.length > 0) {
+    const advancedBase = advanceBasePastBotCommits(baseSha, headSha, inputs.skipCommitters);
+    if (advancedBase !== baseSha) {
+      core.info(
+        `skip_committers: advanced base SHA from ${baseSha.substring(0, GIT_SHA_SHORT_LENGTH)} to ` +
+          `${advancedBase.substring(0, GIT_SHA_SHORT_LENGTH)} to exclude consecutive bot commits from the diff.`,
+      );
+      baseSha = advancedBase;
     }
   }
 

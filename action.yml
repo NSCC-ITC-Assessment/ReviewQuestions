@@ -131,6 +131,25 @@ inputs:
     required: false
     default: "true"
 
+  skip_committers:
+    description: >
+      Comma-separated list of commit author names or email substrings.
+      Any consecutive commits at the start of the assessed range (immediately
+      after the resolved base SHA) whose author name or email contains one of
+      these values are excluded from the diff. Matching is case-insensitive.
+
+      This handles the automated commits that GitHub Classroom applies to a
+      student repository when the assignment is accepted (e.g. feedback PR
+      setup, autograder configuration) so they are never included in the
+      assessed diff.
+
+      Only consecutive leading commits are skipped — if a bot commit appears
+      after a student commit it is included as normal.
+
+      Set to an empty string ('') to disable bot-commit skipping entirely.
+    required: false
+    default: "github-classroom[bot],github-actions[bot]"
+
   base_sha:
     description: >-
       Override the base commit SHA for the diff. When provided this takes
@@ -182,5 +201,6 @@ runs:
     INPUT_DISCUSSION_CATEGORY: ${{ inputs.discussion_category }}
     INPUT_ADDITIONAL_CONTEXT: ${{ inputs.additional_context }}
     INPUT_SKIP_INITIAL_COMMIT: ${{ inputs.skip_initial_commit }}
+    INPUT_SKIP_COMMITTERS: ${{ inputs.skip_committers }}
     INPUT_BASE_SHA: ${{ inputs.base_sha }}
     INPUT_HEAD_SHA: ${{ inputs.head_sha }}

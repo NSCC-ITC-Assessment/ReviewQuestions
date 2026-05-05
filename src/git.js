@@ -37,3 +37,43 @@ export function getChangedFiles(baseSha, headSha) {
 export function getDiff(baseSha, headSha, files) {
   return git('diff', baseSha, headSha, '--', ...files);
 }
+
+/**
+ * Advances baseSha past any consecutive commits (oldest-first from baseSha
+ * towards headSha) whose author name or email contains one of the
+ * skipCommitters substrings (case-insensitive).
+ *
+ * The walk stops as soon as a non-matching commit is encountered, so only a
+ * leading run of bot commits is skipped — any bot commits that appear after
+ * student work are left in the range.
+ *
+ * Returns the new baseSha (unchanged if no matching commits were found at
+ * the start of the range).
+ */
+export function advanceBasePastBotCommits(baseSha, headSha, skipCommitters) {
+  const raw = git('log', '--format=%H\t%ae\t%an', '--reverse', `${baseSha}..${headSha}`);
+  const commits = raw
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map((l) => {
+      const parts = l.split('\t');
+      return { sha: parts[0], email: parts[1] || '', name: parts[2] || '' };
+    });
+
+  let newBase = baseSha;
+  for (const commit of commits) {
+    const isBotCommit = skipCommitters.some((sc) => {
+      const scLower = sc.toLowerCase();
+      return (
+        commit.email.toLowerCase().includes(scLower) || commit.name.toLowerCase().includes(scLower)
+      );
+    });
+    if (isBotCommit) {
+      newBase = commit.sha;
+    } else {
+      break;
+    }
+  }
+  return newBase;
+}

@@ -19,10 +19,10 @@ export async function postDiscussion({ octokit, ctx, report, branchName, headSha
   const searchStr = branchName ? `Grill My Code (${branchName})` : 'Grill My Code';
 
   // ── Step 1: resolve repo node ID, category ID, and existing discussions ──
-  const repoQuery = await octokit.graphql(
-    `query($owner: String!, $repo: String!) {
+  const repoGraphqlQuery = `query($owner: String!, $repo: String!) {
        repository(owner: $owner, name: $repo) {
          id
+         hasDiscussionsEnabled
          discussionCategories(first: ${DISCUSSION_CATEGORIES_FETCH_LIMIT}) {
            nodes { id name }
          }
@@ -30,9 +30,22 @@ export async function postDiscussion({ octokit, ctx, report, branchName, headSha
            nodes { id number title isAnswered locked url }
          }
        }
-     }`,
-    { owner: ctx.repo.owner, repo: ctx.repo.repo },
-  );
+     }`;
+  const queryArgs = { owner: ctx.repo.owner, repo: ctx.repo.repo };
+
+  let repoQuery = await octokit.graphql(repoGraphqlQuery, queryArgs);
+
+  // ── Enable Discussions if not already active ─────────────────────────────
+  if (!repoQuery.repository.hasDiscussionsEnabled) {
+    core.warning('Discussions are not enabled on this repository. Enabling automatically…');
+    await octokit.rest.repos.update({
+      owner: ctx.repo.owner,
+      repo: ctx.repo.repo,
+      has_discussions: true,
+    });
+    core.info('Discussions enabled. Re-fetching repository data…');
+    repoQuery = await octokit.graphql(repoGraphqlQuery, queryArgs);
+  }
 
   const repoId = repoQuery.repository.id;
   const categories = repoQuery.repository.discussionCategories.nodes;

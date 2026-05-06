@@ -33,8 +33,8 @@ See [docs/architecture.md](docs/architecture.md) for a detailed breakdown of how
 | `exclude_patterns`    | No       | _(common non-code files)_                   | Comma-separated globs for files to exclude                                                                                                                                                                                                                                                          |
 | `output_file`         | No       | `grill-my-code.md`                          | Path for the output Markdown file                                                                                                                                                                                                                                                                   |
 | `post_pr_comment`     | No       | `true`                                      | Post assessment as a PR comment                                                                                                                                                                                                                                                                     |
-| `post_issue`          | No       | `false`                                     | Create a GitHub Issue with the assessment                                                                                                                                                                                                                                                           |
-| `post_discussion`     | No       | `false`                                     | Create a GitHub Discussion with the assessment                                                                                                                                                                                                                                                      |
+| `post_issue`          | No       | `false`                                     | Create a GitHub Issue with the assessment. The issue is automatically assigned to the student who authored the head commit.                                                                                                                                                                         |
+| `post_discussion`     | No       | `false`                                     | Create a GitHub Discussion with the assessment. If Discussions are not enabled on the repository, the action enables them automatically.                                                                                                                                                            |
 | `discussion_category` | No       | `Assessments`                               | Discussion category name                                                                                                                                                                                                                                                                            |
 | `additional_context`  | No       |                                             | Instructor-specific instructions for this assignment. Injected at the end of the system prompt and takes precedence over any conflicting default behaviour. Supports multi-line, detailed instructions.                                                                                             |
 | `skip_initial_commit` | No       | `true`                                      | Exclude GitHub Classroom starter files from the diff                                                                                                                                                                                                                                                |
@@ -136,7 +136,7 @@ jobs:
 
 ### Post to GitHub Discussions
 
-Creates a Discussion instead of (or as well as) a PR comment. Requires Discussions to be enabled on the repository and the named category to already exist.
+Creates a Discussion instead of (or as well as) a PR comment. If Discussions are not yet enabled on the repository, the action enables them automatically. The named category must already exist.
 
 ```yaml
 jobs:
@@ -145,6 +145,7 @@ jobs:
     permissions:
       contents: read
       discussions: write
+      administration: write # required only if Discussions may not yet be enabled
     steps:
       - uses: actions/checkout@v4
         with:
@@ -174,14 +175,15 @@ jobs:
 
 ## Permissions
 
-| Permission             | When required                                                  |
-| ---------------------- | -------------------------------------------------------------- |
-| `contents: read`       | Always — needed to check out the repo and read the git history |
-| `contents: write`      | When writing the output file back to the repository            |
-| `models: read`         | When using the `github-models` provider (the default)          |
-| `pull-requests: write` | When `post_pr_comment: 'true'` (the default)                   |
-| `issues: write`        | When `post_issue: 'true'`                                      |
-| `discussions: write`   | When `post_discussion: 'true'`                                 |
+| Permission              | When required                                                                     |
+| ----------------------- | --------------------------------------------------------------------------------- |
+| `contents: read`        | Always — needed to check out the repo and read the git history                    |
+| `contents: write`       | When writing the output file back to the repository                               |
+| `models: read`          | When using the `github-models` provider (the default)                             |
+| `pull-requests: write`  | When `post_pr_comment: 'true'` (the default)                                      |
+| `issues: write`         | When `post_issue: 'true'`                                                         |
+| `discussions: write`    | When `post_discussion: 'true'`                                                    |
+| `administration: write` | When `post_discussion: 'true'` and Discussions may not yet be enabled on the repo |
 
 ---
 

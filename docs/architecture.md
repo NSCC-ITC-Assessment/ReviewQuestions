@@ -41,6 +41,10 @@ resolveSHAs()
 resolveBranch()
     │  Extracts the branch name from the event payload or GITHUB_REF
     │
+repos.getCommit(headSha)
+    │  Resolves the GitHub login of the student who authored the head commit
+    │  Falls back to ctx.actor if the git email is not linked to a GitHub account
+    │
 getChangedFiles() → filterFiles()
     │  Runs `git diff --name-only baseSha headSha`
     │  Applies include_patterns and exclude_patterns via minimatch
@@ -150,7 +154,9 @@ Both delivery functions follow the same supersession pattern:
 
 This prevents an accumulating backlog of open issues or discussions per branch.
 
-`postDiscussion` uses the **GraphQL API** (not REST) because GitHub's REST API does not support creating Discussions.
+`postIssue` assigns the newly created issue to the student login resolved from the head commit author. If the login cannot be determined, the `assignees` array is left empty.
+
+`postDiscussion` uses the **GraphQL API** (not REST) because GitHub's REST API does not support creating Discussions. If Discussions are not enabled on the repository at the time of the call, `postDiscussion` automatically enables them via `octokit.rest.repos.update({ has_discussions: true })` before proceeding. This requires the token to have `administration: write` permission.
 
 ---
 

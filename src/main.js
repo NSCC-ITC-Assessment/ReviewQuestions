@@ -51,6 +51,15 @@ async function run() {
     const branchName = resolveBranch(ctx);
     core.info(`Branch: ${branchName}`);
 
+    // ── Resolve the student login from the head commit author ───────────────
+    const { data: headCommit } = await octokit.rest.repos.getCommit({
+      owner: ctx.repo.owner,
+      repo: ctx.repo.repo,
+      ref: headSha,
+    });
+    const studentLogin = headCommit.author?.login ?? ctx.actor;
+    core.info(`Student login: ${studentLogin}`);
+
     // ── Collect changed files and apply filters ─────────────────────────────
     const allFiles = getChangedFiles(baseSha, headSha);
     const files = filterFiles(allFiles, inputs.includePatterns, inputs.excludePatterns);
@@ -168,7 +177,7 @@ async function run() {
 
     // ── Create GitHub Issue ──────────────────────────────────────────────────
     if (inputs.postIssue) {
-      await postIssue({ octokit, ctx, report, branchName, headSha });
+      await postIssue({ octokit, ctx, report, branchName, headSha, studentLogin });
     }
 
     // ── Create GitHub Discussion ─────────────────────────────────────────────

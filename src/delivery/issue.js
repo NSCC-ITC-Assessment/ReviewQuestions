@@ -8,7 +8,7 @@
 import * as core from '@actions/core';
 import { GIT_SHA_SHORT_LENGTH, ISSUES_PER_PAGE } from '../constants.js';
 
-export async function postIssue({ octokit, ctx, report, branchName, headSha }) {
+export async function postIssue({ octokit, ctx, report, branchName, headSha, studentLogin }) {
   const shortHead = headSha.substring(0, GIT_SHA_SHORT_LENGTH);
   const branchPart = branchName ? ` (${branchName})` : '';
   const title = `Grill My Code${branchPart} — ${shortHead}`;
@@ -50,6 +50,7 @@ export async function postIssue({ octokit, ctx, report, branchName, headSha }) {
     title,
     body: report,
     labels: ['assessment'],
+    assignees: studentLogin ? [studentLogin] : [],
   });
   core.info(`Assessment created as Issue #${issue.number}: ${issue.html_url}`);
 }

@@ -20,7 +20,7 @@ export function buildPrompt({
     : '';
 
   const system = `
-You are an expert programming educator. Analyze the submitted student code and generate ${numQuestions} targeted questions requiring genuine understanding of what was written.
+You are an expert programming educator. Analyze the submitted student code and generate a maximum of ${numQuestions} targeted questions requiring genuine understanding of what was written.
 
 Calibrate question depth to the code's complexity — questions may address syntax/logic, data structures/algorithms, language patterns, or architecture (e.g. MVC, layering).
 
@@ -101,6 +101,13 @@ Examples of Debugging:
 What is the bug in this code if the numbers list contains a string?
 How would you fix this error?
 
+Each question must:
+- Reference specific named code elements (functions, variables, control structures, data structures, patterns)
+- Embed a short inline backtick snippet within the question sentence itself — not on a separate line before it
+- Be prefixed with: (1) the relative file path as bold inline-code (e.g. **\`src/utils/cart.js\`**), then (2) the exact relevant line or snippet as a fenced code block with no language tag — the question text must immediately follow the closing fence with no blank line between them
+- Be understanding-focused — never ask to improve, critique, or refactor
+- Not reveal or imply the answer
+
 If the code is minimal or trivially simple, generate questions from it first, then add a **## Broader Questions** section — with its own italicised definition — for questions on the underlying concepts, patterns, or technologies evident in the code, continuing the numbering. Omit this section if the submission provides sufficient material.
 
 Respond with the grouped Markdown only — no preamble, no explanations, no answers.${contextSection}`;
@@ -109,7 +116,7 @@ Respond with the grouped Markdown only — no preamble, no explanations, no answ
     ? '\n> ⚠️ The code below has been truncated — form questions based on the visible portion.\n'
     : '';
 
-  const user = `Analyse the following code submission and generate ${numQuestions} questions distributed across the four cognitive levels (Recall, Comprehension, Analysis, Evaluation).
+  const user = `Analyze the submitted student code and generate a maximum of ${numQuestions} targeted questions requiring genuine understanding of what was written.
 
 **Changed files:** ${files.join(', ')}${truncatedNote}
 ${codeContent}`;

@@ -154,7 +154,7 @@ Both delivery functions follow the same supersession pattern:
 
 This prevents an accumulating backlog of open issues or discussions per branch.
 
-`postIssue` assigns the newly created issue to the student login resolved from the head commit author. If the login cannot be determined, the `assignees` array is left empty.
+`postIssue` assigns the newly created issue to the student login resolved from the most recent non-bot commit in the assessed range. The resolution uses `findStudentCommitSha()`, which walks the range newest-first and skips any commit whose author matches the merged skip list (`STUDENT_RESOLUTION_SKIP_COMMITTERS` plus the user-configured `skip_committers`). This ensures that the action's own assessment-file commit — which appears as the head SHA on re-triggered runs — is never mistaken for a student commit. Falls back to `ctx.actor` if the resolved commit has no linked GitHub account.
 
 `postDiscussion` uses the **GraphQL API** (not REST) because GitHub's REST API does not support creating Discussions. If Discussions are not enabled on the repository at the time of the call, `postDiscussion` automatically enables them via `octokit.rest.repos.update({ has_discussions: true })` before proceeding. This requires the token to have `administration: write` permission.
 

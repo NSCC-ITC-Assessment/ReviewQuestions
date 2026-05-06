@@ -96,6 +96,16 @@ export const MIN_OUTPUT_TOKENS = 500;
 export const MAX_OUTPUT_TOKENS = 7500;
 
 /**
+ * Bot account substrings that are always excluded when resolving the student
+ * login from the commit history. This list is applied unconditionally,
+ * regardless of the user-configured skip_committers input (which controls
+ * diff-base advancement, a separate concern). It ensures that the action's
+ * own assessment-file commit never gets mistaken for a student commit even
+ * when skip_committers has been overridden or cleared by the user.
+ */
+export const STUDENT_RESOLUTION_SKIP_COMMITTERS = ['github-actions[bot]', 'github-classroom[bot]'];
+
+/**
  * Maximum number of open issues to fetch when searching for predecessors.
  */
 export const ISSUES_PER_PAGE = 100;

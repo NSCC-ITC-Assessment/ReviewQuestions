@@ -14,10 +14,14 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import fs from 'fs';
 import path from 'path';
-import { MAX_DIFF_CHARS, GIT_SHA_SHORT_LENGTH } from './constants.js';
+import {
+  MAX_DIFF_CHARS,
+  GIT_SHA_SHORT_LENGTH,
+  STUDENT_RESOLUTION_SKIP_COMMITTERS,
+} from './constants.js';
 import { readInputs } from './inputs.js';
 import { resolveSHAs, resolveBranch, resolveOutputFile } from './context.js';
-import { getChangedFiles, getDiff } from './git.js';
+import { getChangedFiles, getDiff, findStudentCommitSha } from './git.js';
 import { filterFiles, collectRawFiles, stripCommentsFromFiles, buildCodeContent } from './files.js';
 import { buildPrompt } from './prompt.js';
 import { callAI } from './ai.js';
@@ -51,14 +55,24 @@ async function run() {
     const branchName = resolveBranch(ctx);
     core.info(`Branch: ${branchName}`);
 
-    // ── Resolve the student login from the head commit author ───────────────
-    const { data: headCommit } = await octokit.rest.repos.getCommit({
+    // ── Resolve the student login from the most recent non-bot commit ────────
+    // headSha may point to the action's own assessment-file commit on re-runs
+    // triggered by that push. Walk the range to find the last student commit.
+    // Merge the user's skip_committers with the hardcoded bot list so that
+    // github-actions[bot] is always excluded even if the user clears the input.
+    const studentResolutionSkipList = [
+      ...new Set([...STUDENT_RESOLUTION_SKIP_COMMITTERS, ...inputs.skipCommitters]),
+    ];
+    const studentCommitSha = findStudentCommitSha(baseSha, headSha, studentResolutionSkipList);
+    const { data: studentCommitData } = await octokit.rest.repos.getCommit({
       owner: ctx.repo.owner,
       repo: ctx.repo.repo,
-      ref: headSha,
+      ref: studentCommitSha,
     });
-    const studentLogin = headCommit.author?.login ?? ctx.actor;
-    core.info(`Student login: ${studentLogin}`);
+    const studentLogin = studentCommitData.author?.login ?? ctx.actor;
+    core.info(
+      `Student login: ${studentLogin} (resolved from commit ${studentCommitSha.substring(0, GIT_SHA_SHORT_LENGTH)})`,
+    );
 
     // ── Collect changed files and apply filters ─────────────────────────────
     const allFiles = getChangedFiles(baseSha, headSha);

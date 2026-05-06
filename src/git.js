@@ -50,6 +50,43 @@ export function getDiff(baseSha, headSha, files) {
  * Returns the new baseSha (unchanged if no matching commits were found at
  * the start of the range).
  */
+/**
+ * Returns the SHA of the most recent commit in baseSha..headSha whose author
+ * is NOT matched by any entry in skipCommitters. This avoids misidentifying a
+ * trailing bot commit (e.g. the action's own assessment file commit) as the
+ * student's work when resolving the student's GitHub login.
+ *
+ * Falls back to headSha if skipCommitters is empty or no non-bot commit exists
+ * in the range (e.g. the range only contains bot commits).
+ */
+export function findStudentCommitSha(baseSha, headSha, skipCommitters) {
+  if (!skipCommitters || skipCommitters.length === 0) return headSha;
+
+  const raw = git('log', '--format=%H\t%ae\t%an', `${baseSha}..${headSha}`);
+  const commits = raw
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map((l) => {
+      const parts = l.split('\t');
+      return { sha: parts[0], email: parts[1] || '', name: parts[2] || '' };
+    });
+
+  // git log is newest-first; find() returns the most recent non-bot commit.
+  const studentCommit = commits.find(
+    (commit) =>
+      !skipCommitters.some((sc) => {
+        const scLower = sc.toLowerCase();
+        return (
+          commit.email.toLowerCase().includes(scLower) ||
+          commit.name.toLowerCase().includes(scLower)
+        );
+      }),
+  );
+
+  return studentCommit?.sha ?? headSha;
+}
+
 export function advanceBasePastBotCommits(baseSha, headSha, skipCommitters) {
   const raw = git('log', '--format=%H\t%ae\t%an', '--reverse', `${baseSha}..${headSha}`);
   const commits = raw

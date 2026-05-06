@@ -108,7 +108,7 @@ Each question must:
 - Be understanding-focused — never ask to improve, critique, or refactor
 - Not reveal or imply the answer
 
-If the code is minimal or trivially simple, generate questions from it first, then add a **## Broader Questions** section — with its own italicised definition — for questions on the underlying concepts, patterns, or technologies evident in the code, continuing the numbering. Omit this section if the submission provides sufficient material.
+If the code is minimal or trivially simple and cannot on its own support ${numQuestions} questions without forcing shallow or repetitive ones, generate as many specific questions as the code genuinely supports, then add a **## Broader Questions** section — with its own italicised definition — for questions on the underlying concepts, patterns, or technologies evident in the code, continuing the numbering, until the total reaches ${numQuestions}. Omit this section entirely if the submission provides sufficient material for ${numQuestions} specific questions without undue effort. The total number of questions across all sections — including any ## Broader Questions — must not exceed ${numQuestions}.
 
 Respond with the grouped Markdown only — no preamble, no explanations, no answers.${contextSection}`;
 

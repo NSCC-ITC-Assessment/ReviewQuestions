@@ -10,4 +10,15 @@ if git diff --cached --name-only | xargs grep -hE '(api_key|secret|password)\s*[
 fi
 
 # Run lint-staged (format and syntax-check staged files)
-pnpm exec lint-staged
+pnpm exec lint-staged || {
+  echo "" >&2
+  echo "──────────────────────────────────────────────────────────" >&2
+  echo "  PRE-COMMIT CHECK FAILED" >&2
+  echo "──────────────────────────────────────────────────────────" >&2
+  echo "" >&2
+  echo "  To fix lint errors:     pnpm lint:fix" >&2
+  echo "  To fix formatting:      pnpm format" >&2
+  echo "  Then re-stage the files and try committing again." >&2
+  echo "" >&2
+  exit 1
+}

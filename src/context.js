@@ -8,18 +8,18 @@
 
 import * as core from '@actions/core';
 import path from 'path';
-import { GIT_SHA_SHORT_LENGTH } from './constants.js';
+import { GIT_EMPTY_TREE_SHA, GIT_SHA_SHORT_LENGTH } from './constants.js';
 import { advanceBasePastBotCommits, getFirstCommit } from './git.js';
 
 /**
  * Determines the base and head commit SHAs for the diff based on the
  * GitHub Actions event type. Manual overrides take precedence.
  *
- * When inputs.skipInitialCommit is true the base SHA is always pinned to the
- * repository's very first commit, regardless of the event type. This ensures
- * that starter/template files committed by GitHub Classroom (the "Initial
- * commit") are never included in the assessed diff — only code added or
- * modified by the student after that first commit will appear.
+ * skip_initial_commit controls the diff base regardless of event type:
+ *   true  (default) — base is pinned to the first commit; the initial
+ *                     commit's files are excluded from the assessed diff.
+ *   false           — base is set to the empty tree SHA; the initial commit's
+ *                     files are included in the diff.
  *
  * Manual base_sha / head_sha overrides always take precedence over this flag.
  */
@@ -64,7 +64,8 @@ export async function resolveSHAs(ctx, octokit, inputs) {
     headSha = sanitiseSha(ctx.sha);
   }
 
-  // ── Apply skip_initial_commit override ──────────────────────────────────
+  // ── Apply skip_initial_commit ─────────────────────────────────────────────
+  // Always override baseSha based on this flag, regardless of event type.
   if (inputs.skipInitialCommit) {
     const initialCommit = getFirstCommit();
     if (baseSha !== initialCommit) {
@@ -73,8 +74,13 @@ export async function resolveSHAs(ctx, octokit, inputs) {
           `${baseSha.substring(0, GIT_SHA_SHORT_LENGTH)} to initial commit ${initialCommit.substring(0, GIT_SHA_SHORT_LENGTH)} ` +
           `to exclude GitHub Classroom starter files from the diff.`,
       );
-      baseSha = initialCommit;
     }
+    baseSha = initialCommit;
+  } else {
+    core.info(
+      `skip_initial_commit is disabled: using empty tree as base so the initial commit's files are included in the diff.`,
+    );
+    baseSha = GIT_EMPTY_TREE_SHA;
   }
 
   // ── Apply skip_committers ────────────────────────────────────────────────

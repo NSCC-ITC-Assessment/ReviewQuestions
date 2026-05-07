@@ -7,7 +7,7 @@
  */
 
 import { spawnSync } from 'child_process';
-import { GIT_MAX_BUFFER } from './constants.js';
+import { GIT_EMPTY_TREE_SHA, GIT_MAX_BUFFER } from './constants.js';
 
 /**
  * Runs a git command using spawnSync and returns stdout.
@@ -62,7 +62,10 @@ export function getDiff(baseSha, headSha, files) {
 export function findStudentCommitSha(baseSha, headSha, skipCommitters) {
   if (!skipCommitters || skipCommitters.length === 0) return headSha;
 
-  const raw = git('log', '--format=%H\t%ae\t%an', `${baseSha}..${headSha}`);
+  // git log range notation (A..B) requires A to be a commit object.
+  // When baseSha is the empty tree, use a plain log up to headSha instead.
+  const logRange = baseSha === GIT_EMPTY_TREE_SHA ? [headSha] : [`${baseSha}..${headSha}`];
+  const raw = git('log', '--format=%H\t%ae\t%an', ...logRange);
   const commits = raw
     .split('\n')
     .map((l) => l.trim())
@@ -88,7 +91,10 @@ export function findStudentCommitSha(baseSha, headSha, skipCommitters) {
 }
 
 export function advanceBasePastBotCommits(baseSha, headSha, skipCommitters) {
-  const raw = git('log', '--format=%H\t%ae\t%an', '--reverse', `${baseSha}..${headSha}`);
+  // git log range notation (A..B) requires A to be a commit object.
+  // When baseSha is the empty tree, use a plain log up to headSha instead.
+  const logRange = baseSha === GIT_EMPTY_TREE_SHA ? [headSha] : [`${baseSha}..${headSha}`];
+  const raw = git('log', '--format=%H\t%ae\t%an', '--reverse', ...logRange);
   const commits = raw
     .split('\n')
     .map((l) => l.trim())

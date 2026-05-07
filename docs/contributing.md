@@ -1,13 +1,23 @@
 # Contributing Guide
 
+## Dev Container (recommended)
+
+A fully configured dev container is included in `.devcontainer/`. It comes pre-loaded with the correct Node and pnpm versions, all VS Code extensions, and every other tool needed to work on this project. **No local installation of Node, pnpm, or Docker is required on your machine.**
+
+To use it, open the repository in VS Code and accept the prompt to _Reopen in Container_, or run the **Dev Containers: Reopen in Container** command from the Command Palette. The container will build and install all dependencies automatically.
+
+---
+
 ## Prerequisites
 
-| Tool   | Version | Notes                                             |
-| ------ | ------- | ------------------------------------------------- |
-| Node   | ≥ 24    | Matches the Docker base image (`node:24-slim`)    |
-| pnpm   | ≥ 10    | Enforced via `engines` — `npm install` is blocked |
-| Docker | any     | Required to test the action end-to-end locally    |
-| git    | any     | Commit hooks are installed automatically          |
+> The prerequisites below apply only if you are **not** using the dev container.
+
+| Tool   | Version | Notes                                                |
+| ------ | ------- | ---------------------------------------------------- |
+| Node   | ≥ 24    | The Dockerfile image uses 26 but only 24 is required |
+| pnpm   | ≥ 11    | Enforced via `engines` — `npm install` is blocked    |
+| Docker | any     | Required to test the action end-to-end locally       |
+| git    | any     | Commit hooks are installed automatically             |
 
 ---
 

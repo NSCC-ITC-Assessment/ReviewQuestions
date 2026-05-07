@@ -181,7 +181,7 @@ Stage 1 — rmcm-builder (rust:slim-bookworm)
       │  cargo build --release  ──► /build/target/release/rmcm
       │
       ▼
-Stage 2 — final image (node:24-slim)
+Stage 2 — final image (node:26-slim)
       │
       ├── COPY --from=rmcm-builder /build/target/release/rmcm /usr/local/bin/rmcm
       ├── pnpm install --prod

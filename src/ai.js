@@ -9,6 +9,7 @@
 import {
   AI_TEMPERATURE,
   AI_TOP_P,
+  AZURE_OPENAI_API_VERSION,
   MAX_OUTPUT_TOKENS,
   MIN_OUTPUT_TOKENS,
   TOKENS_PER_QUESTION,
@@ -48,7 +49,7 @@ export async function callAI({ provider, model, apiKey, endpoint, messages }) {
       }
       url = endpoint.endsWith('/chat/completions')
         ? endpoint
-        : `${endpoint.replace(/\/$/, '')}/chat/completions?api-version=2024-02-01`;
+        : `${endpoint.replace(/\/$/, '')}/chat/completions?api-version=${AZURE_OPENAI_API_VERSION}`;
       headers['api-key'] = apiKey;
       break;
 

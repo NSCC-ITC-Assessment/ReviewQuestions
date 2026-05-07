@@ -131,6 +131,14 @@ inputs:
     required: false
     default: "true"
 
+  exclude_workflow_files:
+    description: >
+      When true (the default), files under .github/workflows/ are excluded from
+      the assessed diff. Set to "false" to include workflow files so they can
+      be subject to comprehension questions.
+    required: false
+    default: "true"
+
   skip_committers:
     description: >
       Comma-separated list of commit author names or email substrings.

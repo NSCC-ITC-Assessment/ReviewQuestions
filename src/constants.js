@@ -124,3 +124,21 @@ export const DISCUSSIONS_FETCH_LIMIT = 50;
  * Path to the comment-remover binary (rmcm) installed in the Docker image.
  */
 export const COMMENT_REMOVER_BIN = '/usr/local/bin/rmcm';
+
+/**
+ * Minimum number of questions that can be requested. Values below this are
+ * clamped up to this floor before any further processing.
+ */
+export const MIN_QUESTIONS = 1;
+
+/**
+ * Azure OpenAI REST API version sent as the api-version query parameter.
+ * Update this when Microsoft releases a newer stable GA version.
+ */
+export const AZURE_OPENAI_API_VERSION = '2024-02-01';
+
+/**
+ * GitHub REST API version sent in the X-GitHub-Api-Version header on every
+ * Octokit request. Update when adopting a newer stable GitHub API version.
+ */
+export const GITHUB_API_VERSION = '2022-11-28';

@@ -17,6 +17,7 @@ import path from 'path';
 import {
   MAX_DIFF_CHARS,
   GIT_SHA_SHORT_LENGTH,
+  GITHUB_API_VERSION,
   STUDENT_RESOLUTION_SKIP_COMMITTERS,
 } from './constants.js';
 import { readInputs } from './inputs.js';
@@ -36,7 +37,7 @@ async function run() {
   try {
     const inputs = readInputs();
     const octokit = github.getOctokit(inputs.githubToken, {
-      headers: { 'X-GitHub-Api-Version': '2022-11-28' },
+      headers: { 'X-GitHub-Api-Version': GITHUB_API_VERSION },
     });
     const ctx = github.context;
 

@@ -7,19 +7,35 @@
  */
 
 import * as core from '@actions/core';
-import { DEFAULT_EXCLUDE_PATTERNS, MAX_QUESTIONS } from './constants.js';
+import { DEFAULT_EXCLUDE_PATTERNS, MAX_QUESTIONS, MIN_QUESTIONS } from './constants.js';
 
 export function readInputs() {
   const includeStr = core.getInput('include_patterns');
   const excludeStr = core.getInput('exclude_patterns');
 
-  const rawNumQuestions = Math.max(1, parseInt(core.getInput('num_questions') || '5', 10));
+  const rawNumQuestions = Math.max(
+    MIN_QUESTIONS,
+    parseInt(core.getInput('num_questions') || '5', 10),
+  );
   const numQuestions = Math.min(MAX_QUESTIONS, rawNumQuestions);
   if (rawNumQuestions > MAX_QUESTIONS) {
     core.warning(
       `num_questions was set to ${rawNumQuestions}, which exceeds the maximum of ${MAX_QUESTIONS}. Capping to ${MAX_QUESTIONS}.`,
     );
   }
+
+  const excludeWorkflowFiles = core.getInput('exclude_workflow_files') !== 'false';
+
+  const baseExcludePatterns = excludeStr
+    ? excludeStr
+        .split(',')
+        .map((p) => p.trim())
+        .filter(Boolean)
+    : DEFAULT_EXCLUDE_PATTERNS;
+
+  const excludePatterns = excludeWorkflowFiles
+    ? [...new Set([...baseExcludePatterns, '.github/workflows/**'])]
+    : baseExcludePatterns;
 
   return {
     githubToken: core.getInput('github_token', { required: true }),
@@ -34,12 +50,7 @@ export function readInputs() {
           .map((p) => p.trim())
           .filter(Boolean)
       : [],
-    excludePatterns: excludeStr
-      ? excludeStr
-          .split(',')
-          .map((p) => p.trim())
-          .filter(Boolean)
-      : DEFAULT_EXCLUDE_PATTERNS,
+    excludePatterns,
     outputFile: core.getInput('output_file') || 'grill-my-code.md',
     postPrComment: core.getInput('post_pr_comment') !== 'false',
     postIssue: core.getInput('post_issue') === 'true',

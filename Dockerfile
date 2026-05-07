@@ -21,10 +21,11 @@ RUN cargo build --release --all-features
 # ---------------------------------------------------------------------------
 FROM node:26-slim
 
-# Install git (needed for diff operations) and pnpm.
+# Install git, corepack, and pnpm.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git \
     && rm -rf /var/lib/apt/lists/* \
+    && npm install -g corepack \
     && corepack enable \
     && corepack prepare pnpm@latest --activate
 

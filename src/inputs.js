@@ -57,6 +57,7 @@ export function readInputs() {
     postDiscussion: core.getInput('post_discussion') === 'true',
     discussionCategory: core.getInput('discussion_category') || 'Assessments',
     additionalContext: core.getInput('additional_context') || '',
+    keepComments: core.getInput('keep_comments') === 'true',
     skipInitialCommit: core.getInput('skip_initial_commit') !== 'false',
     // Three-way logic for skip_committers:
     //   • Input not provided (empty string from Actions default) → use the

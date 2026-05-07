@@ -89,25 +89,32 @@ async function run() {
     const diff = getDiff(baseSha, headSha, files);
     core.info(`Total diff size: ${diff.length} characters`);
 
-    // ── Strip comments from changed files ──────────────────────────────────
+    // ── Strip comments from changed files (unless keep_comments is set) ────
     const rawFiles = collectRawFiles(files, headSha);
     const rawContent = buildCodeContent(rawFiles);
     core.info(`Code size before comment stripping: ${rawContent.length} characters`);
-    core.info(
-      `--- CODE BEFORE COMMENT STRIPPING ---\n${rawContent}\n--- END CODE BEFORE COMMENT STRIPPING ---`,
-    );
 
-    const { strippedFiles, strippedCharCount } = stripCommentsFromFiles(rawFiles);
-    core.info(`Code size after comment stripping: ${strippedCharCount} characters`);
-    core.info(
-      `--- CODE AFTER COMMENT STRIPPING ---\n${buildCodeContent(strippedFiles)}\n--- END CODE AFTER COMMENT STRIPPING ---`,
-    );
+    let processedFiles;
+    if (inputs.keepComments) {
+      core.info('Comment stripping skipped (keep_comments is true).');
+      processedFiles = rawFiles;
+    } else {
+      core.info(
+        `--- CODE BEFORE COMMENT STRIPPING ---\n${rawContent}\n--- END CODE BEFORE COMMENT STRIPPING ---`,
+      );
+      const { strippedFiles, strippedCharCount } = stripCommentsFromFiles(rawFiles);
+      core.info(`Code size after comment stripping: ${strippedCharCount} characters`);
+      core.info(
+        `--- CODE AFTER COMMENT STRIPPING ---\n${buildCodeContent(strippedFiles)}\n--- END CODE AFTER COMMENT STRIPPING ---`,
+      );
+      processedFiles = strippedFiles;
+    }
 
-    let codeContent = buildCodeContent(strippedFiles);
-    // Fall back to the raw diff if stripping produced no output
+    let codeContent = buildCodeContent(processedFiles);
+    // Fall back to the raw diff if processing produced no output
     if (codeContent.trim() === '') {
       codeContent = diff;
-      core.warning('Comment stripping produced no content — falling back to raw diff.');
+      core.warning('Code content was empty after processing — falling back to raw diff.');
     }
 
     let truncated = false;
@@ -177,7 +184,7 @@ async function run() {
     core.setOutput('output_file', effectiveOutputFile);
     core.setOutput('questions', questions);
     core.setOutput('code_before_strip', rawContent);
-    core.setOutput('code_after_strip', buildCodeContent(strippedFiles));
+    core.setOutput('code_after_strip', buildCodeContent(processedFiles));
 
     // ── Post PR comment ─────────────────────────────────────────────────────
     if (inputs.postPrComment && prNumber) {

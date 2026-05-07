@@ -80,6 +80,12 @@ jobs:
           # and you want those included in the assessment.
           exclude_workflow_files: "true"
 
+          # When false (default), inline and block comments are stripped from the
+          # submitted code before it is sent to the AI, ensuring questions focus
+          # on the code logic rather than the student's annotations. Set to "true"
+          # to preserve comments exactly as written.
+          # keep_comments: "false"
+
           # ── Output & Delivery ─────────────────────────────────────────────
 
           # Basename of the assessment Markdown file. Always written to the

@@ -139,6 +139,14 @@ inputs:
     required: false
     default: "true"
 
+  keep_comments:
+    description: >
+      When false (the default), inline and block comments are stripped from the
+      submitted code before it is sent to the AI. Set to "true" to preserve
+      comments exactly as written.
+    required: false
+    default: "false"
+
   skip_committers:
     description: >
       Comma-separated list of commit author names or email substrings.
@@ -209,6 +217,7 @@ runs:
     INPUT_DISCUSSION_CATEGORY: ${{ inputs.discussion_category }}
     INPUT_ADDITIONAL_CONTEXT: ${{ inputs.additional_context }}
     INPUT_SKIP_INITIAL_COMMIT: ${{ inputs.skip_initial_commit }}
+    INPUT_KEEP_COMMENTS: ${{ inputs.keep_comments }}
     INPUT_SKIP_COMMITTERS: ${{ inputs.skip_committers }}
     INPUT_BASE_SHA: ${{ inputs.base_sha }}
     INPUT_HEAD_SHA: ${{ inputs.head_sha }}

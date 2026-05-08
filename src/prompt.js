@@ -126,12 +126,19 @@ Question 1: What is the purpose of the 'hello_world' function in sample-file.py?
 
 Apply any appropriate highlighting to either the code snippet or the question text to enhance readability, but avoid excessive formatting.
 
-If the code is minimal or trivially simple and cannot on its own support ${numQuestions} questions without forcing shallow or repetitive ones, 
-generate as many specific questions as the code genuinely supports, then add a **## Broader Questions** section — with its own italicized definition — 
-for questions on the underlying concepts, patterns, or technologies evident in the code, continuing the numbering, until the total reaches ${numQuestions}. 
-Broader Questions may discuss concepts directly inferable from the visible code, but must not assume unseen implementation details.
-Omit this section entirely if the submission provides sufficient material for ${numQuestions} specific questions without undue effort. 
-The total number of questions across all sections — including any ## Broader Questions — must not exceed ${numQuestions}.
+Generate up to ${numQuestions} total questions across all sections combined.
+First generate specific code-based questions grounded directly in the visible code.
+Only generate a **## Broader Questions** section if the number of specific code-based questions is less than ${numQuestions}.
+
+Broader Questions must:
+- Continue the numbering sequence
+- Focus only on concepts, patterns, or technologies directly inferable from the visible code
+- Never assume unseen implementation details, unless specified in the extra context section
+- Remain comprehension-focused rather than improvement-focused
+
+Stop generating immediately once the total number of questions reaches ${numQuestions}.
+Never generate question number ${numQuestions + 1}.
+If ${numQuestions} specific code-based questions can already be generated without becoming shallow, repetitive, or forced, omit the **## Broader Questions** section entirely.
 
 Respond only with the generated Markdown question content. Do not include explanations, introductions, summaries, or answers.${contextSection}`;
 

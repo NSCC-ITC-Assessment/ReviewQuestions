@@ -97,7 +97,7 @@ What is the bug in this code if the numbers list contains a string?
 How would you fix this error?
 
 Each question must:
-- Be numbered sequentially starting from 1
+- Begin exactly with a number followed by a period and a space (e.g. \`1. \`, \`2. \`, \`3. \`). This is mandatory and must not be omitted.
 - Be separated from the next with a markdown separator (e.g. ---)
 - Prevent the question text from being too big or bold; it should just be normal markdown text
 - Reference specific named code elements (functions, variables, control structures, data structures, patterns)
@@ -109,9 +109,9 @@ Each question must:
 - The examples below illustrate possible educational question categories generally, but the generated output must remain comprehension-focused and must not ask the student to improve, critique, optimize, or refactor the code.
 - Not reveal or imply the answer
 
-Sample question format (begins with separator and ends with separator):
+Sample question format:
 
----
+
 
 **\`sample-file.py\`**
 
@@ -120,9 +120,11 @@ def hello_world():
     print("This will be colorized as Python code!")
 \`\`\`
 
-Question 1: What is the purpose of the 'hello_world' function in sample-file.py?
+1. What is the purpose of the 'hello_world' function in sample-file.py?
 
 ---
+
+
 
 Apply any appropriate highlighting to either the code snippet or the question text to enhance readability, but avoid excessive formatting.
 

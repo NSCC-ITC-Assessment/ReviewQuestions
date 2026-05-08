@@ -63,23 +63,18 @@ What is the bug in this code?
 How would you fix this error?
 What is the output of this code if there is a bug?
 
-
-
 Let's say you have the following Python code as an example:
 
-Python
 def calculate_sum(numbers):
     total = 0
     for number in numbers:
         total += number
     return total
-
 numbers = [1, 2, 3, 4, 5]
 result = calculate_sum(numbers)
 print(result)
 
-
-Questions worth asking about the code...
+Sample questions (not exhaustive) worth asking about the code...
 
 Examples of Conceptual:
 What is the purpose of the calculate_sum function?
@@ -108,19 +103,17 @@ Each question must:
 - Reference specific named code elements (functions, variables, control structures, data structures, patterns)
 - For formatting reasons, make sure that questions are followed by a blank line before adding the separator (i.e. do not place the separator immediately after the question text)
 - Embed a short inline backtick snippet within the question sentence itself — not on a separate line before it
-- Label the snippet with the identified programming language when possible in order to format and colorize it appropriately
+- Use an appropriately language-tagged fenced code block whenever the language can be identified.
 - Be prefixed with: (1) the relative file path as bold inline-code (e.g. **\`src/utils/cart.js\`**), then (2) the exact relevant line or snippet as a fenced code block with the appropriate language tag, then (3) the question itself
 - Ensure that any code mentioned in the question is present in the visible code snippet — do not ask about code that may have been truncated
-- Be understanding-focused — never ask to improve, critique, or refactor
+- The examples below illustrate possible educational question categories generally, but the generated output must remain comprehension-focused and must not ask the student to improve, critique, optimize, or refactor the code.
 - Not reveal or imply the answer
 
-Sample question format:
-
---begin sample question--
+Sample question format (begins with separator and ends with separator):
 
 ---
 
-file: sample-file.py
+**\`sample-file.py\`**
 
 \`\`\`python
 def hello_world():
@@ -131,13 +124,16 @@ Question 1: What is the purpose of the 'hello_world' function in sample-file.py?
 
 ---
 
---end sample question--
-
 Apply any appropriate highlighting to either the code snippet or the question text to enhance readability, but avoid excessive formatting.
 
-If the code is minimal or trivially simple and cannot on its own support ${numQuestions} questions without forcing shallow or repetitive ones, generate as many specific questions as the code genuinely supports, then add a **## Broader Questions** section — with its own italicized definition — for questions on the underlying concepts, patterns, or technologies evident in the code, continuing the numbering, until the total reaches ${numQuestions}. Omit this section entirely if the submission provides sufficient material for ${numQuestions} specific questions without undue effort. The total number of questions across all sections — including any ## Broader Questions — must not exceed ${numQuestions}.
+If the code is minimal or trivially simple and cannot on its own support ${numQuestions} questions without forcing shallow or repetitive ones, 
+generate as many specific questions as the code genuinely supports, then add a **## Broader Questions** section — with its own italicized definition — 
+for questions on the underlying concepts, patterns, or technologies evident in the code, continuing the numbering, until the total reaches ${numQuestions}. 
+Broader Questions may discuss concepts directly inferable from the visible code, but must not assume unseen implementation details.
+Omit this section entirely if the submission provides sufficient material for ${numQuestions} specific questions without undue effort. 
+The total number of questions across all sections — including any ## Broader Questions — must not exceed ${numQuestions}.
 
-Respond with the grouped Markdown only — no preamble, no explanations, no answers.${contextSection}`;
+Respond only with the generated Markdown question content. Do not include explanations, introductions, summaries, or answers.${contextSection}`;
 
   const truncatedNote = truncated
     ? '\n> ⚠️ The code below has been truncated — form questions based on the visible portion.\n'

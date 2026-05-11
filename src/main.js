@@ -149,6 +149,7 @@ async function run() {
       apiKey: effectiveApiKey,
       endpoint: inputs.azureEndpoint,
       messages,
+      retryMaxAttempts: inputs.aiRetryMaxAttempts,
     });
 
     // ── Write output ────────────────────────────────────────────────────────

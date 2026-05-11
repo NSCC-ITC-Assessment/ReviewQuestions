@@ -7,7 +7,12 @@
  */
 
 import * as core from '@actions/core';
-import { DEFAULT_EXCLUDE_PATTERNS, MAX_QUESTIONS, MIN_QUESTIONS } from './constants.js';
+import {
+  DEFAULT_EXCLUDE_PATTERNS,
+  MAX_QUESTIONS,
+  MIN_QUESTIONS,
+  DEFAULT_AI_RETRY_MAX_ATTEMPTS,
+} from './constants.js';
 
 export function readInputs() {
   const includeStr = core.getInput('include_patterns');
@@ -41,6 +46,10 @@ export function readInputs() {
     githubToken: core.getInput('github_token', { required: true }),
     aiProvider: core.getInput('ai_provider') || 'github-models',
     aiModel: core.getInput('ai_model') || 'gpt-4o',
+    aiRetryMaxAttempts: Math.max(
+      1,
+      parseInt(core.getInput('ai_retry_max_attempts') || String(DEFAULT_AI_RETRY_MAX_ATTEMPTS), 10),
+    ),
     apiKey: core.getInput('api_key') || '',
     azureEndpoint: core.getInput('azure_endpoint') || '',
     numQuestions,

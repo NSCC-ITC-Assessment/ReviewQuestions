@@ -35,6 +35,16 @@ inputs:
     required: false
     default: "gpt-4o"
 
+  ai_retry_max_attempts:
+    description: >
+      Total number of attempts (initial attempt plus retries) when calling the
+      AI provider. Retries are triggered by transient errors: 429 (rate limit),
+      500, 502, 503, 504, and network-level failures. A 429 response with a
+      Retry-After header is honoured; all other retryable errors use
+      exponential backoff with full jitter. Values below 1 are clamped to 1.
+    required: false
+    default: "5"
+
   api_key:
     description: >
       API key for the chosen AI provider.
@@ -205,6 +215,7 @@ runs:
     INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
     INPUT_AI_PROVIDER: ${{ inputs.ai_provider }}
     INPUT_AI_MODEL: ${{ inputs.ai_model }}
+    INPUT_AI_RETRY_MAX_ATTEMPTS: ${{ inputs.ai_retry_max_attempts }}
     INPUT_API_KEY: ${{ inputs.api_key }}
     INPUT_AZURE_ENDPOINT: ${{ inputs.azure_endpoint }}
     INPUT_NUM_QUESTIONS: ${{ inputs.num_questions }}

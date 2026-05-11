@@ -74,7 +74,7 @@ jobs:
       contents: read
       pull-requests: write # required to post the PR comment
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # full history required for diff resolution
 
@@ -102,7 +102,7 @@ jobs:
       contents: write # required to write the output file to the repo
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -125,7 +125,7 @@ jobs:
       contents: read
       issues: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -149,7 +149,7 @@ jobs:
       discussions: write
       administration: write # required only if Discussions may not yet be enabled
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -222,7 +222,7 @@ The action exposes two outputs for use in later steps:
     github_token: ${{ secrets.GITHUB_TOKEN }}
 
 - name: Upload assessment
-  uses: actions/upload-artifact@v4
+  uses: actions/upload-artifact@v6
   with:
     name: assessment
     path: ${{ steps.assess.outputs.output_file }}

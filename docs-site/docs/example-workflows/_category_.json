@@ -1,0 +1,8 @@
+{
+  "label": "Example Workflows",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "Ready-to-use workflow files. Copy the relevant file to .github/workflows/assess.yml in the student repository."
+  }
+}

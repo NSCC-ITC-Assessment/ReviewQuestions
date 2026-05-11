@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Architecture
 
 ## How the action runs
@@ -110,12 +114,12 @@ Reads and normalises every `INPUT_*` environment variable. Responsible for:
 
 The most event-aware function in the codebase. Handles four distinct event types:
 
-| Event                                  | Base SHA                                     | Head SHA    | PR number    |
-| -------------------------------------- | -------------------------------------------- | ----------- | ------------ |
-| `pull_request` / `pull_request_target` | PR base branch SHA                           | PR head SHA | from payload |
-| `push`                                 | previous SHA (or first commit on new branch) | `after` SHA | —            |
-| `issue_comment`                        | PR base branch SHA (fetched via REST)        | PR head SHA | from payload |
-| everything else                        | first commit                                 | `ctx.sha`   | —            |
+| Event | Base SHA | Head SHA | PR number |
+|---|---|---|---|
+| `pull_request` / `pull_request_target` | PR base branch SHA | PR head SHA | from payload |
+| `push` | previous SHA (or first commit on new branch) | `after` SHA | — |
+| `issue_comment` | PR base branch SHA (fetched via REST) | PR head SHA | from payload |
+| everything else | first commit | `ctx.sha` | — |
 
 After event-specific resolution, `skip_initial_commit` can override the base SHA to pin it to the repository's very first commit — the behaviour needed for GitHub Classroom to exclude starter template files.
 
@@ -133,23 +137,21 @@ Always writes output under the `_assessment/` folder. Uses `path.basename()` to 
 
 A thin provider abstraction over the OpenAI-compatible chat completions API. Each provider maps to a different base URL and authentication header:
 
-| Provider        | URL                                              | Auth header                            |
-| --------------- | ------------------------------------------------ | -------------------------------------- |
+| Provider | URL | Auth header |
+|---|---|---|
 | `github-models` | `models.inference.ai.azure.com/chat/completions` | `Authorization: Bearer <github_token>` |
-| `openai`        | `api.openai.com/v1/chat/completions`             | `Authorization: Bearer <api_key>`      |
-| `openrouter`    | `openrouter.ai/api/v1/chat/completions`          | `Authorization: Bearer <api_key>`      |
-| `azure-openai`  | caller-supplied endpoint                         | `api-key: <api_key>`                   |
+| `openai` | `api.openai.com/v1/chat/completions` | `Authorization: Bearer <api_key>` |
+| `openrouter` | `openrouter.ai/api/v1/chat/completions` | `Authorization: Bearer <api_key>` |
+| `azure-openai` | caller-supplied endpoint | `api-key: <api_key>` |
 
 All providers use the same request body shape (`model`, `messages`, `temperature`, `max_tokens`, `top_p`).
-
-For the full configuration reference — required inputs, secrets, and workflow examples for each provider — see [docs/ai-providers.md](ai-providers.md).
 
 ### `postIssue()` / `postDiscussion()`
 
 **`postIssue`** uses an update-first strategy:
 
 1. List open assessment issues for the same branch
-2. If one exists, update its title and body in-place with the latest report (preserving issue number, URL, and comment history). Any extra duplicates beyond the first are deleted.
+2. If one exists, update its title and body in-place (preserving issue number, URL, and comment history). Extra duplicates are deleted.
 3. If none exists, create a fresh issue.
 
 **`postDiscussion`** follows a supersession pattern:
@@ -158,11 +160,7 @@ For the full configuration reference — required inputs, secrets, and workflow 
 2. Delete each superseded discussion
 3. Create a fresh discussion with the latest report
 
-This prevents an accumulating backlog of open items per branch.
-
-`postIssue` assigns the newly created issue to the student login resolved from the most recent non-bot commit in the assessed range. The resolution uses `findStudentCommitSha()`, which walks the range newest-first and skips any commit whose author matches the merged skip list (`STUDENT_RESOLUTION_SKIP_COMMITTERS` plus the user-configured `skip_committers`). This ensures that the action's own assessment-file commit — which appears as the head SHA on re-triggered runs — is never mistaken for a student commit. Falls back to `ctx.actor` if the resolved commit has no linked GitHub account.
-
-`postDiscussion` uses the **GraphQL API** (not REST) because GitHub's REST API does not support creating Discussions. If Discussions are not enabled on the repository at the time of the call, `postDiscussion` automatically enables them via `octokit.rest.repos.update({ has_discussions: true })` before proceeding. This requires the token to have `administration: write` permission.
+`postDiscussion` uses the **GraphQL API** (not REST) because GitHub's REST API does not support creating Discussions.
 
 ---
 
@@ -170,7 +168,7 @@ This prevents an accumulating backlog of open items per branch.
 
 - **Shell injection prevention:** all `git` calls use `spawnSync` with an explicit argument array — no shell string interpolation. SHAs are validated with `sanitiseSha()` before use.
 - **Secret masking:** the external API key is registered with `core.setSecret()` before any API call, preventing it from appearing in workflow logs.
-- **Minimal permissions:** the action only requests the permissions it needs for the chosen delivery method (see the Permissions table in `README.md`).
+- **Minimal permissions:** the action only requests the permissions it needs for the chosen delivery method.
 
 ---
 
@@ -194,29 +192,4 @@ Stage 2 — final image (node:26-slim)
       └── COPY src/ entrypoint.sh
 ```
 
-`rmcm` (the comment-stripping binary from [NSCC-ITC-Assessment/comment-remover](https://github.com/NSCC-ITC-Assessment/comment-remover), `production` branch) is compiled from source at image-build time rather than downloaded from a pre-built release. This ensures the binary is always built from the current `production` branch and runs correctly on the target architecture.
-
-The Rust build stage is discarded after compilation, so the final image contains only the compiled binary alongside the Node runtime — no Rust toolchain or build artefacts are included.
-
----
-
-## Docker image lifecycle
-
-```
-push to main  ──► build-and-push.yml  ──► ghcr.io/…:latest  (dev build only)
-
-push v* tag   ──► release.yml ──► ghcr.io/…:v1.0.3   (immutable)
-                                  ghcr.io/…:v1        (floating — recommended for consumers)
-                                  ghcr.io/…:latest    (floating)
-                            └──► updates action.yml image reference
-                            └──► creates GitHub Release
-```
-
-Two separate workflows manage the image:
-
-- **`build-and-push.yml`** fires on every push to `main` that is _not_ a version tag. It pushes a single `:latest` tag as a dev/CI image. This image is continuously overwritten and should never be pinned by consumers.
-- **`release.yml`** fires only when a `v*` tag is pushed. It produces the three versioned tags above and updates `action.yml` so consumers always get the correct pre-built image.
-
-> ⚠️ `:latest` on GHCR is overwritten by routine `main` merges between releases. Consumers must pin to a major floating tag (e.g. `v1`) — never to `:latest`.
-
-See [versioning.md](versioning.md) for the full release and tagging guide.
+`rmcm` (the comment-stripping binary from [NSCC-ITC-Assessment/comment-remover](https://github.com/NSCC-ITC-Assessment/comment-remover)) is compiled from source at image-build time. The Rust build stage is discarded after compilation, so the final image contains only the compiled binary alongside the Node runtime.

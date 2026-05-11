@@ -28,6 +28,6 @@ export default [
   },
   {
     // Ignore files that should not be linted
-    ignores: ['node_modules/**', 'dist/**', 'build/**'],
+    ignores: ['node_modules/**', 'dist/**', 'build/**', 'docs-site/**'],
   },
 ];

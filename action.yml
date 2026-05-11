@@ -114,6 +114,19 @@ inputs:
     required: false
     default: "Assessments"
 
+  assignment_context:
+    description: >
+      Comma-separated file glob(s) whose contents are read from the repository
+      and injected into the AI prompt as assignment context. Useful for
+      automatically including README files, assignment briefs, or style guides.
+      Globs are matched against the full relative path from the repository root,
+      so subdirectory paths and wildcards work (e.g. "docs/assignment.md", "**/*.md").
+      If no files match, a workflow warning is emitted and the action continues
+      without assignment context.
+      Example: "README.md, docs/assignment.md, coding_style.md"
+    required: false
+    default: ""
+
   additional_context:
     description: >
       Free-text context about the assignment or topic being assessed. Helps the
@@ -215,6 +228,7 @@ runs:
     INPUT_POST_ISSUE: ${{ inputs.post_issue }}
     INPUT_POST_DISCUSSION: ${{ inputs.post_discussion }}
     INPUT_DISCUSSION_CATEGORY: ${{ inputs.discussion_category }}
+    INPUT_ASSIGNMENT_CONTEXT: ${{ inputs.assignment_context }}
     INPUT_ADDITIONAL_CONTEXT: ${{ inputs.additional_context }}
     INPUT_SKIP_INITIAL_COMMIT: ${{ inputs.skip_initial_commit }}
     INPUT_KEEP_COMMENTS: ${{ inputs.keep_comments }}

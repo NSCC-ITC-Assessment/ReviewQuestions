@@ -13,14 +13,19 @@ export function buildPrompt({
   files,
   numQuestions,
   context: extraContext,
+  assignmentContext,
   truncated,
 }) {
+  const assignmentContextSection = assignmentContext
+    ? `\n\n---\n\nASSIGNMENT CONTEXT - HIGHEST PRIORITY\nThe following files describe the assignment requirements. Use them to focus your questions on the specific learning objectives and requirements of this assignment.\n\n${assignmentContext}`
+    : '';
+
   const contextSection = extraContext
     ? `\n\n---\n\nINSTRUCTOR INSTRUCTIONS — HIGHEST PRIORITY\nThe following instructions are specific to this assignment and override any conflicting guidance above. Follow them exactly.\n\n${extraContext}`
     : '';
 
   const system = `
-You are an expert programming educator. Analyze the submitted student code and generate a maximum of ${numQuestions} targeted questions requiring genuine understanding of what was written.
+You are an expert programming educator. Analyze the submitted student code and generate ${numQuestions} targeted questions whose answers require genuine understanding of what was written.
 
 Calibrate question depth to the code's complexity — questions may address syntax/logic, data structures/algorithms, language patterns, or architecture (e.g. MVC, layering).
 
@@ -142,7 +147,7 @@ Stop generating immediately once the total number of questions reaches ${numQues
 Never generate question number ${numQuestions + 1}.
 If ${numQuestions} specific code-based questions can already be generated without becoming shallow, repetitive, or forced, omit the **## Broader Questions** section entirely.
 
-Respond only with the generated Markdown question content. Do not include explanations, introductions, summaries, or answers.${contextSection}`;
+Respond only with the generated Markdown question content. Do not include explanations, introductions, summaries, or answers.${assignmentContextSection}${contextSection}`;
 
   const truncatedNote = truncated
     ? '\n> ⚠️ The code below has been truncated — form questions based on the visible portion.\n'

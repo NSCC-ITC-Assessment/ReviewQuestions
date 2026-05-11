@@ -80,6 +80,12 @@ export const AI_TEMPERATURE = 0.7;
 export const AI_TOP_P = 0.95;
 
 /**
+ * Maximum total characters read from all assignment_context files combined.
+ * Prevents extremely large context files from flooding the AI prompt.
+ */
+export const MAX_ASSIGNMENT_CONTEXT_CHARS = 20000;
+
+/**
  * Estimated output tokens consumed per generated question (file label +
  * code snippet + question text).
  */

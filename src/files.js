@@ -11,7 +11,11 @@ import { spawnSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { minimatch } from 'minimatch';
-import { COMMENT_REMOVER_BIN, COMMENT_STRIP_TIMEOUT_MS } from './constants.js';
+import {
+  COMMENT_REMOVER_BIN,
+  COMMENT_STRIP_TIMEOUT_MS,
+  MAX_ASSIGNMENT_CONTEXT_CHARS,
+} from './constants.js';
 import { git } from './git.js';
 
 /**
@@ -104,4 +108,72 @@ export function buildCodeContent(files) {
       return `### \`${filepath}\`\n\`\`\`${ext}\n${content.trimEnd()}\n\`\`\``;
     })
     .join('\n\n');
+}
+
+/**
+ * Reads files from GITHUB_WORKSPACE (or cwd as fallback) that match any of
+ * the provided glob patterns. Returns their combined contents formatted as
+ * headed sections, capped at MAX_ASSIGNMENT_CONTEXT_CHARS.
+ *
+ * Returns an empty string when no globs are provided or no files match.
+ */
+export function readAssignmentContextFiles(globs) {
+  if (!globs || globs.length === 0) return '';
+
+  const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
+  const opts = { dot: true };
+
+  // Walk the workspace directory recursively to get all candidate paths.
+  let allFiles;
+  try {
+    allFiles = fs.readdirSync(workspace, { recursive: true, encoding: 'utf-8' });
+  } catch {
+    return '';
+  }
+
+  // Keep only regular files that match at least one glob.
+  const matched = allFiles.filter((rel) => {
+    const normalised = rel.replace(/\\/g, '/');
+    try {
+      const stat = fs.statSync(path.join(workspace, normalised));
+      if (!stat.isFile()) return false;
+    } catch {
+      return false;
+    }
+    return globs.some((g) => minimatch(normalised, g, opts));
+  });
+
+  if (matched.length === 0) return '';
+
+  let combined = '';
+  let truncated = false;
+
+  for (const rel of matched) {
+    const normalised = rel.replace(/\\/g, '/');
+    let content;
+    try {
+      content = fs.readFileSync(path.join(workspace, normalised), 'utf-8');
+    } catch {
+      continue;
+    }
+
+    const section = `### \`${normalised}\`\n${content.trimEnd()}\n`;
+
+    if (combined.length + section.length > MAX_ASSIGNMENT_CONTEXT_CHARS) {
+      const remaining = MAX_ASSIGNMENT_CONTEXT_CHARS - combined.length;
+      if (remaining > 0) {
+        combined += section.substring(0, remaining);
+      }
+      truncated = true;
+      break;
+    }
+
+    combined += section + '\n';
+  }
+
+  if (truncated) {
+    combined += '\n[assignment context truncated due to size]';
+  }
+
+  return combined.trim();
 }

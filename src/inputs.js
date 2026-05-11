@@ -57,6 +57,13 @@ export function readInputs() {
     postDiscussion: core.getInput('post_discussion') === 'true',
     discussionCategory: core.getInput('discussion_category') || 'Assessments',
     additionalContext: core.getInput('additional_context') || '',
+    assignmentContextGlobs: (() => {
+      const raw = core.getInput('assignment_context') || '';
+      return raw
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+    })(),
     keepComments: core.getInput('keep_comments') === 'true',
     skipInitialCommit: core.getInput('skip_initial_commit') !== 'false',
     // Three-way logic for skip_committers:

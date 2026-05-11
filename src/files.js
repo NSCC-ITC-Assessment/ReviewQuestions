@@ -11,11 +11,7 @@ import { spawnSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { minimatch } from 'minimatch';
-import {
-  COMMENT_REMOVER_BIN,
-  COMMENT_STRIP_TIMEOUT_MS,
-  MAX_ASSIGNMENT_CONTEXT_CHARS,
-} from './constants.js';
+import { COMMENT_REMOVER_BIN, COMMENT_STRIP_TIMEOUT_MS } from './constants.js';
 import { git } from './git.js';
 
 /**
@@ -113,11 +109,11 @@ export function buildCodeContent(files) {
 /**
  * Reads files from GITHUB_WORKSPACE (or cwd as fallback) that match any of
  * the provided glob patterns. Returns their combined contents formatted as
- * headed sections, capped at MAX_ASSIGNMENT_CONTEXT_CHARS.
+ * headed sections, capped at the maxChars argument (default: DEFAULT_ASSIGNMENT_CONTEXT_MAX_CHARS).
  *
  * Returns an empty string when no globs are provided or no files match.
  */
-export function readAssignmentContextFiles(globs) {
+export function readAssignmentContextFiles(globs, maxChars) {
   if (!globs || globs.length === 0) return '';
 
   const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
@@ -159,8 +155,8 @@ export function readAssignmentContextFiles(globs) {
 
     const section = `### \`${normalised}\`\n${content.trimEnd()}\n`;
 
-    if (combined.length + section.length > MAX_ASSIGNMENT_CONTEXT_CHARS) {
-      const remaining = MAX_ASSIGNMENT_CONTEXT_CHARS - combined.length;
+    if (combined.length + section.length > maxChars) {
+      const remaining = maxChars - combined.length;
       if (remaining > 0) {
         combined += section.substring(0, remaining);
       }

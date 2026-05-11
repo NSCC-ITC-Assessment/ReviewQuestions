@@ -7,7 +7,12 @@
  */
 
 import * as core from '@actions/core';
-import { DEFAULT_EXCLUDE_PATTERNS, MAX_QUESTIONS, MIN_QUESTIONS } from './constants.js';
+import {
+  DEFAULT_EXCLUDE_PATTERNS,
+  MAX_QUESTIONS,
+  MIN_QUESTIONS,
+  DEFAULT_ASSIGNMENT_CONTEXT_MAX_CHARS,
+} from './constants.js';
 
 export function readInputs() {
   const includeStr = core.getInput('include_patterns');
@@ -64,6 +69,14 @@ export function readInputs() {
         .map((s) => s.trim())
         .filter(Boolean);
     })(),
+    assignmentContextMaxChars: Math.max(
+      1,
+      parseInt(
+        core.getInput('assignment_context_max_chars') ||
+          String(DEFAULT_ASSIGNMENT_CONTEXT_MAX_CHARS),
+        10,
+      ),
+    ),
     keepComments: core.getInput('keep_comments') === 'true',
     skipInitialCommit: core.getInput('skip_initial_commit') !== 'false',
     // Three-way logic for skip_committers:

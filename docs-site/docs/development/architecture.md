@@ -72,7 +72,7 @@ buildCodeContent()
     │
 readAssignmentContextFiles()
     │  Reads files from GITHUB_WORKSPACE that match assignment_context globs
-    │  Concatenates contents as headed sections; capped at MAX_ASSIGNMENT_CONTEXT_CHARS
+    │  Concatenates contents as headed sections; capped at assignment_context_max_chars input (default 20000)
     │  Returns an empty string when no globs are supplied or no files match
     │
 buildPrompt()

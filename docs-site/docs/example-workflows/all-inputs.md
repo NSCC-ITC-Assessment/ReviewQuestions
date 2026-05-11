@@ -75,6 +75,11 @@ jobs:
           # coding style guides. Leave empty (default) to disable.
           # assignment_context: "README.md, assignment.md, coding_style.md"
 
+          # Maximum total characters read from all assignment_context files
+          # combined. Increase if your assignment brief is large; decrease to
+          # limit token usage. Values below 1 are clamped to 1.
+          # assignment_context_max_chars: "20000"
+
           # ── File filtering ────────────────────────────────────────────────
 
           # Comma-separated glob patterns for files to include.

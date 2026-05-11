@@ -5,6 +5,8 @@ on:
     branches: [main]
     tags-ignore:
       - "v*"
+    paths-ignore:
+      - "docs-site/**"
 
 jobs:
   build-and-push:

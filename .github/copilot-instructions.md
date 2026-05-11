@@ -4,8 +4,8 @@
 
 Any change to the action's functionality — including new inputs, changed defaults, modified behaviors, or removed features — **must** be accompanied by:
 
-1. **Documentation updates** — Update all affected files under `docs/` and the inputs/outputs tables in `README.md` to reflect the change accurately.
-2. **Example workflow updates** — Update any affected example workflows under `docs/example_workflows/`, and add a new example if the change introduces a capability not covered by an existing one.
+1. **Documentation updates** — Update all affected files under `docs-site/docs/` and the inputs/outputs tables in `README.md` to reflect the change accurately.
+2. **Example workflow updates** — Update any affected example workflows under `docs-site/docs/example-workflows/`, and add a new example if the change introduces a capability not covered by an existing one.
 
 Do not implement a functional change in isolation. Documentation and example workflows are part of the same deliverable.
 
@@ -17,7 +17,7 @@ New inputs must be added consistently across **all five locations**:
 2. `src/inputs.js` — parsing and normalization
 3. `src/constants.js` — any associated defaults, limits, or threshold values
 4. `README.md` — inputs table row
-5. `docs/example_workflows/7-all-inputs.yml` — active or commented-out entry with an inline explanatory comment
+5. `docs-site/docs/example-workflows/all-inputs.md` — active or commented-out entry with an inline explanatory comment
 
 ## New AI Providers
 
@@ -26,7 +26,7 @@ Adding a new `ai_provider` value requires changes in all of the following places
 1. `src/ai.js` — new `case` in the provider `switch`
 2. `action.yml` — updated `ai_provider` input description listing the new value
 3. `README.md` — updated `ai_provider` description in the inputs table
-4. A new dedicated example workflow under `docs/example_workflows/` following the naming and style of `5-openai-provider.yml` and `6-azure-openai-provider.yml`
+4. A new dedicated example workflow page under `docs-site/docs/example-workflows/` following the naming and style of `openai-provider.md` and `azure-openai-provider.md`
 
 ## Constants vs Magic Numbers
 
@@ -44,11 +44,11 @@ Commits must follow [Conventional Commits](https://www.conventionalcommits.org/)
 <type>(<optional scope>): <subject>
 ```
 
-Functional changes use `feat:` or `fix:`. Documentation-only changes use `docs:`. A full list of allowed types is in `docs/contributing.md`.
+Functional changes use `feat:` or `fix:`. Documentation-only changes use `docs:`. A full list of allowed types is in `docs-site/docs/development/contributing.md`.
 
 ## Example Workflow Numbering
 
-New example workflows must be named `<N>-<short-description>.yml` where `<N>` is one greater than the current highest number. Existing example workflow numbers must never be changed.
+New example workflow pages must be named `<N>-<short-description>.md` where `<N>` is one greater than the current highest number in `docs-site/docs/example-workflows/`. Existing example workflow numbers must never be changed.
 
 ## Using the most up-to-date documentation
 

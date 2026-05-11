@@ -69,6 +69,12 @@ jobs:
             Focus questions on: when list comprehensions are appropriate,
             performance trade-offs, and readability.
 
+          # Comma-separated file glob(s) whose contents are read from the repo
+          # and injected into the prompt as assignment context (before
+          # additional_context). Useful for README files, assignment briefs, or
+          # coding style guides. Leave empty (default) to disable.
+          # assignment_context: "README.md, assignment.md, coding_style.md"
+
           # ── File filtering ────────────────────────────────────────────────
 
           # Comma-separated glob patterns for files to include.

@@ -9,7 +9,7 @@ A GitHub Action that analyses code changes and uses AI to generate targeted comp
 3. Sends the diff to an AI provider to generate comprehension questions
 4. Writes the assessment to a Markdown file, and optionally posts it as a PR comment, GitHub Issue, or GitHub Discussion
 
-See [docs/architecture.md](docs/architecture.md) for a detailed breakdown of how the action is structured and executed.
+See [architecture](https://nscc-itc-assessment.github.io/GrillMyCode/docs/development/architecture) for a detailed breakdown of how the action is structured and executed.
 
 ## Usage
 
@@ -55,7 +55,7 @@ See [docs/architecture.md](docs/architecture.md) for a detailed breakdown of how
 
 ## Example workflows
 
-Ready-to-use workflow files for each configuration are available in [docs/example_workflows/](docs/example_workflows/). Copy the relevant file into `.github/workflows/` in your repository.
+Ready-to-use workflows for each configuration are available in the [example workflows](https://nscc-itc-assessment.github.io/GrillMyCode/docs/category/example-workflows) section of the docs site. Copy the relevant YAML into `.github/workflows/` in your repository.
 
 ### Pull request (recommended)
 

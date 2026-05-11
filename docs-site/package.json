@@ -41,10 +41,5 @@
   },
   "engines": {
     "node": ">=20.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "serialize-javascript": ">=7.0.5"
-    }
   }
 }

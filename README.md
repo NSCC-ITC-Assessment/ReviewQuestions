@@ -245,10 +245,12 @@ exclude_patterns: 'node_modules/**,**/*.lock,dist/**,tests/**'
 
 ## Further reading
 
-| Document                                           | Description                                                                     |
-| -------------------------------------------------- | ------------------------------------------------------------------------------- |
-| [docs/ai-providers.md](docs/ai-providers.md)       | Supported AI providers, required inputs, secrets, and example snippets for each |
-| [docs/architecture.md](docs/architecture.md)       | How the Docker-based action is structured and executed                          |
-| [docs/example_workflows/](docs/example_workflows/) | Numbered, copy-paste workflow files for each configuration                      |
-| [docs/contributing.md](docs/contributing.md)       | Local development setup, commit conventions, and the release process            |
-| [docs/versioning.md](docs/versioning.md)           | Release guide — cutting patch and major versions                                |
+Full documentation is available at **https://nscc-itc-assessment.github.io/GrillMyCode/**.
+
+| Page                                                                                                   | Description                                                                     |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| [AI Providers](https://nscc-itc-assessment.github.io/GrillMyCode/docs/ai-providers)                    | Supported AI providers, required inputs, secrets, and example snippets for each |
+| [Architecture](https://nscc-itc-assessment.github.io/GrillMyCode/docs/development/architecture)        | How the Docker-based action is structured and executed                          |
+| [Example Workflows](https://nscc-itc-assessment.github.io/GrillMyCode/docs/category/example-workflows) | Copy-paste workflow files for each configuration                                |
+| [Contributing](https://nscc-itc-assessment.github.io/GrillMyCode/docs/development/contributing)        | Local development setup, commit conventions, and the release process            |
+| [Versioning](https://nscc-itc-assessment.github.io/GrillMyCode/docs/development/versioning)            | Release guide — cutting patch and major versions                                |

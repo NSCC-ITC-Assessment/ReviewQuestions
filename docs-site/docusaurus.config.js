@@ -52,20 +52,7 @@ const config = {
           // Remove this to remove the "edit this page" links.
           editUrl: 'https://github.com/NSCC-ITC-Assessment/GrillMyCode/tree/main/docs-site/',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/NSCC-ITC-Assessment/GrillMyCode/tree/main/docs-site/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -92,9 +79,8 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
-            label: 'Tutorial',
+            label: 'Docs',
           },
-          { to: '/blog', label: 'Blog', position: 'left' },
           {
             href: 'https://github.com/NSCC-ITC-Assessment/GrillMyCode',
             label: 'GitHub',
@@ -109,35 +95,39 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: 'Getting Started',
+                to: '/docs/getting-started',
+              },
+              {
+                label: 'AI Providers',
+                to: '/docs/ai-providers',
+              },
+              {
+                label: 'Inputs & Outputs',
+                to: '/docs/reference/inputs-outputs',
               },
             ],
           },
           {
-            title: 'Community',
+            title: 'Guides',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                label: 'GitHub Classroom',
+                to: '/docs/guides/github-classroom',
               },
               {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
+                label: 'Example Workflows',
+                to: '/docs/example-workflows/pull-request',
               },
               {
-                label: 'X',
-                href: 'https://x.com/docusaurus',
+                label: 'Architecture',
+                to: '/docs/development/architecture',
               },
             ],
           },
           {
             title: 'More',
             items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
               {
                 label: 'GitHub',
                 href: 'https://github.com/NSCC-ITC-Assessment/GrillMyCode',

@@ -4,32 +4,32 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
+    title: 'Zero Setup',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Uses GitHub Models by default — no API keys or secrets needed.
+        Just add the workflow file and the built-in <code>GITHUB_TOKEN</code> handles everything.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Built for GitHub Classroom',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Automatically excludes template starter code and bot commits,
+        so only the student&apos;s own work is assessed — no extra configuration required.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Flexible Delivery',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Post assessment questions as a PR comment, GitHub Issue, or GitHub Discussion.
+        Supports GitHub Models, OpenAI, OpenRouter, and Azure OpenAI.
       </>
     ),
   },

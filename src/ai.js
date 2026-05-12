@@ -134,13 +134,6 @@ export async function callAI({ provider, model, apiKey, endpoint, messages, retr
     top_p: AI_TOP_P,
   });
 
-  const response = await fetch(url, { method: 'POST', headers, body });
-
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => '(no body)');
-    throw new Error(`AI API error ${response.status} ${response.statusText}: ${errorText}`);
-  }
-
   let lastError;
 
   for (let attempt = 0; attempt < retryMaxAttempts; attempt++) {

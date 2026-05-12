@@ -157,3 +157,29 @@ export const GITHUB_API_VERSION = '2022-11-28';
  * This value is a fixed constant in git and never changes.
  */
 export const GIT_EMPTY_TREE_SHA = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
+
+/**
+ * Default number of total attempts (initial + retries) when calling the AI
+ * provider. Overridable via the ai_retry_max_attempts action input.
+ * A value of 5 means one initial attempt followed by up to 4 retries.
+ */
+export const DEFAULT_AI_RETRY_MAX_ATTEMPTS = 5;
+
+/**
+ * Base delay in milliseconds for exponential-backoff retry calculations.
+ * Each retry's delay is derived from: Math.random() * min(maxDelay, base * 2^attempt)
+ * (full-jitter strategy).
+ */
+export const AI_RETRY_BASE_DELAY_MS = 1000;
+
+/**
+ * Maximum delay cap in milliseconds applied to retry backoff calculations.
+ * Prevents runaway wait times on later retry attempts.
+ */
+export const AI_RETRY_MAX_DELAY_MS = 30_000;
+
+/**
+ * HTTP status codes that are considered transient and eligible for retry.
+ * 429 = rate-limited; 500/502/503/504 = transient server-side errors.
+ */
+export const AI_RETRYABLE_STATUS_CODES = [429, 500, 502, 503, 504];

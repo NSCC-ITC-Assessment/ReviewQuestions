@@ -140,7 +140,7 @@ Validates that a SHA is 4–64 hex characters before passing it to a `git` comma
 
 Always writes output under the `_assessment/` folder. Uses `path.basename()` to extract only the filename — any directory component of `output_file` is discarded. On `main`/`master` (or when the branch is unknown) the basename is kept as-is; on any other branch the sanitised branch name is inserted before the extension so each branch produces a distinct file without collisions.
 
-### `callAI({ provider, model, apiKey, endpoint, messages })`
+### `callAI({ provider, model, apiKey, endpoint, messages, retryMaxAttempts })`
 
 A thin provider abstraction over the OpenAI-compatible chat completions API. Each provider maps to a different base URL and authentication header:
 
@@ -152,6 +152,8 @@ A thin provider abstraction over the OpenAI-compatible chat completions API. Eac
 | `azure-openai` | caller-supplied endpoint | `api-key: <api_key>` |
 
 All providers use the same request body shape (`model`, `messages`, `temperature`, `max_tokens`, `top_p`).
+
+Transient failures are retried automatically up to `retryMaxAttempts` total attempts using **exponential backoff with full jitter**. The following status codes are retried: `429`, `500`, `502`, `503`, `504`. Network-level failures (e.g. DNS, socket errors) are also retried. A `429` response that includes a `Retry-After` header has that delay honoured in preference to the calculated backoff. A `core.warning()` is logged before each retry, showing the attempt number, status code, and delay.
 
 ### `postIssue()` / `postDiscussion()`
 

@@ -49,6 +49,12 @@ jobs:
           # OpenRouter:    provider/model-name format (e.g. anthropic/claude-3-5-sonnet)
           ai_model: "gpt-4o"
 
+          # Total number of attempts (initial + retries) when calling the AI provider.
+          # Retries are triggered by 429 (rate limit), 500, 502, 503, 504, and network
+          # failures. A 429 with a Retry-After header has that delay honoured.
+          # Values below 1 are clamped to 1.
+          # ai_retry_max_attempts: "5"
+
           # API key for the provider. Leave empty when using github-models with
           # the built-in GITHUB_TOKEN. Required for openai, openrouter, azure-openai.
           # api_key: ${{ secrets.OPENAI_API_KEY }}

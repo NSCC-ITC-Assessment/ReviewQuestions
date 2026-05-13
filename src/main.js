@@ -135,7 +135,10 @@ async function run() {
 
     // ── Generate questions using AI ─────────────────────────────────────────
     const { content: assignmentContext, matchedFiles: assignmentContextFiles } =
-      readAssignmentContextFiles(inputs.assignmentContextGlobs, inputs.assignmentContextMaxChars);
+      await readAssignmentContextFiles(
+        inputs.assignmentContextGlobs,
+        inputs.assignmentContextMaxChars,
+      );
     if (inputs.assignmentContextGlobs.length > 0 && !assignmentContext) {
       core.warning(
         `assignment_context was set but no matching files were found for: ${inputs.assignmentContextGlobs.join(', ')}. Check that the glob(s) are correct and the files exist in the repository.`,

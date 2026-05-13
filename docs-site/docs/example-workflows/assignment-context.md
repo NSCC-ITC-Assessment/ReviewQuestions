@@ -42,6 +42,7 @@ jobs:
 ## Notes
 
 - `assignment_context` accepts a comma-separated list of glob patterns — all matching files are concatenated and injected before `additional_context` in the prompt
-- If no files match the globs, a workflow warning is emitted and the action continues without assignment context
+- Supported file types: plain text and source files (any UTF-8 text), PDF (`.pdf` — text layer only, images ignored), Microsoft Word (`.doc`/`.docx` — text content only, images ignored)
+- If a file cannot be read or parsed, a workflow warning is emitted for that file and the action continues with the remaining files
 - Combined file contents are capped at `assignment_context_max_chars` characters (default `20000`) to prevent extremely large files from flooding the prompt
 - Common files to include: `README.md`, assignment brief, rubric, or any instructor-maintained requirements document

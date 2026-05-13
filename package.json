@@ -20,7 +20,9 @@
     "@actions/core": "^3.0.1",
     "@actions/github": "^9.1.1",
     "@actions/http-client": "^4.0.1",
-    "minimatch": "^10.2.5"
+    "mammoth": "^1.12.0",
+    "minimatch": "^10.2.5",
+    "unpdf": "^1.6.2"
   },
   "type": "module",
   "license": "MIT",

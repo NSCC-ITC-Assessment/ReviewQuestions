@@ -22,6 +22,8 @@ sidebar_position: 1
 | `post_discussion` | No | `false` | Create a GitHub Discussion with the assessment. Discussions are enabled automatically if not already on |
 | `discussion_category` | No | `Assessments` | Discussion category name |
 | `additional_context` | No | | Instructor-specific instructions for this assignment. Injected into the system prompt and takes precedence over default behaviour. Supports multi-line instructions |
+| `assignment_context` | No | | Comma-separated file glob(s) read from the repository and injected into the AI prompt before `additional_context`. Supported file types: plain text / source files (UTF-8), PDF (`.pdf` — text layer only), Microsoft Word (`.doc`/`.docx` — text only). If no files match, a workflow warning is emitted and the action continues without context. Example: `"README.md, docs/brief.pdf, rubric.docx"` |
+| `assignment_context_max_chars` | No | `20000` | Maximum total characters read from all `assignment_context` files combined. Prevents large files from flooding the prompt. Values below 1 are clamped to 1 |
 | `exclude_workflow_files` | No | `true` | Exclude `.github/workflows/**` files from the assessed diff. Set to `"false"` to include workflow files |
 | `keep_comments` | No | `false` | When `false` (default), inline and block comments are stripped before sending code to the AI. Set to `"true"` to preserve comments |
 | `skip_initial_commit` | No | `true` | When `true` (default), pins the diff base to the first commit so starter/template files are excluded. When `false`, uses the empty tree as the base |

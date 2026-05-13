@@ -7,10 +7,13 @@
  * fenced code blocks.
  */
 
+import * as core from '@actions/core';
 import { spawnSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { minimatch } from 'minimatch';
+import { extractText, getDocumentProxy } from 'unpdf';
+import mammoth from 'mammoth';
 import { COMMENT_REMOVER_BIN, COMMENT_STRIP_TIMEOUT_MS } from './constants.js';
 import { git } from './git.js';
 
@@ -113,7 +116,7 @@ export function buildCodeContent(files) {
  *
  * Returns an empty string when no globs are provided or no files match.
  */
-export function readAssignmentContextFiles(globs, maxChars) {
+export async function readAssignmentContextFiles(globs, maxChars) {
   if (!globs || globs.length === 0) return '';
 
   const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
@@ -148,8 +151,22 @@ export function readAssignmentContextFiles(globs, maxChars) {
     const normalised = rel.replace(/\\/g, '/');
     let content;
     try {
-      content = fs.readFileSync(path.join(workspace, normalised), 'utf-8');
-    } catch {
+      if (normalised.toLowerCase().endsWith('.pdf')) {
+        const buffer = fs.readFileSync(path.join(workspace, normalised));
+        const pdf = await getDocumentProxy(new Uint8Array(buffer));
+        const { text } = await extractText(pdf, { mergePages: true });
+        content = text;
+      } else if (/\.docx?$/i.test(normalised)) {
+        const buffer = fs.readFileSync(path.join(workspace, normalised));
+        const result = await mammoth.extractRawText({ buffer });
+        content = result.value;
+      } else {
+        content = fs.readFileSync(path.join(workspace, normalised), 'utf-8');
+      }
+    } catch (err) {
+      core.warning(
+        `assignment_context: failed to read "${normalised}" — ${err.message}. Skipping.`,
+      );
       continue;
     }
 

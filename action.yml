@@ -129,6 +129,9 @@ inputs:
       Comma-separated file glob(s) whose contents are read from the repository
       and injected into the AI prompt as assignment context. Useful for
       automatically including README files, assignment briefs, or style guides.
+      Supported file types: plain text and source files (any UTF-8 text),
+      PDF (.pdf — text layer only, images ignored), and Microsoft Word
+      (.doc/.docx — text content only, images ignored).
       Globs are matched against the full relative path from the repository root,
       so subdirectory paths and wildcards work (e.g. "docs/assignment.md", "**/*.md").
       If no files match, a workflow warning is emitted and the action continues

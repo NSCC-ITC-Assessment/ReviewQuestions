@@ -13,6 +13,7 @@ import {
   MIN_QUESTIONS,
   DEFAULT_ASSIGNMENT_CONTEXT_MAX_CHARS,
   DEFAULT_AI_RETRY_MAX_ATTEMPTS,
+  DEFAULT_AI_TEMPERATURE,
 } from './constants.js';
 
 export function readInputs() {
@@ -50,6 +51,10 @@ export function readInputs() {
     aiRetryMaxAttempts: Math.max(
       1,
       parseInt(core.getInput('ai_retry_max_attempts') || String(DEFAULT_AI_RETRY_MAX_ATTEMPTS), 10),
+    ),
+    aiTemperature: Math.min(
+      1,
+      Math.max(0, parseFloat(core.getInput('ai_temperature') || String(DEFAULT_AI_TEMPERATURE))),
     ),
     apiKey: core.getInput('api_key') || '',
     azureEndpoint: core.getInput('azure_endpoint') || '',

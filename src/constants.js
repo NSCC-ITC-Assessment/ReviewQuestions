@@ -83,22 +83,6 @@ export const DEFAULT_AI_TEMPERATURE = 0.5;
 export const AI_TOP_P = 0.95;
 
 /**
- * Estimated output tokens consumed per generated question (file label +
- * code snippet + question text).
- */
-export const TOKENS_PER_QUESTION = 150;
-
-/**
- * Minimum output token budget, covering headings and formatting overhead.
- */
-export const MIN_OUTPUT_TOKENS = 500;
-
-/**
- * Maximum output token budget, keeping responses within model output limits.
- */
-export const MAX_OUTPUT_TOKENS = 7500;
-
-/**
  * Bot account substrings that are always excluded when resolving the student
  * login from the commit history. This list is applied unconditionally,
  * regardless of the user-configured skip_committers input (which controls

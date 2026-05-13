@@ -171,5 +171,5 @@ export function readAssignmentContextFiles(globs, maxChars) {
     combined += '\n[assignment context truncated due to size]';
   }
 
-  return combined.trim();
+  return { content: combined.trim(), matchedFiles: matched };
 }

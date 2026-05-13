@@ -134,10 +134,8 @@ async function run() {
     }
 
     // ── Generate questions using AI ─────────────────────────────────────────
-    const assignmentContext = readAssignmentContextFiles(
-      inputs.assignmentContextGlobs,
-      inputs.assignmentContextMaxChars,
-    );
+    const { content: assignmentContext, matchedFiles: assignmentContextFiles } =
+      readAssignmentContextFiles(inputs.assignmentContextGlobs, inputs.assignmentContextMaxChars);
     if (inputs.assignmentContextGlobs.length > 0 && !assignmentContext) {
       core.warning(
         `assignment_context was set but no matching files were found for: ${inputs.assignmentContextGlobs.join(', ')}. Check that the glob(s) are correct and the files exist in the repository.`,
@@ -181,6 +179,7 @@ async function run() {
       provider: inputs.aiProvider,
       model: inputs.aiModel,
       branchName,
+      assignmentContextFiles,
     });
     const effectiveOutputFile = resolveOutputFile(inputs.outputFile, branchName);
     const outPath = path.resolve(

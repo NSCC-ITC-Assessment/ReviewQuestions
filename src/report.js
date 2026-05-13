@@ -19,6 +19,7 @@ export function formatReport({
   provider,
   model,
   branchName,
+  assignmentContextFiles,
 }) {
   const date = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
   const shortBase = baseSha.substring(0, GIT_SHA_SHORT_LENGTH);
@@ -31,13 +32,19 @@ export function formatReport({
   const isDefaultBranch = !branchName || branchName === 'main' || branchName === 'master';
   const branchNote = isDefaultBranch ? '' : `> **Branch:** \`${branchName}\`\n`;
 
+  const contextNote =
+    assignmentContextFiles && assignmentContextFiles.length > 0
+      ? `> **Assignment Context:** ${assignmentContextFiles.map((f) => `\`${f}\``).join(', ')}\n`
+      : '';
+
   return [
     '## Grill My Code',
     '',
     `> **Generated:** ${date}`,
     `> **Commits reviewed:** \`${shortBase}\` → \`${shortHead}\``,
     branchNote,
-    `> **Files assessed:** ${fileList}`,
+    `> **Code Files Assessed:** ${fileList}`,
+    contextNote,
     truncNote,
     '---',
     '',

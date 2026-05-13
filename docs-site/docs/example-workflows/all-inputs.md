@@ -79,7 +79,9 @@ jobs:
           # and injected into the prompt as assignment context (before
           # additional_context). Useful for README files, assignment briefs, or
           # coding style guides. Leave empty (default) to disable.
-          # assignment_context: "README.md, assignment.md, coding_style.md"
+          # Supported file types: plain text / source files (UTF-8), PDF (.pdf,
+          # text layer only), and Microsoft Word (.doc/.docx, text content only).
+          # assignment_context: "README.md, assignment.pdf, rubric.docx"
 
           # Maximum total characters read from all assignment_context files
           # combined. Increase if your assignment brief is large; decrease to

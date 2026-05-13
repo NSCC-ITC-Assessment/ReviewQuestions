@@ -18,9 +18,6 @@ import {
   AI_RETRY_MAX_DELAY_MS,
   AI_RETRYABLE_STATUS_CODES,
   AZURE_OPENAI_API_VERSION,
-  MAX_OUTPUT_TOKENS,
-  MIN_OUTPUT_TOKENS,
-  TOKENS_PER_QUESTION,
 } from './constants.js';
 
 /** Resolves after `ms` milliseconds. */
@@ -122,22 +119,10 @@ export async function callAI({
       );
   }
 
-  // Allocate TOKENS_PER_QUESTION tokens per question to cover the file-path label,
-  // code snippet, and question text, with MIN_OUTPUT_TOKENS as a floor for headings
-  // and formatting overhead, and MAX_OUTPUT_TOKENS as the ceiling.
-  const numQuestions = messages[1]?.content?.match(/(\d+) comprehension questions/)?.[1];
-  const dynamicMaxTokens = numQuestions
-    ? Math.min(
-        MAX_OUTPUT_TOKENS,
-        Math.max(MIN_OUTPUT_TOKENS, parseInt(numQuestions, 10) * TOKENS_PER_QUESTION),
-      )
-    : MAX_OUTPUT_TOKENS;
-
   const body = JSON.stringify({
     model,
     messages,
     temperature: temperature,
-    max_tokens: dynamicMaxTokens,
     top_p: AI_TOP_P,
   });
 
@@ -206,7 +191,7 @@ export async function callAI({
 
     if (finishReason === 'length') {
       core.warning(
-        `AI response was cut off because the output token limit (${dynamicMaxTokens}) was reached. ` +
+        `AI response was cut off because the output token limit was reached. ` +
           `The generated questions may be incomplete. `,
       );
     }

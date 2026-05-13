@@ -189,10 +189,18 @@ export async function callAI({ provider, model, apiKey, endpoint, messages, retr
     }
 
     const content = data.choices[0].message.content;
+    const finishReason = data.choices[0].finish_reason ?? 'unknown';
+
     if (content === null || content === undefined) {
-      const finishReason = data.choices[0].finish_reason ?? 'unknown';
       throw new Error(
         `AI API returned a null response content (finish_reason: ${finishReason}) — the model may have refused the request or hit a quota limit.`,
+      );
+    }
+
+    if (finishReason === 'length') {
+      core.warning(
+        `AI response was cut off because the output token limit (${dynamicMaxTokens}) was reached. ` +
+          `The generated questions may be incomplete. `,
       );
     }
 

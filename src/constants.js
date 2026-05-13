@@ -70,9 +70,12 @@ export const GIT_MAX_BUFFER = 20 * 1024 * 1024; // 20 MB
 export const COMMENT_STRIP_TIMEOUT_MS = 10_000;
 
 /**
- * AI model sampling temperature (0 = deterministic, 1 = most random).
+ * Default AI model sampling temperature (0 = deterministic, 1 = most random).
+ * Overridable via the ai_temperature action input.
+ * 0.5 keeps questions tightly anchored to the submitted code while still
+ * producing enough phrasing variation that repeated runs differ meaningfully.
  */
-export const AI_TEMPERATURE = 0.7;
+export const DEFAULT_AI_TEMPERATURE = 0.5;
 
 /**
  * AI nucleus-sampling probability mass cutoff.

@@ -45,6 +45,15 @@ inputs:
     required: false
     default: "5"
 
+  ai_temperature:
+    description: >
+      Controls the randomness of the AI's output (0.0 = fully deterministic,
+      1.0 = most random). Lower values produce more predictable, consistent
+      questions; higher values produce more varied output. Most users should
+      leave this at the default.
+    required: false
+    default: "0.5"
+
   api_key:
     description: >
       API key for the chosen AI provider.

@@ -13,7 +13,6 @@
 
 import * as core from '@actions/core';
 import {
-  AI_TEMPERATURE,
   AI_TOP_P,
   AI_RETRY_BASE_DELAY_MS,
   AI_RETRY_MAX_DELAY_MS,
@@ -74,7 +73,15 @@ function parseRetryAfterMs(response) {
  * @param {Array}  opts.messages       - Chat messages array
  * @param {number} opts.retryMaxAttempts - Total attempts (initial + retries)
  */
-export async function callAI({ provider, model, apiKey, endpoint, messages, retryMaxAttempts }) {
+export async function callAI({
+  provider,
+  model,
+  apiKey,
+  endpoint,
+  messages,
+  retryMaxAttempts,
+  temperature,
+}) {
   let url;
   const headers = { 'Content-Type': 'application/json' };
 
@@ -129,7 +136,7 @@ export async function callAI({ provider, model, apiKey, endpoint, messages, retr
   const body = JSON.stringify({
     model,
     messages,
-    temperature: AI_TEMPERATURE,
+    temperature: temperature,
     max_tokens: dynamicMaxTokens,
     top_p: AI_TOP_P,
   });

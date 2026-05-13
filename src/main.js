@@ -150,6 +150,7 @@ async function run() {
       endpoint: inputs.azureEndpoint,
       messages,
       retryMaxAttempts: inputs.aiRetryMaxAttempts,
+      temperature: inputs.aiTemperature,
     });
 
     // ── Write output ────────────────────────────────────────────────────────

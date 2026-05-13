@@ -55,6 +55,12 @@ jobs:
           # Values below 1 are clamped to 1.
           # ai_retry_max_attempts: "5"
 
+          # Controls the randomness of the AI's output (0.0 = fully deterministic,
+          # 1.0 = most random). Lower values produce more consistent questions;
+          # higher values produce more varied output. Most users should leave this
+          # at the default.
+          # ai_temperature: "0.5"
+
           # API key for the provider. Leave empty when using github-models with
           # the built-in GITHUB_TOKEN. Required for openai, openrouter, azure-openai.
           # api_key: ${{ secrets.OPENAI_API_KEY }}

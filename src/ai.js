@@ -97,7 +97,7 @@ export async function callAI({
       url = 'https://openrouter.ai/api/v1/chat/completions';
       headers['Authorization'] = `Bearer ${apiKey}`;
       headers['HTTP-Referer'] = 'https://github.com/NSCC-ITC-Assessment/GrillMyCode';
-      headers['X-Title'] = 'Code Comprehension Questions';
+      headers['X-Title'] = 'GrillMyCode';
       break;
 
     case 'azure-openai':

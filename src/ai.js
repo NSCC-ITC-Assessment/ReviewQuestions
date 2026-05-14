@@ -184,6 +184,15 @@ export async function callAI({
     const finishReason = data.choices[0].finish_reason ?? 'unknown';
 
     if (content === null || content === undefined) {
+      if (attempt < retryMaxAttempts - 1) {
+        const delay = backoffDelay(attempt, AI_RETRY_BASE_DELAY_MS, AI_RETRY_MAX_DELAY_MS);
+        core.warning(
+          `AI returned null content (finish_reason: ${finishReason}) — model may have refused or hit a quota limit. ` +
+            `Attempt ${attempt + 1}/${retryMaxAttempts}. Retrying in ${delay}ms…`,
+        );
+        await sleep(delay);
+        continue;
+      }
       throw new Error(
         `AI API returned a null response content (finish_reason: ${finishReason}) — the model may have refused the request or hit a quota limit.`,
       );

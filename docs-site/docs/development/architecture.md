@@ -70,8 +70,14 @@ buildCodeContent()
     │  Formats stripped files as fenced Markdown code blocks
     │  Truncates to MAX_DIFF_CHARS (12 000) if needed
     │
+readAssignmentContextFiles()
+    │  Reads files from GITHUB_WORKSPACE that match assignment_context globs
+    │  Concatenates contents as headed sections; capped at assignment_context_max_chars input (default 20000)
+    │  Returns an empty string when no globs are supplied or no files match
+    │
 buildPrompt()
     │  Constructs the system + user messages for the AI
+    │  Injects assignment context (file contents) then instructor instructions
     │  AI receives comment-stripped file content, not the raw diff
     │
 callAI()
@@ -109,6 +115,7 @@ Reads and normalises every `INPUT_*` environment variable. Responsible for:
 - Parsing comma-separated glob lists into arrays
 - Applying defaults (`DEFAULT_EXCLUDE_PATTERNS` when no `exclude_patterns` is supplied)
 - Clamping `num_questions` to a minimum of 1 and a maximum of 50; a workflow warning is emitted if the supplied value exceeds 50
+- Splitting `assignment_context` into a `assignmentContextGlobs` array for later file resolution
 
 ### `resolveSHAs(ctx, octokit, inputs)`
 

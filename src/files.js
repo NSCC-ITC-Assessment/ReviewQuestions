@@ -7,10 +7,13 @@
  * fenced code blocks.
  */
 
+import * as core from '@actions/core';
 import { spawnSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { minimatch } from 'minimatch';
+import { extractText, getDocumentProxy } from 'unpdf';
+import mammoth from 'mammoth';
 import { COMMENT_REMOVER_BIN, COMMENT_STRIP_TIMEOUT_MS } from './constants.js';
 import { git } from './git.js';
 
@@ -104,4 +107,86 @@ export function buildCodeContent(files) {
       return `### \`${filepath}\`\n\`\`\`${ext}\n${content.trimEnd()}\n\`\`\``;
     })
     .join('\n\n');
+}
+
+/**
+ * Reads files from GITHUB_WORKSPACE (or cwd as fallback) that match any of
+ * the provided glob patterns. Returns their combined contents formatted as
+ * headed sections, capped at the maxChars argument (default: DEFAULT_ASSIGNMENT_CONTEXT_MAX_CHARS).
+ *
+ * Returns an empty string when no globs are provided or no files match.
+ */
+export async function readAssignmentContextFiles(globs, maxChars) {
+  if (!globs || globs.length === 0) return '';
+
+  const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
+  const opts = { dot: true };
+
+  // Walk the workspace directory recursively to get all candidate paths.
+  let allFiles;
+  try {
+    allFiles = fs.readdirSync(workspace, { recursive: true, encoding: 'utf-8' });
+  } catch {
+    return '';
+  }
+
+  // Keep only regular files that match at least one glob.
+  const matched = allFiles.filter((rel) => {
+    const normalised = rel.replace(/\\/g, '/');
+    try {
+      const stat = fs.statSync(path.join(workspace, normalised));
+      if (!stat.isFile()) return false;
+    } catch {
+      return false;
+    }
+    return globs.some((g) => minimatch(normalised, g, opts));
+  });
+
+  if (matched.length === 0) return '';
+
+  let combined = '';
+  let truncated = false;
+
+  for (const rel of matched) {
+    const normalised = rel.replace(/\\/g, '/');
+    let content;
+    try {
+      if (normalised.toLowerCase().endsWith('.pdf')) {
+        const buffer = fs.readFileSync(path.join(workspace, normalised));
+        const pdf = await getDocumentProxy(new Uint8Array(buffer));
+        const { text } = await extractText(pdf, { mergePages: true });
+        content = text;
+      } else if (/\.docx?$/i.test(normalised)) {
+        const buffer = fs.readFileSync(path.join(workspace, normalised));
+        const result = await mammoth.extractRawText({ buffer });
+        content = result.value;
+      } else {
+        content = fs.readFileSync(path.join(workspace, normalised), 'utf-8');
+      }
+    } catch (err) {
+      core.warning(
+        `assignment_context: failed to read "${normalised}" — ${err.message}. Skipping.`,
+      );
+      continue;
+    }
+
+    const section = `### \`${normalised}\`\n${content.trimEnd()}\n`;
+
+    if (combined.length + section.length > maxChars) {
+      const remaining = maxChars - combined.length;
+      if (remaining > 0) {
+        combined += section.substring(0, remaining);
+      }
+      truncated = true;
+      break;
+    }
+
+    combined += section + '\n';
+  }
+
+  if (truncated) {
+    combined += '\n[assignment context truncated due to size]';
+  }
+
+  return { content: combined.trim(), matchedFiles: matched };
 }

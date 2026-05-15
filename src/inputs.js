@@ -11,6 +11,7 @@ import {
   DEFAULT_EXCLUDE_PATTERNS,
   MAX_QUESTIONS,
   MIN_QUESTIONS,
+  DEFAULT_ASSIGNMENT_CONTEXT_MAX_CHARS,
   DEFAULT_AI_RETRY_MAX_ATTEMPTS,
   DEFAULT_AI_TEMPERATURE,
 } from './constants.js';
@@ -71,6 +72,21 @@ export function readInputs() {
     postDiscussion: core.getInput('post_discussion') === 'true',
     discussionCategory: core.getInput('discussion_category') || 'Assessments',
     additionalContext: core.getInput('additional_context') || '',
+    assignmentContextGlobs: (() => {
+      const raw = core.getInput('assignment_context') || '';
+      return raw
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+    })(),
+    assignmentContextMaxChars: Math.max(
+      1,
+      parseInt(
+        core.getInput('assignment_context_max_chars') ||
+          String(DEFAULT_ASSIGNMENT_CONTEXT_MAX_CHARS),
+        10,
+      ),
+    ),
     keepComments: core.getInput('keep_comments') === 'true',
     skipInitialCommit: core.getInput('skip_initial_commit') !== 'false',
     // Three-way logic for skip_committers:

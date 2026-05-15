@@ -23,7 +23,13 @@ import {
 import { readInputs } from './inputs.js';
 import { resolveSHAs, resolveBranch, resolveOutputFile } from './context.js';
 import { getChangedFiles, getDiff, findStudentCommitSha } from './git.js';
-import { filterFiles, collectRawFiles, stripCommentsFromFiles, buildCodeContent } from './files.js';
+import {
+  filterFiles,
+  collectRawFiles,
+  stripCommentsFromFiles,
+  buildCodeContent,
+  readAssignmentContextFiles,
+} from './files.js';
 import { buildPrompt } from './prompt.js';
 import { callAI } from './ai.js';
 import { formatReport } from './report.js';
@@ -128,11 +134,25 @@ async function run() {
     }
 
     // ── Generate questions using AI ─────────────────────────────────────────
+    const { content: assignmentContext, matchedFiles: assignmentContextFiles } =
+      await readAssignmentContextFiles(
+        inputs.assignmentContextGlobs,
+        inputs.assignmentContextMaxChars,
+      );
+    if (inputs.assignmentContextGlobs.length > 0 && !assignmentContext) {
+      core.warning(
+        `assignment_context was set but no matching files were found for: ${inputs.assignmentContextGlobs.join(', ')}. Check that the glob(s) are correct and the files exist in the repository.`,
+      );
+    } else if (assignmentContext) {
+      core.info(`Assignment context loaded (${assignmentContext.length} characters).`);
+    }
+
     const messages = buildPrompt({
       codeContent,
       files,
       numQuestions: inputs.numQuestions,
       context: inputs.additionalContext,
+      assignmentContext,
       truncated,
     });
 
@@ -163,6 +183,7 @@ async function run() {
       provider: inputs.aiProvider,
       model: inputs.aiModel,
       branchName,
+      assignmentContextFiles,
     });
     const effectiveOutputFile = resolveOutputFile(inputs.outputFile, branchName);
     const outPath = path.resolve(

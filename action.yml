@@ -133,6 +133,30 @@ inputs:
     required: false
     default: "Assessments"
 
+  assignment_context:
+    description: >
+      Comma-separated file glob(s) whose contents are read from the repository
+      and injected into the AI prompt as assignment context. Useful for
+      automatically including README files, assignment briefs, or style guides.
+      Supported file types: plain text and source files (any UTF-8 text),
+      PDF (.pdf — text layer only, images ignored), and Microsoft Word
+      (.doc/.docx — text content only, images ignored).
+      Globs are matched against the full relative path from the repository root,
+      so subdirectory paths and wildcards work (e.g. "docs/assignment.md", "**/*.md").
+      If no files match, a workflow warning is emitted and the action continues
+      without assignment context.
+      Example: "README.md, docs/assignment.md, coding_style.md"
+    required: false
+    default: ""
+
+  assignment_context_max_chars:
+    description: >
+      Maximum total characters read from all assignment_context files combined.
+      Prevents extremely large context files from flooding the AI prompt.
+      Values below 1 are clamped to 1.
+    required: false
+    default: "20000"
+
   additional_context:
     description: >
       Free-text context about the assignment or topic being assessed. Helps the
@@ -235,6 +259,8 @@ runs:
     INPUT_POST_ISSUE: ${{ inputs.post_issue }}
     INPUT_POST_DISCUSSION: ${{ inputs.post_discussion }}
     INPUT_DISCUSSION_CATEGORY: ${{ inputs.discussion_category }}
+    INPUT_ASSIGNMENT_CONTEXT: ${{ inputs.assignment_context }}
+    INPUT_ASSIGNMENT_CONTEXT_MAX_CHARS: ${{ inputs.assignment_context_max_chars }}
     INPUT_ADDITIONAL_CONTEXT: ${{ inputs.additional_context }}
     INPUT_SKIP_INITIAL_COMMIT: ${{ inputs.skip_initial_commit }}
     INPUT_KEEP_COMMENTS: ${{ inputs.keep_comments }}

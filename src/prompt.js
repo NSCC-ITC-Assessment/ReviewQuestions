@@ -7,20 +7,48 @@
 
 /**
  * Builds the [system, user] message array for the chat completions API.
+ *
+ * The system prompt is assembled in three tiers, ordered from lowest to highest
+ * priority. LLMs exhibit recency bias — later content in the prompt carries more
+ * weight — so higher-priority content is intentionally placed later. Each tier
+ * also carries explicit override language to reinforce the hierarchy in models
+ * that do not rely purely on position.
+ *
+ * Tier 1 — Main system prompt (lowest priority)
+ *   Always present. Contains the core assessment rubric, question formatting
+ *   rules, and general educational guidelines. Provides the baseline behaviour
+ *   when no additional context is supplied.
+ *
+ * Tier 2 — Assignment context (middle priority, optional)
+ *   Appended when `assignment_context` glob(s) match files in the repository.
+ *   Contains the raw contents of instructor-provided files (README, assignment
+ *   brief, rubric, style guide, etc.). Explicitly overrides the main prompt
+ *   above it, and explicitly defers to instructor instructions below it.
+ *
+ * Tier 3 — Instructor instructions (highest priority, optional)
+ *   Appended when `additional_context` is provided. Contains free-text
+ *   instructions written directly by the instructor for this specific run.
+ *   Explicitly overrides all content above it, including the assignment context.
+ *   Placed last in the prompt to maximise recency-bias reinforcement.
  */
 export function buildPrompt({
   codeContent,
   files,
   numQuestions,
   context: extraContext,
+  assignmentContext,
   truncated,
 }) {
+  const assignmentContextSection = assignmentContext
+    ? `\n\n---\n\nASSIGNMENT CONTEXT — HIGH PRIORITY\nThe following files describe the assignment requirements. They take precedence over the general guidelines above. Use them to focus your questions on the specific learning objectives and requirements of this assignment. Instructor instructions below take precedence over this section if there is any conflict.\n\n${assignmentContext}`
+    : '';
+
   const contextSection = extraContext
-    ? `\n\n---\n\nINSTRUCTOR INSTRUCTIONS — HIGHEST PRIORITY\nThe following instructions are specific to this assignment and override any conflicting guidance above. Follow them exactly.\n\n${extraContext}`
+    ? `\n\n---\n\nINSTRUCTOR INSTRUCTIONS — HIGHEST PRIORITY\nThe following instructions are specific to this assignment and override all other guidance above, including the assignment context. Follow them exactly.\n\n${extraContext}`
     : '';
 
   const system = `
-You are an expert programming educator. Analyze the submitted student code and generate a maximum of ${numQuestions} targeted questions requiring genuine understanding of what was written.
+You are an expert programming educator. Analyze the submitted student code and generate ${numQuestions} targeted questions whose answers require genuine understanding of what was written.
 
 Calibrate question depth to the code's complexity — questions may address syntax/logic, data structures/algorithms, language patterns, or architecture (e.g. MVC, layering).
 
@@ -142,7 +170,7 @@ Stop generating immediately once the total number of questions reaches ${numQues
 Never generate question number ${numQuestions + 1}.
 If ${numQuestions} specific code-based questions can already be generated without becoming shallow, repetitive, or forced, omit the **## Broader Questions** section entirely.
 
-Respond only with the generated Markdown question content. Do not include explanations, introductions, summaries, or answers.${contextSection}`;
+Respond only with the generated Markdown question content. Do not include explanations, introductions, summaries, or answers.${assignmentContextSection}${contextSection}`;
 
   const truncatedNote = truncated
     ? '\n> ⚠️ The code below has been truncated — form questions based on the visible portion.\n'

@@ -81,6 +81,19 @@ jobs:
             Focus questions on: when list comprehensions are appropriate,
             performance trade-offs, and readability.
 
+          # Comma-separated file glob(s) whose contents are read from the repo
+          # and injected into the prompt as assignment context (before
+          # additional_context). Useful for README files, assignment briefs, or
+          # coding style guides. Leave empty (default) to disable.
+          # Supported file types: plain text / source files (UTF-8), PDF (.pdf,
+          # text layer only), and Microsoft Word (.doc/.docx, text content only).
+          # assignment_context: "README.md, assignment.pdf, rubric.docx"
+
+          # Maximum total characters read from all assignment_context files
+          # combined. Increase if your assignment brief is large; decrease to
+          # limit token usage. Values below 1 are clamped to 1.
+          # assignment_context_max_chars: "20000"
+
           # ── File filtering ────────────────────────────────────────────────
 
           # Comma-separated glob patterns for files to include.

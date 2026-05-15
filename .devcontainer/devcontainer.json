@@ -17,9 +17,6 @@
         "orta.vscode-jest",
         "vitest.explorer",
 
-        //Git
-        "eamodio.gitlens",
-
         // GitHub & Actions
         "github.vscode-github-actions",
         "github.copilot",

@@ -37,5 +37,5 @@ jobs:
 ## Notes
 
 - `post_pr_comment: "false"` disables the PR comment since there may be no open PR for this branch
-- `contents: write` is required to commit the `_assessment/` file back to the repository
-- The output file includes the branch name to avoid collisions — e.g. `_assessment/grill-my-code-feat-login-form.md`
+- `contents: write` is required to commit the `.assessment/` file back to the repository
+- The output file includes the branch name to avoid collisions — e.g. `.assessment/grill-my-code-feat-login-form.md`

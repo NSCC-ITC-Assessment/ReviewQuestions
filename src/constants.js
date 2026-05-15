@@ -38,7 +38,7 @@ export const DEFAULT_EXCLUDE_PATTERNS = [
   '**/*.pdf',
   '**/*.zip',
   '**/*.tar.gz',
-  '_assessment/**',
+  '.assessment/**',
 ];
 
 /**

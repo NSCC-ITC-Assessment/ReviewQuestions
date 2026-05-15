@@ -205,13 +205,13 @@ Set `skip_initial_commit: 'false'` to include the initial commit's files in the 
 
 ## Output file naming
 
-All assessment files are written under the `_assessment/` folder. Any directory component of the `output_file` setting is ignored — only the basename is used. On the default branch (`main`/`master`) the file keeps the configured basename; on any other branch the sanitised branch name is appended before the extension:
+All assessment files are written under the `.assessment/` folder. Any directory component of the `output_file` setting is ignored — only the basename is used. On the default branch (`main`/`master`) the file keeps the configured basename; on any other branch the sanitised branch name is appended before the extension:
 
 | Branch            | `output_file` setting | Actual file written                            |
 | ----------------- | --------------------- | ---------------------------------------------- |
-| `main`            | `grill-my-code.md`    | `_assessment/grill-my-code.md`                 |
-| `feat/login-form` | `grill-my-code.md`    | `_assessment/grill-my-code-feat-login-form.md` |
-| `student/a1`      | `assessment.md`       | `_assessment/assessment-student-a1.md`         |
+| `main`            | `grill-my-code.md`    | `.assessment/grill-my-code.md`                 |
+| `feat/login-form` | `grill-my-code.md`    | `.assessment/grill-my-code-feat-login-form.md` |
+| `student/a1`      | `assessment.md`       | `.assessment/assessment-student-a1.md`         |
 
 ---
 

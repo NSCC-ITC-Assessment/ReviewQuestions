@@ -6,7 +6,7 @@ sidebar_position: 8
 
 Automatically injects assignment files (README, brief, rubric, style guide, etc.) into the AI prompt so questions are targeted to the specific requirements of the assignment — without manually copying content into `additional_context`.
 
-Copy this file to `.github/workflows/assess.yml` in the student repository.
+Copy this file to `.github/workflows/grill-my-code.yml` in the student repository.
 
 ```yaml
 name: Code Assessment

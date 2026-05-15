@@ -10,7 +10,7 @@ If Discussions are not enabled on the repository when the action runs, they are 
 
 Each run supersedes the previous: existing open assessment discussions for the same branch are deleted before a new one is created.
 
-Copy this file to `.github/workflows/assess.yml` in the student repository.
+Copy this file to `.github/workflows/grill-my-code.yml` in the student repository.
 
 ```yaml
 name: Code Assessment

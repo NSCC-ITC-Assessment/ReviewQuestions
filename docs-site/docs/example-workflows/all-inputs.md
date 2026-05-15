@@ -6,7 +6,7 @@ sidebar_position: 7
 
 A fully annotated workflow showing every available input. Inputs that don't apply to the pull-request scenario are commented out with an explanation of when they would be used instead.
 
-Copy this file to `.github/workflows/assess.yml` in the student repository and remove or adjust inputs as needed.
+Copy this file to `.github/workflows/grill-my-code.yml` in the student repository and remove or adjust inputs as needed.
 
 ```yaml
 name: Code Assessment

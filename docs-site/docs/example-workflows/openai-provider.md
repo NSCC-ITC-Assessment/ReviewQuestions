@@ -8,7 +8,7 @@ Uses an external AI provider instead of GitHub Models. Useful when a higher ques
 
 Store the API key as a secret in **Settings → Secrets and variables → Actions** on the student repository.
 
-Copy this file to `.github/workflows/assess.yml` in the student repository.
+Copy this file to `.github/workflows/grill-my-code.yml` in the student repository.
 
 ```yaml
 name: Code Assessment

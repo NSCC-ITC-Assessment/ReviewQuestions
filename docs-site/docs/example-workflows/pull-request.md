@@ -6,7 +6,7 @@ sidebar_position: 1
 
 Generates assessment questions whenever a student opens or updates a pull request. Questions are posted as a PR comment so the instructor can see them inline alongside the submitted code.
 
-Copy this file to `.github/workflows/assess.yml` in the student repository.
+Copy this file to `.github/workflows/grill-my-code.yml` in the student repository.
 
 ```yaml
 name: Code Assessment

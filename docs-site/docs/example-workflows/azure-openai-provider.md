@@ -15,7 +15,7 @@ Add these in **Settings → Secrets and variables → Actions** on the student r
 | `AZURE_OPENAI_API_KEY` | API key for your Azure OpenAI resource |
 | `AZURE_OPENAI_ENDPOINT` | Full endpoint URL, e.g. `https://my-resource.openai.azure.com/openai/deployments/my-deployment` |
 
-Copy this file to `.github/workflows/assess.yml` in the student repository.
+Copy this file to `.github/workflows/grill-my-code.yml` in the student repository.
 
 ```yaml
 name: Code Assessment

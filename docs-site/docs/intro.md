@@ -17,7 +17,7 @@ slug: /
 
 ## Quick start
 
-Add this to `.github/workflows/assess.yml` in the student repository:
+Add this to `.github/workflows/grill-my-code.yml` in the student repository:
 
 ```yaml
 name: Code Assessment

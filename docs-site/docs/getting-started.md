@@ -33,7 +33,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Copy this file to `.github/workflows/assess.yml` in the student repository. No secrets need to be created — [GitHub Models](https://github.com/marketplace/models) (the default AI provider) authenticates with the built-in `GITHUB_TOKEN`.
+Copy this file to `.github/workflows/grill-my-code.yml` in the student repository. No secrets need to be created — [GitHub Models](https://github.com/marketplace/models) (the default AI provider) authenticates with the built-in `GITHUB_TOKEN`.
 
 ## Choosing a trigger event
 

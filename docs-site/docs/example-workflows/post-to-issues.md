@@ -8,7 +8,7 @@ Creates a GitHub Issue for each assessment run. Each issue title includes the br
 
 If an issue already exists for the same branch, its title and body are **updated in place** — the issue number, URL, and comment history are preserved. Any duplicate issues are deleted.
 
-Copy this file to `.github/workflows/assess.yml` in the student repository.
+Copy this file to `.github/workflows/grill-my-code.yml` in the student repository.
 
 ```yaml
 name: Code Assessment

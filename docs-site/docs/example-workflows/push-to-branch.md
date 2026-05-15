@@ -6,7 +6,7 @@ sidebar_position: 2
 
 Generates assessment questions on every push to a non-default branch. Useful when students work directly on a feature or personal branch without opening a pull request. The output file is written back to the repository.
 
-Copy this file to `.github/workflows/assess.yml` in the student repository.
+Copy this file to `.github/workflows/grill-my-code.yml` in the student repository.
 
 ```yaml
 name: Code Assessment

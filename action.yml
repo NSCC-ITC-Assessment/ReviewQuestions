@@ -94,8 +94,8 @@ inputs:
   output_file:
     description: >
       Basename for the assessment Markdown file. The file is always written
-      under the _assessment/ folder in the repository root (e.g.
-      grill-my-code.md → _assessment/grill-my-code.md) and committed back to
+      under the .assessment/ folder in the repository root (e.g.
+      grill-my-code.md → .assessment/grill-my-code.md) and committed back to
       the repository via the GitHub Contents API.
     required: false
     default: "grill-my-code.md"

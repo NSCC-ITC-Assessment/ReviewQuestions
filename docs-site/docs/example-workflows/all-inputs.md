@@ -99,7 +99,7 @@ jobs:
           # ── Output & delivery ─────────────────────────────────────────────
 
           # Filename for the written assessment file (basename only — directory
-          # components are ignored). Always written under _assessment/.
+          # components are ignored). Always written under .assessment/.
           output_file: "grill-my-code.md"
 
           # Post the assessment as a pull request comment.

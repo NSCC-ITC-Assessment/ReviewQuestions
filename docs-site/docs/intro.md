@@ -46,7 +46,7 @@ No secrets need to be created — the default provider (GitHub Models) authentic
 
 ## What you get
 
-- **Comprehension questions** written to a Markdown file committed back to the repository under `_assessment/`
+- **Comprehension questions** written to a Markdown file committed back to the repository under `.assessment/`
 - **PR comment** (default on) with the questions posted inline on the pull request
 - **GitHub Issue** (optional) — one per branch, updated in place on re-runs
 - **GitHub Discussion** (optional) — forum-style record of each assessment

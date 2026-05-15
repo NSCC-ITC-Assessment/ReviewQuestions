@@ -135,24 +135,24 @@ export function resolveBranch(ctx) {
 }
 
 /**
- * Derives the effective output file path under the _assessment/ folder.
+ * Derives the effective output file path under the .assessment/ folder.
  *
  * On main/master (or when the branch is unknown) the file is named after
  * the configured output_file basename. On any other branch the sanitised
  * branch name is appended before the extension so each branch produces a
- * distinct file, all stored under _assessment/.
+ * distinct file, all stored under .assessment/.
  */
 export function resolveOutputFile(outputFile, branchName) {
   const ext = path.extname(outputFile);
   const base = path.basename(outputFile, ext);
   const isDefaultBranch = !branchName || branchName === 'main' || branchName === 'master';
 
-  if (isDefaultBranch) return `_assessment/${base}${ext}`;
+  if (isDefaultBranch) return `.assessment/${base}${ext}`;
 
   const safeBranch = branchName
     .replace(/[^a-zA-Z0-9_-]/g, '-')
     .replace(/-{2,}/g, '-')
     .replace(/^-|-$/g, '');
 
-  return `_assessment/${base}-${safeBranch}${ext}`;
+  return `.assessment/${base}-${safeBranch}${ext}`;
 }

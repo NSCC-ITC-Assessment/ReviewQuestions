@@ -119,6 +119,13 @@ export const COMMENT_REMOVER_BIN = '/usr/local/bin/rmcm';
 export const MIN_QUESTIONS = 1;
 
 /**
+ * Default maximum total characters read from all assignment_context files
+ * combined. Overridable via the assignment_context_max_chars action input.
+ * Prevents large files from flooding the prompt.
+ */
+export const DEFAULT_ASSIGNMENT_CONTEXT_MAX_CHARS = 20000;
+
+/**
  * Azure OpenAI REST API version sent as the api-version query parameter.
  * Update this when Microsoft releases a newer stable GA version.
  */

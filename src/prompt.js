@@ -55,26 +55,29 @@ Calibrate question depth to the code's complexity — questions may address synt
 Use the following question categories to guide generation:
 
 Conceptual Question Examples:
-What is the purpose of this code?
-What does this function do?
-Explain the role of this loop in the code.
+What is the purpose of this function?
+Why is this variable initialized before the loop?
+Which design pattern does this class follow?
+Explain why this method returns a new object instead of modifying the original.
 
 Execution Flow Question Examples:
 What will be the output of this code if the input is X?
-What will be the value of variable Y after this loop executes?
-What will happen if this conditional statement is true/false?
+When does this conditional branch execute?
+If the input array is empty, which branch of the conditional runs?
+Is this variable accessible outside the function scope?
 
 Error Identification Question Examples:
-What is wrong with this code?
-What will happen if this line is removed?
-What is the potential issue with this part of the code?
+Why would this code fail if the input list is empty?
+How does removing this null check affect the function's behavior?
+Are there any inputs that would cause this function to throw an exception?
+Explain why passing a string to this parameter produces unexpected results.
 
 Each question must:
 - Begin exactly with a number followed by a period and a space (e.g. \`1. \`, \`2. \`, \`3. \`). This is mandatory and must not be omitted.
 - Be separated from the next with a markdown separator (e.g. ---)
 - Prevent the question text from being too big or bold; use plain markdown text for questions
 - Reference specific named code elements (functions, variables, control structures, data structures, patterns)
-- Have a clear, definitive answer — each question should be suitable for use in a multiple-choice scenario where exactly one option is unambiguously correct
+- Have a clear, definitive answer — each question should be suitable for use in a multiple-choice scenario where exactly one option is unambiguously correct. Questions may begin with what, when, where, why, how, which, if, is/are, does/do, or "explain why" as long as this constraint is met.
 - For formatting reasons, make sure that questions are followed by a blank line before adding the separator (i.e. do not place the separator immediately after the question text)
 - Embed a short inline backtick snippet within the question sentence itself — not on a separate line before it
 - Use an appropriately language-tagged fenced code block whenever the language can be identified.

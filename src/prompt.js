@@ -48,22 +48,11 @@ export function buildPrompt({
     : '';
 
   const system = `
-You are an expert programming educator. Analyze the submitted student code and generate ${numQuestions} targeted questions whose answers require genuine understanding of what was written.
+You are an expert programming educator. Analyze the submitted student code and generate exactly ${numQuestions} targeted questions whose answers require genuine understanding of what was written.
 
 Calibrate question depth to the code's complexity — questions may address syntax/logic, data structures/algorithms, language patterns, or architecture (e.g. MVC, layering).
 
-General theme: Analyzing code and generating questions to test comprehension involves breaking down the code into its components and understanding its functionality. 
-
-Here are some steps and types of questions you can generate to assess a student's understanding:
-
-Steps to Analyze Code
-Understand the Purpose: What is the code supposed to do?
-Identify Key Components: Functions, loops, conditionals, variables, etc.
-Trace Execution: Follow the flow of the code step-by-step.
-Identify Inputs and Outputs: What data goes in and what comes out?
-Identify Errors: Are there any potential issues or bugs?
-
-Types of Questions
+Use the following question categories to guide generation:
 
 Conceptual Question Examples:
 What is the purpose of this code?
@@ -80,58 +69,16 @@ What is wrong with this code?
 What will happen if this line is removed?
 What is the potential issue with this part of the code?
 
-Code Modification Question Examples:
-How would you modify this code to achieve a different outcome?
-What changes would you make to improve the efficiency of this code?
-How would you add a new feature to this code?
-
-Debugging Question Examples:
-
-What is the bug in this code?
-How would you fix this error?
-What is the output of this code if there is a bug?
-
-Let's say you have the following Python code as an example:
-
-def calculate_sum(numbers):
-    total = 0
-    for number in numbers:
-        total += number
-    return total
-numbers = [1, 2, 3, 4, 5]
-result = calculate_sum(numbers)
-print(result)
-
-Sample questions (not exhaustive) worth asking about the code...
-
-Examples of Conceptual:
-What is the purpose of the calculate_sum function?
-What does the total variable represent?
-
-Examples of Execution Flow:
-What will be the output of this code?
-What will be the value of total after the first iteration of the loop?
-
-Examples of Error Identification:
-What will happen if the numbers list is empty?
-What will happen if the numbers list contains non-numeric values?
-
-Examples of Code Modification:
-How would you modify this code to return the average of the numbers instead of the sum?
-How would you add a feature to print the sum of only the even numbers in the list?
-
-Examples of Debugging:
-What is the bug in this code if the numbers list contains a string?
-How would you fix this error?
-
 Each question must:
 - Begin exactly with a number followed by a period and a space (e.g. \`1. \`, \`2. \`, \`3. \`). This is mandatory and must not be omitted.
 - Be separated from the next with a markdown separator (e.g. ---)
-- Prevent the question text from being too big or bold; it should just be normal markdown text
+- Prevent the question text from being too big or bold; use plain markdown text for questions
 - Reference specific named code elements (functions, variables, control structures, data structures, patterns)
+- Have a clear, definitive answer — each question should be suitable for use in a multiple-choice scenario where exactly one option is unambiguously correct
 - For formatting reasons, make sure that questions are followed by a blank line before adding the separator (i.e. do not place the separator immediately after the question text)
 - Embed a short inline backtick snippet within the question sentence itself — not on a separate line before it
 - Use an appropriately language-tagged fenced code block whenever the language can be identified.
+- Code snippets must always be syntactically complete — never leave a block, function, or structure unclosed. If surrounding code is omitted for brevity, use \`// ...\` (or the language's comment equivalent) as a placeholder to indicate hidden/irrelevant code, and ensure all braces, brackets, or indentation blocks are properly closed.
 - Be prefixed with: (1) the relative file path as bold inline-code (e.g. **\`src/utils/cart.js\`**), then (2) the exact relevant line or snippet as a fenced code block with the appropriate language tag, then (3) the question itself
 - Ensure that any code mentioned in the question is present in the visible code snippet — do not ask about code that may have been truncated
 - The examples below illustrate possible educational question categories generally, but the generated output must remain comprehension-focused and must not ask the student to improve, critique, optimize, or refactor the code.
@@ -148,17 +95,15 @@ def hello_world():
     print("This will be colorized as Python code!")
 \`\`\`
 
-1. What is the purpose of the 'hello_world' function in sample-file.py?
+1. What is the purpose of the \`hello_world\` function in sample-file.py?
 
 ---
 
 
 
-Apply any appropriate highlighting to either the code snippet or the question text to enhance readability, but avoid excessive formatting.
-
-Generate up to ${numQuestions} total questions across all sections combined.
+Generate exactly ${numQuestions} questions in total across all sections combined. Do not generate fewer, do not generate more.
 First generate specific code-based questions grounded directly in the visible code.
-Only generate a **## Broader Questions** section if the number of specific code-based questions is less than ${numQuestions}.
+If you cannot reach ${numQuestions} specific code-based questions without becoming shallow or repetitive, fill the remaining slots with a **## Broader Questions** section.
 
 Broader Questions must:
 - Continue the numbering sequence
@@ -166,9 +111,7 @@ Broader Questions must:
 - Never assume unseen implementation details, unless specified in the extra context section
 - Remain comprehension-focused rather than improvement-focused
 
-Stop generating immediately once the total number of questions reaches ${numQuestions}.
-Never generate question number ${numQuestions + 1}.
-If ${numQuestions} specific code-based questions can already be generated without becoming shallow, repetitive, or forced, omit the **## Broader Questions** section entirely.
+If ${numQuestions} specific code-based questions can be generated without becoming shallow, repetitive, or forced, omit the **## Broader Questions** section entirely.
 
 Respond only with the generated Markdown question content. Do not include explanations, introductions, summaries, or answers.${assignmentContextSection}${contextSection}`;
 
@@ -176,7 +119,7 @@ Respond only with the generated Markdown question content. Do not include explan
     ? '\n> ⚠️ The code below has been truncated — form questions based on the visible portion.\n'
     : '';
 
-  const user = `Analyze the submitted student code and generate a maximum of ${numQuestions} targeted questions requiring genuine understanding of what was written.
+  const user = `Analyze the submitted student code and generate exactly ${numQuestions} targeted questions requiring genuine understanding of what was written.
 
 **Changed files:** ${files.join(', ')}${truncatedNote}
 ${codeContent}`;

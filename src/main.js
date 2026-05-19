@@ -154,6 +154,7 @@ async function run() {
       context: inputs.additionalContext,
       assignmentContext,
       truncated,
+      showAnswers: inputs.showAnswers,
     });
 
     core.info(

@@ -75,6 +75,14 @@ inputs:
     required: false
     default: "5"
 
+  show_answers:
+    description: >
+      When true, each question is immediately followed by its answer, labelled
+      "Answer:". Answers use plain, everyday language and avoid technical jargon.
+      Useful for generating a marked instructor copy alongside the student copy.
+    required: false
+    default: "false"
+
   include_patterns:
     description: >
       Comma-separated glob patterns for files to include in the assessment.
@@ -267,3 +275,4 @@ runs:
     INPUT_SKIP_COMMITTERS: ${{ inputs.skip_committers }}
     INPUT_BASE_SHA: ${{ inputs.base_sha }}
     INPUT_HEAD_SHA: ${{ inputs.head_sha }}
+    INPUT_SHOW_ANSWERS: ${{ inputs.show_answers }}

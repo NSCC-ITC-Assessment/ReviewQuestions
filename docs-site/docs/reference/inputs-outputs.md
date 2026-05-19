@@ -16,7 +16,7 @@ sidebar_position: 1
 | `api_key` | No | | API key for the provider. For `github-models`, leave empty to use `github_token`, or supply an instructor PAT to override it |
 | `azure_endpoint` | No | | Azure OpenAI endpoint URL (required for `azure-openai`) |
 | `num_questions` | No | `5` | Number of questions to generate (minimum 1, maximum 50). Values above 50 are automatically capped |
-| `show_answers` | No | `false` | When `true`, each question is immediately followed by its answer labelled **Answer:**. Answers are written in plain, everyday language and avoid technical jargon. Useful for generating an instructor copy |
+| `include_answers` | No | `false` | When `true`, each question is immediately followed by its answer labelled **Answer:**. Answers are written in plain, everyday language and avoid technical jargon. Useful for generating an instructor copy |
 | `include_patterns` | No | | Comma-separated globs for files to include |
 | `exclude_patterns` | No | *(common non-code files)* | Comma-separated globs for files to exclude |
 | `output_file` | No | `grill-my-code.md` | Filename for the output Markdown file |

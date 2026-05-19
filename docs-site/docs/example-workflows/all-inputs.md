@@ -76,7 +76,7 @@ jobs:
           # When true, each question is immediately followed by its answer, labelled
           # "Answer:". Answers use plain, everyday language and avoid technical jargon.
           # Useful for generating an instructor copy alongside the student copy.
-          # show_answers: "false"
+          # include_answers: "false"
 
           # Assignment-specific instructions for the AI. Injected at the end of
           # the system prompt and takes precedence over default behaviour.

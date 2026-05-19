@@ -88,7 +88,7 @@ export function readInputs() {
       ),
     ),
     keepComments: core.getInput('keep_comments') === 'true',
-    showAnswers: core.getInput('show_answers') === 'true',
+    includeAnswers: core.getInput('include_answers') === 'true',
     skipInitialCommit: core.getInput('skip_initial_commit') !== 'false',
     // Three-way logic for skip_committers:
     //   • Input not provided (empty string from Actions default) → use the

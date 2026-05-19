@@ -75,7 +75,7 @@ inputs:
     required: false
     default: "5"
 
-  show_answers:
+  include_answers:
     description: >
       When true, each question is immediately followed by its answer, labelled
       "Answer:". Answers use plain, everyday language and avoid technical jargon.
@@ -275,4 +275,4 @@ runs:
     INPUT_SKIP_COMMITTERS: ${{ inputs.skip_committers }}
     INPUT_BASE_SHA: ${{ inputs.base_sha }}
     INPUT_HEAD_SHA: ${{ inputs.head_sha }}
-    INPUT_SHOW_ANSWERS: ${{ inputs.show_answers }}
+    INPUT_INCLUDE_ANSWERS: ${{ inputs.include_answers }}

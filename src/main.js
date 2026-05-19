@@ -110,14 +110,12 @@ async function run() {
     let processedFiles;
     if (inputs.keepComments) {
       core.info('Comment stripping skipped (keep_comments is true).');
+      core.debug('No comments were removed from the code (keep_comments is true).');
       processedFiles = rawFiles;
     } else {
-      core.info(
-        `--- CODE BEFORE COMMENT STRIPPING ---\n${rawContent}\n--- END CODE BEFORE COMMENT STRIPPING ---`,
-      );
       const { strippedFiles, strippedCharCount } = stripCommentsFromFiles(rawFiles);
       core.info(`Code size after comment stripping: ${strippedCharCount} characters`);
-      core.info(
+      core.debug(
         `--- CODE AFTER COMMENT STRIPPING ---\n${buildCodeContent(strippedFiles)}\n--- END CODE AFTER COMMENT STRIPPING ---`,
       );
       processedFiles = strippedFiles;

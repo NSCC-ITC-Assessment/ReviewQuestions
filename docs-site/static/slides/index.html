@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GrillMyCode – Overview</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
+
+    <style>
+      :root {
+        --accent: #f97316;
+        --accent-light: #fdba74;
+        --dim: rgba(255, 255, 255, 0.55);
+      }
+
+      .reveal h1,
+      .reveal h2,
+      .reveal h3 {
+        text-transform: none;
+        letter-spacing: -0.01em;
+      }
+
+      .reveal h1 { font-size: 1.8em; }
+      .reveal h2 { font-size: 1.25em; color: var(--accent-light); }
+      .reveal h3 { font-size: 1.0em; color: var(--accent-light); }
+
+      .reveal .slides section { text-align: left; }
+      .reveal .slides section.center-slide { text-align: center; }
+
+      .accent  { color: var(--accent); font-weight: 700; }
+      .dim     { color: var(--dim); }
+      .mono    { font-family: monospace; font-size: 0.9em; background: rgba(255,255,255,0.07); padding: 0.1em 0.35em; border-radius: 4px; }
+
+      /* Pill badges */
+      .badge {
+        display: inline-block;
+        padding: 0.2em 0.65em;
+        border-radius: 999px;
+        font-size: 0.72em;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        vertical-align: middle;
+        background: var(--accent);
+        color: #111;
+        margin-left: 0.4em;
+      }
+      .badge.green  { background: #22c55e; }
+      .badge.blue   { background: #38bdf8; }
+      .badge.purple { background: #a78bfa; }
+
+      /* Step list */
+      .step-list { list-style: none; margin: 0; padding: 0; }
+      .step-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.55em;
+        margin-bottom: 0.4em;
+        font-size: 0.78em;
+      }
+      .step-num {
+        flex-shrink: 0;
+        width: 1.7em;
+        height: 1.7em;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #111;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85em;
+        margin-top: 0.1em;
+      }
+
+      /* Two-column layout */
+      .cols { display: flex; gap: 2em; align-items: flex-start; }
+      .cols > * { flex: 1; }
+
+      /* Feature grid */
+      .feature-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5em;
+        font-size: 0.72em;
+      }
+      .feature-card {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 8px;
+        padding: 0.55em 0.8em;
+      }
+      .feature-card .icon { font-size: 1.2em; margin-bottom: 0.15em; }
+      .feature-card strong { display: block; margin-bottom: 0.15em; color: var(--accent-light); }
+
+      /* Provider table */
+      .provider-table { width: 100%; border-collapse: collapse; font-size: 0.68em; }
+      .provider-table th {
+        background: rgba(249,115,22,0.25);
+        color: var(--accent-light);
+        padding: 0.3em 0.6em;
+        text-align: left;
+        font-weight: 700;
+      }
+      .provider-table td { padding: 0.3em 0.6em; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .provider-table tr:last-child td { border-bottom: none; }
+      .provider-table .default-row td { background: rgba(255,255,255,0.05); }
+
+      /* Code block override */
+      .reveal pre { font-size: 0.58em; border-radius: 6px; }
+      .reveal code { font-size: 0.9em; }
+
+      /* Divider slide */
+      .divider { border-top: 2px solid var(--accent); margin: 0.25em 0 0.5em; }
+
+      /* Footnote */
+      .footnote { font-size: 0.6em; color: var(--dim); margin-top: 1.2em; }
+
+      /* Title slide */
+      .title-logo { font-size: 3.5em; margin-bottom: 0.1em; }
+
+      /* Progress dots override */
+      .reveal .progress { color: var(--accent); }
+
+      /* Delivery icons row */
+      .delivery-row {
+        display: flex;
+        gap: 0.7em;
+        margin-top: 0.6em;
+        font-size: 0.72em;
+      }
+      .delivery-card {
+        flex: 1;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 8px;
+        padding: 0.55em 0.65em;
+        text-align: center;
+      }
+      .delivery-card .dicon { font-size: 1.5em; }
+      .delivery-card strong { display: block; color: var(--accent-light); margin: 0.2em 0 0.15em; font-size: 1em; }
+      .delivery-card span { color: var(--dim); font-size: 0.88em; }
+    </style>
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <!-- ── 1. Title ─────────────────────────────────────────────── -->
+        <section class="center-slide" data-auto-animate>
+          <div class="title-logo">🔥</div>
+          <h1><span class="accent">GrillMyCode</span></h1>
+          <p style="font-size:1.1em; color:var(--dim); margin-top:-0.2em;">
+            AI‑powered code comprehension assessments for GitHub
+          </p>
+          <hr class="divider" style="width:40%; margin:1em auto;" />
+          <p class="dim" style="font-size:0.72em;">
+            Use ← → arrow keys or swipe to navigate &nbsp;·&nbsp; Press <kbd>F</kbd> for full screen
+          </p>
+        </section>
+
+        <!-- ── 2. The Problem ─────────────────────────────────────── -->
+        <section data-auto-animate>
+          <h2>The Problem</h2>
+          <hr class="divider" />
+          <p style="font-size:0.9em;">
+            Code-submission assessments can't answer the fundamental question:
+          </p>
+          <blockquote style="border-left: 4px solid var(--accent); padding-left: 1em; margin: 1em 0; font-style: italic; font-size: 0.95em;">
+            "Did the student actually <span class="accent">understand</span> the code they submitted?"
+          </blockquote>
+          <ul style="font-size:0.82em; line-height:1.75;">
+            <li>Copy-paste and AI-generated code looks identical to authored code</li>
+            <li>Manual code review is time-consuming at classroom scale</li>
+            <li>Plagiarism checkers flag similarity — not comprehension</li>
+          </ul>
+        </section>
+
+        <!-- ── 3. What is GrillMyCode ─────────────────────────────── -->
+        <section data-auto-animate>
+          <h2>What is GrillMyCode?</h2>
+          <hr class="divider" />
+          <p style="font-size:0.88em;">
+            A <span class="accent">GitHub Action</span> that automatically analyses a student's
+            code changes and uses AI to generate targeted comprehension questions — ready for a
+            follow-up verbal or written quiz.
+          </p>
+          <div class="feature-grid" style="margin-top:1em;">
+            <div class="feature-card">
+              <div class="icon">🤖</div>
+              <strong>AI-generated questions</strong>
+              Tailored to <em>exactly</em> the code the student wrote
+            </div>
+            <div class="feature-card">
+              <div class="icon">⚡</div>
+              <strong>Zero setup for students</strong>
+              Runs automatically on every push or PR
+            </div>
+            <div class="feature-card">
+              <div class="icon">🎓</div>
+              <strong>Built for GitHub Classroom</strong>
+              Skips template & bot-committed starter files
+            </div>
+            <div class="feature-card">
+              <div class="icon">🔌</div>
+              <strong>Multiple AI providers</strong>
+              GitHub Models, OpenAI, OpenRouter, Azure OpenAI
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 4. How it Works (overview) ────────────────────────── -->
+        <section data-auto-animate>
+          <h2>How It Works</h2>
+          <hr class="divider" />
+          <ul class="step-list">
+            <li>
+              <span class="step-num">1</span>
+              <div><strong>Detect the commit range</strong><br /><span class="dim">Reads the triggering event (push, pull request, etc.) to determine which commits to assess</span></div>
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              <div><strong>Collect changed files</strong><br /><span class="dim">Runs <span class="mono">git diff</span> and applies include/exclude glob filters</span></div>
+            </li>
+            <li>
+              <span class="step-num">3</span>
+              <div><strong>Strip code comments</strong><br /><span class="dim">Removes inline and block comments so the AI focuses on logic, not hints</span></div>
+            </li>
+            <li>
+              <span class="step-num">4</span>
+              <div><strong>Generate questions via AI</strong><br /><span class="dim">Sends the cleaned code to the configured AI provider with a structured prompt</span></div>
+            </li>
+            <li>
+              <span class="step-num">5</span>
+              <div><strong>Deliver the assessment</strong><br /><span class="dim">Writes a Markdown file and optionally posts to a PR comment, Issue, or Discussion</span></div>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── 5. Architecture ────────────────────────────────────── -->
+        <section data-auto-animate>
+          <h2>Architecture</h2>
+          <hr class="divider" />
+          <p style="font-size:0.82em; color:var(--dim);">Docker-based GitHub Action — the runtime is fully pinned and reproducible.</p>
+          <pre><code class="language-text" style="font-size:0.68em; line-height:1.6;">Consumer workflow
+      │
+      ▼
+action.yml  ──► pulls Docker image from ghcr.io
+                      │
+                      ▼
+              entrypoint.sh  ──► cd $GITHUB_WORKSPACE
+                                       │
+                                       ▼
+                                 node src/main.js
+                                 │
+                    ┌────────────┼────────────────┐
+                    ▼            ▼                 ▼
+               git.js         ai.js           delivery/
+              (diffs)      (provider)    (PR / issue / discussion)</code></pre>
+          <p style="font-size:0.75em; color:var(--dim); margin-top:0.6em;">
+            The Docker image is built once and reused — consumer repos pay <em>no</em> build cost at runtime.
+          </p>
+        </section>
+
+        <!-- ── 6. Comment Stripping ───────────────────────────────── -->
+        <section data-auto-animate>
+          <h2>Comment Stripping</h2>
+          <hr class="divider" />
+          <div class="cols">
+            <div>
+              <h3>Before</h3>
+              <pre><code class="language-python"># Add two numbers together
+def add(a, b):
+    # Return the sum
+    return a + b</code></pre>
+            </div>
+            <div>
+              <h3>After</h3>
+              <pre><code class="language-python">def add(a, b):
+    return a + b</code></pre>
+            </div>
+          </div>
+          <p style="font-size:0.8em; margin-top:0.8em;">
+            The <span class="mono">rmcm</span> binary removes comments before sending to the AI.
+            This forces questions to target the <span class="accent">logic</span>, not hints left
+            by the student in their comments.
+          </p>
+          <p class="dim" style="font-size:0.75em;">
+            Can be disabled with <span class="mono">keep_comments: 'true'</span>. Falls back gracefully for unsupported file types.
+          </p>
+        </section>
+
+        <!-- ── 7. Delivery Options ───────────────────────────────── -->
+        <section data-auto-animate>
+          <h2>Delivery Options</h2>
+          <hr class="divider" />
+          <p style="font-size:0.82em; color:var(--dim);">
+            The assessment is always written to a Markdown file. Any combination of the options below can be enabled at the same time.
+          </p>
+          <div class="delivery-row">
+            <div class="delivery-card">
+              <div class="dicon">💬</div>
+              <strong>PR Comment</strong>
+              <span>Posted inline on the pull request. On by default.</span>
+            </div>
+            <div class="delivery-card">
+              <div class="dicon">🐛</div>
+              <strong>GitHub Issue</strong>
+              <span>Auto-assigned to the student. Updated in place on re-runs.</span>
+            </div>
+            <div class="delivery-card">
+              <div class="dicon">🗣️</div>
+              <strong>Discussion</strong>
+              <span>Forum-style record. Discussions are auto-enabled if needed.</span>
+            </div>
+            <div class="delivery-card">
+              <div class="dicon">📄</div>
+              <strong>Markdown File</strong>
+              <span>Committed to <span class="mono">.assessment/</span> in the repo.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 8. AI Providers ───────────────────────────────────── -->
+        <section data-auto-animate>
+          <h2>AI Providers</h2>
+          <hr class="divider" />
+          <table class="provider-table">
+            <thead>
+              <tr>
+                <th>Provider</th>
+                <th><span class="mono">ai_provider</span> value</th>
+                <th>API Key needed?</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="default-row">
+                <td>GitHub Models <span class="badge">default</span></td>
+                <td><span class="mono">github-models</span></td>
+                <td>No</td>
+                <td>Uses built-in <span class="mono">GITHUB_TOKEN</span></td>
+              </tr>
+              <tr>
+                <td>OpenAI</td>
+                <td><span class="mono">openai</span></td>
+                <td>Yes</td>
+                <td>GPT-4o, GPT-4 Turbo, etc.</td>
+              </tr>
+              <tr>
+                <td>OpenRouter</td>
+                <td><span class="mono">openrouter</span></td>
+                <td>Yes</td>
+                <td>Access to many open models</td>
+              </tr>
+              <tr>
+                <td>Azure OpenAI</td>
+                <td><span class="mono">azure-openai</span></td>
+                <td>Yes</td>
+                <td>Also requires <span class="mono">azure_endpoint</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="footnote">All providers share the same OpenAI-compatible chat completions API shape — swapping is a config change only.</p>
+        </section>
+
+        <!-- ── 9. GitHub Classroom Integration ──────────────────── -->
+        <section data-auto-animate>
+          <h2>GitHub Classroom Integration</h2>
+          <hr class="divider" />
+          <p style="font-size:0.85em;">
+            GrillMyCode is designed to work seamlessly with
+            <span class="accent">GitHub Classroom</span> assignment repositories.
+          </p>
+          <ul style="font-size:0.8em; line-height:1.85;">
+            <li>
+              <strong>Skips starter/template files</strong> — pins the diff base to the first student commit so instructor-provided boilerplate is never assessed
+            </li>
+            <li>
+              <strong>Filters bot commits</strong> — leading commits by <span class="mono">github-classroom[bot]</span> and <span class="mono">github-actions[bot]</span> are automatically excluded
+            </li>
+            <li>
+              <strong>Assignment context</strong> — pass the brief, rubric, or README as <span class="mono">assignment_context</span> so the AI asks questions relevant to the assignment goals
+            </li>
+            <li>
+              <strong>Auto-assigns issues</strong> — GitHub Issues are assigned directly to the student who authored the head commit
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── 10. Customisation ─────────────────────────────────── -->
+        <section data-auto-animate>
+          <h2>Key Customisation Inputs</h2>
+          <hr class="divider" />
+          <div style="font-size:0.78em; line-height:1.8;">
+            <table class="provider-table">
+              <thead><tr><th>Input</th><th>Default</th><th>What it does</th></tr></thead>
+              <tbody>
+                <tr><td><span class="mono">num_questions</span></td><td>5</td><td>How many questions to generate (1–50)</td></tr>
+                <tr><td><span class="mono">include_answers</span></td><td>false</td><td>Append model answers for an instructor copy</td></tr>
+                <tr><td><span class="mono">additional_context</span></td><td>—</td><td>Free-text instructor instructions injected into the prompt</td></tr>
+                <tr><td><span class="mono">assignment_context</span></td><td>—</td><td>Globs for brief/rubric files to inject into the prompt</td></tr>
+                <tr><td><span class="mono">include_patterns</span></td><td>—</td><td>Limit assessment to specific file globs</td></tr>
+                <tr><td><span class="mono">exclude_patterns</span></td><td><em>auto</em></td><td>Skip non-code files (lock files, images, etc.)</td></tr>
+                <tr><td><span class="mono">ai_temperature</span></td><td>0.5</td><td>Randomness of generated questions (0 = deterministic)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ── 11. Quick Start ───────────────────────────────────── -->
+        <section data-auto-animate>
+          <h2>Quick Start</h2>
+          <hr class="divider" />
+          <p style="font-size:0.82em; color:var(--dim);">Add this file to the student repository — no secrets needed.</p>
+          <pre><code class="language-yaml"># .github/workflows/grill-my-code.yml
+name: Code Assessment
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  generate-questions:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write   # post the PR comment
+      models: read           # GitHub Models access
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0     # full history required for diff resolution
+
+      - uses: NSCC-ITC-Assessment/GrillMyCode@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          num_questions: '5'
+          additional_context: 'Assignment 3 – Python list comprehensions'</code></pre>
+        </section>
+
+        <!-- ── 12. What the student sees ────────────────────────── -->
+        <section data-auto-animate>
+          <h2>What the Student Sees</h2>
+          <hr class="divider" />
+          <div class="cols">
+            <div>
+              <p style="font-size:0.82em;">A PR comment appears automatically after every push:</p>
+              <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:1em; font-size:0.75em; line-height:1.7;">
+                <p style="color:var(--accent-light); font-weight:700; margin:0 0 0.5em;">🔥 Code Assessment</p>
+                <p style="margin:0 0 0.3em;"><strong>1.</strong> Your <span class="mono">add()</span> function uses positional parameters — what would happen if a caller passed keyword arguments in the wrong order?</p>
+                <p style="margin:0 0 0.3em;"><strong>2.</strong> The loop on line 12 iterates over a list. Why did you choose a <span class="mono">for</span> loop rather than a <span class="mono">while</span> loop here?</p>
+                <p style="margin:0;"><strong>3.</strong> …</p>
+              </div>
+            </div>
+            <div>
+              <p style="font-size:0.82em;">A Markdown file is committed to the repo:</p>
+              <pre style="font-size:0.68em;"><code class="language-text">.assessment/
+  └── 2024-11-15-main.md</code></pre>
+              <p style="font-size:0.78em; color:var(--dim); margin-top:0.5em;">
+                Optionally, a GitHub Issue or Discussion is also created and updated in place on subsequent submissions.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 13. Summary ───────────────────────────────────────── -->
+        <section class="center-slide" data-auto-animate>
+          <div style="font-size:2.5em; margin-bottom:0.2em;">🔥</div>
+          <h2 style="font-size:1.8em; color:white;">GrillMyCode</h2>
+          <p style="font-size:0.88em; color:var(--dim); max-width:600px; margin:0 auto 1.2em;">
+            Drop-in GitHub Action that turns every student submission into a personalised comprehension quiz — automatically, at zero cost.
+          </p>
+          <hr class="divider" style="width:40%; margin:0 auto 1em;" />
+          <div style="display:flex; justify-content:center; gap:2em; font-size:0.82em;">
+            <div>📦 <span class="accent">GitHub Action</span></div>
+            <div>🤖 <span class="accent">AI-powered</span></div>
+            <div>🎓 <span class="accent">Classroom-ready</span></div>
+            <div>🆓 <span class="accent">Free by default</span></div>
+          </div>
+          <p class="footnote" style="text-align:center; margin-top:1.5em;">
+            Full documentation at
+            <a href="https://nscc-itc-assessment.github.io/GrillMyCode/" style="color:var(--accent-light);">nscc-itc-assessment.github.io/GrillMyCode</a>
+          </p>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        slideNumber: 'c/t',
+        transition: 'slide',
+        transitionSpeed: 'fast',
+        controlsTutorial: true,
+        width: 1280,
+        height: 720,
+        margin: 0.04,
+        minScale: 0.2,
+        maxScale: 1.0,
+        plugins: [RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
+</html>

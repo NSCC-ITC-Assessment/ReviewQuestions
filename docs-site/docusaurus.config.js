@@ -82,6 +82,11 @@ const config = {
             label: 'Docs',
           },
           {
+            to: '/slides',
+            label: 'Slides',
+            position: 'left',
+          },
+          {
             href: 'https://github.com/NSCC-ITC-Assessment/GrillMyCode',
             label: 'GitHub',
             position: 'right',
@@ -128,6 +133,10 @@ const config = {
           {
             title: 'More',
             items: [
+              {
+                label: 'Slides',
+                to: '/slides',
+              },
               {
                 label: 'GitHub',
                 href: 'https://github.com/NSCC-ITC-Assessment/GrillMyCode',

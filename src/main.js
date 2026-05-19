@@ -42,6 +42,13 @@ import { postDiscussion } from './delivery/discussion.js';
 async function run() {
   try {
     const inputs = readInputs();
+    core.debug(
+      `Resolved inputs:\n${JSON.stringify(
+        { ...inputs, githubToken: '[REDACTED]', apiKey: inputs.apiKey ? '[REDACTED]' : '' },
+        null,
+        2,
+      )}`,
+    );
     const octokit = github.getOctokit(inputs.githubToken, {
       headers: { 'X-GitHub-Api-Version': GITHUB_API_VERSION },
     });
@@ -156,6 +163,7 @@ async function run() {
       truncated,
       includeAnswers: inputs.includeAnswers,
     });
+    core.debug(`Prompt messages:\n${JSON.stringify(messages, null, 2)}`);
 
     core.info(
       `Calling ${inputs.aiProvider} (model: ${inputs.aiModel}) to generate ${inputs.numQuestions} questions…`,
